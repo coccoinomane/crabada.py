@@ -1,0 +1,15 @@
+[
+    {
+        "type": "function",
+        "name": "startGame",
+        "inputs": [
+            {
+                "name": "teamId",
+                "type": "uint256"
+            }
+        ],
+        "outputs": [
+        ],
+        "stateMutability": "nonpayable"
+    }
+]
