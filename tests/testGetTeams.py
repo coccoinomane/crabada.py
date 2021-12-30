@@ -1,11 +1,12 @@
-import requests, sys
-sys.path.append("..")
-from Client import Client
+import sys
+sys.path.insert(1, '..')
+import common
+from libs.crabada.web2client.Web2Client import Web2Client
 from pprint import pprint
 
 # VARS
-client = Client()
-userAddress = "0x5818a5f1Ff6df3B7f5daD8Ac66E100CCe9E33E8e"
+client = Web2Client()
+userAddress = common.getenv('USER_ADDRESS')
 
 # TEST FUNCTIONS
 def testGetAvailableTeams():

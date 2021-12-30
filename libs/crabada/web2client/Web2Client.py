@@ -1,7 +1,7 @@
 import requests
 
-class Client:
-    """Access endpoints of the blockchain P2E game Crabada"""
+class Web2Client:
+    """Access web endpoints of the game Crabada"""
 
     baseUri = 'https://idle-api.crabada.com/public/idle'
 

@@ -1,10 +1,11 @@
-import requests, sys
-sys.path.append("..")
-from Client import Client
+import sys
+sys.path.insert(1, '..')
+import common
+from libs.crabada.web2client.Web2Client import Web2Client
 from pprint import pprint
 
 # VARS
-client = Client()
+client = Web2Client()
 mineId = 269751
 
 # TEST FUNCTIONS
