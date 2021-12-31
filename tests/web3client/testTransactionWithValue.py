@@ -2,6 +2,7 @@ import sys
 sys.path.insert(1, '../..')
 from common.config import nodeUri, contract, users, chainId
 from libs.crabada.web3client.Web3Client import Web3Client
+from tests.helpers.transactions import printTxInfo
 from pprint import pprint
 
 # VARS
@@ -29,21 +30,14 @@ def testSignTransaction():
     print(">>> SIGNED TX")
     pprint(signedTx)
 
-def sendSignedTransaction():
+def testSendSignedTransaction():
     tx = client.buildTransactionWithValue(to, valueInEth, gas, gasPrice)
     signedTx = client.signTransaction(tx)
     txHash = client.sendSignedTransaction(signedTx)
-    print(">>> TX SENT!")
-    print("Hash = " + txHash)
-    print("Waiting for transaction to finalize...")
-    tx_receipt = client.w3.eth.wait_for_transaction_receipt(txHash)
-    print(">>> TX IS ON THE BLOCKCHAIN :-)")
-    pprint(tx_receipt)
-    print(">>> ETH SPENT")
-    print(client.w3.fromWei(tx_receipt['effectiveGasPrice']*tx_receipt['gasUsed'], 'ether'))
+    printTxInfo(client, txHash)
 
 # EXECUTE
 testBuildTransactionWithValue()
 testSignTransaction()
 if (len(sys.argv) > 1 and sys.argv[1] == '--send'):
-    sendSignedTransaction()
+    testSendSignedTransaction()

@@ -45,6 +45,14 @@ class Web3Client:
         tx = self.buildBaseTransaction(gas, gasPriceInGwei)
         return tx | { 'to': to, 'value': self.w3.toWei(valueInEth, 'ether') }
 
+    def buildContractTransaction(self, contractFunction, gas: int, gasPriceInGwei: int):
+        """Build a transaction that involves a contract interation.
+        
+        Requires passing the contract function as detailed in the docs:
+        https://web3py.readthedocs.io/en/stable/web3.eth.account.html#sign-a-contract-transaction"""
+        baseTx = self.buildBaseTransaction(gas, gasPriceInGwei)
+        return contractFunction.buildTransaction(baseTx)
+
     def sendSignedTransaction(self, signedTx: object) -> str:
         """Send a signed transaction and return the tx hash"""
         tx_hash = self.w3.eth.sendRawTransaction(signedTx.rawTransaction)

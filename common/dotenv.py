@@ -4,5 +4,5 @@ import os, dotenv
 dotenv.load_dotenv()
 
 # Shorthand to get environment variables
-def getenv(key: str):
-    return os.environ.get(key)
+def getenv(key: str, default: str = ''):
+    return os.getenv(key, default)

@@ -14,7 +14,6 @@ The Crabada API has REST endpoints with base uri https://idle-api.crabada.com/pu
 
 For a list of endpoints, see the [Postman collection](https://go.postman.co/workspace/Crypto~19d2a5ae-faa1-4999-af6e-e1c4c8428a7e/collection/18622998-191ed6a2-1026-4ae2-8fbd-a9f5b233bc9c).
 
-
 # Response examples
 
 - [Start mining expedition tx](https://snowtrace.io/tx/0x46594658e0f65181d65bd6c229837d9fff962a0480e13d21f542733c0c1dbbb6)
@@ -22,3 +21,12 @@ For a list of endpoints, see the [Postman collection](https://go.postman.co/work
 - [Second reinforcemente tx](https://snowtrace.io/tx/0xe1cd5862278930acb1bf861ecba18fbb63e5696cb5779c3bcc590f8a397ad3b3)
 - [Claim tx](https://snowtrace.io/tx/0x55a75966158e03c22058ac24dbe855ee7aa2437d719c61b54cf14c4a906d9631)
 - [Claim tx](https://snowtrace.io/tx/0x65d7d2783f7817f3302cee3b5f1ca0dd3bb7ace19b172770df00800a51403124) (different sequence)
+
+# To do
+
+* Use EIP-1559 gas
+* Embed gas estimation in client (without need to use parameters)
+* Write startGame script
+* Write closeGame script
+* Use cron library to schedule scripts
+* Write reinforcement script

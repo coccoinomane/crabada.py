@@ -7,7 +7,7 @@ rootDir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 # Teams
 teams = [
     {
-        'id': getenv('USER_1_TEAM_1'),
+        'id': int(getenv('USER_1_TEAM_1')),
         'userAddress': getenv('USER_1_ADDRESS'),
     },
 ]
@@ -31,3 +31,7 @@ contract = {
 # RPC
 nodeUri = getenv('WEB3_NODE_URI')
 chainId = getenv('CHAIN_ID')
+
+# GAS
+defaultGas = getenv('DEFAULT_GAS', 200000) # units
+defaultGasPrice = getenv('DEFAULT_GAS_PRICE', 25) # gwei
