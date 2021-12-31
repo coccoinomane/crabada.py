@@ -19,18 +19,26 @@ gas = 200000 # units
 gasPrice = 50 # gwei
 
 # TEST FUNCTIONS
-def testGetSignedTransaction():
-    tx = client.buildSignedTransaction(to, valueInEth, gas, gasPrice)
-    print(">>> SIGNED TX")
+def testBuildTransactionWithValue():
+    tx = client.buildTransactionWithValue(to, valueInEth, gas, gasPrice)
+    print(">>> TX")
     pprint(tx)
 
+def testSignTransaction():
+    tx = client.buildTransactionWithValue(to, valueInEth, gas, gasPrice)
+    signedTx = client.signTransaction(tx)
+    print(">>> SIGNED TX")
+    pprint(signedTx)
+
 def sendSignedTransaction():
-    tx = client.buildSignedTransaction(to, valueInEth, gas, gasPrice)
-    txHash = client.sendSignedTransaction(tx)
+    tx = client.buildTransactionWithValue(to, valueInEth, gas, gasPrice)
+    signedTx = client.signTransaction(tx)
+    txHash = client.sendSignedTransaction(signedTx)
     print(">>> TX SENT!")
     print(txHash)
 
 # EXECUTE
-testGetSignedTransaction()
+testBuildTransactionWithValue()
+testSignTransaction()
 if (len(sys.argv) > 1 and sys.argv[1] == '--send'):
     sendSignedTransaction()

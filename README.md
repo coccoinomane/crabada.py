@@ -1,5 +1,9 @@
 Scripts to interact with [Crabada](play.crabada.com)'s smart contracts.
 
+# Quick start
+
+1. Copy .env.local in .env and customize .env
+2. TODO: Run one of the scripts in the script folder
 # Contracts
 
 - [Crabada: Game](https://snowtrace.io/address/0x82a85407bd612f52577909f4a58bfc6873f14da8) > [Decompiled](https://snowtrace.io/bytecode-decompiler?a=0x82a85407bd612f52577909f4a58bfc6873f14da8)

@@ -20,39 +20,41 @@ class Web3Client:
     # Tx
     ####################
 
-    def buildSignedTransaction(self, to: str, valueInEth: int, gas: int, gasPriceInGwei: int):
-        """Send a simple transaction using the provided private key.
-        
-        This will send the blockchain token (e.g. ETH) to the given address:
-            - valueInEth is expressed in the blockchain token (e.g. ETH).
-            - gas is expressed as a unit
-            - gasPriceInGwei is expressed in gwei
+    def signTransaction(self, tx: dict):
+        """Sign the give transaction; the private key must have
+        been set with setCredential().
+        """
+        return self.w3.eth.account.sign_transaction(tx, self.privateKey)
 
-        Requires both credentials (setCredentials) and chain ID (setChainId)
-
-        Sources:
-         - https://web3py.readthedocs.io/en/stable/web3.eth.account.html#sign-a-contract-transaction
-         - https://cryptomarketpool.com/send-a-transaction-to-the-ethereum-blockchain-using-python-and-web3-py/"""
+    def buildTransaction(self, to: str, gas: int, gasPriceInGwei: int) -> dict:
+        """Build a transaction template with just nonce, chain ID and gas;
+        the chain ID must have been set with setChainId()."""
         tx = {
             'chainId': self.chainId,
-            'nonce': self.getTransactionCount(),
             'to': Web3.toChecksumAddress(to),
-            'value': self.w3.toWei(valueInEth, 'ether'),
             'gas': gas,
-            'gasPrice': self.w3.toWei(gasPriceInGwei, 'gwei')
+            'gasPrice': self.w3.toWei(gasPriceInGwei, 'gwei'),
+            'nonce': self.getTransactionCount(),
         }
-        signedTx = self.w3.eth.account.sign_transaction(tx, self.privateKey)
-        return signedTx
+        # TODO: Estimate gas (see https://docs.avax .network/learn/platform-overview/transaction-fees/#dynamic-fee-transactions
+        # and https://docs.avax.network/learn/platform-overview/transaction-fees/#dynamic-fee-transactions
+        return tx
+    
+    def buildTransactionWithValue(self, to: str, valueInEth: int, gas: int, gasPriceInGwei: int) -> dict:
+        """Build a transaction involving a transfer of value, expressed
+        in the blockchain token (e.g. ETH or AVAX)."""
+        tx = self.buildTransaction(to, gas, gasPriceInGwei)
+        return tx | { 'value': self.w3.toWei(valueInEth, 'ether') }
 
-    def sendSignedTransaction(self, signedTx: object):
+    def sendSignedTransaction(self, signedTx: object) -> str:
         """Send a signed transaction and return the tx hash"""
         tx_hash = self.w3.eth.sendRawTransaction(signedTx.rawTransaction)
         return self.w3.toHex(tx_hash)
 
-    def getTransactionCount(self):
+    def getTransactionCount(self) -> int:
         return self.w3.eth.get_transaction_count(self.userAddress)
 
-    def getNonce(self):
+    def getNonce(self) -> int:
         return self.getTransactionCount()
 
     ####################
