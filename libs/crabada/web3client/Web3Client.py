@@ -26,25 +26,24 @@ class Web3Client:
         """
         return self.w3.eth.account.sign_transaction(tx, self.privateKey)
 
-    def buildTransaction(self, to: str, gas: int, gasPriceInGwei: int) -> dict:
-        """Build a transaction template with just nonce, chain ID and gas;
+    def buildBaseTransaction(self, gas: int, gasPriceInGwei: int) -> dict:
+        """Build a basic transaction with just nonce, chain ID and gas;
         the chain ID must have been set with setChainId()."""
         tx = {
             'chainId': self.chainId,
-            'to': Web3.toChecksumAddress(to),
             'gas': gas,
             'gasPrice': self.w3.toWei(gasPriceInGwei, 'gwei'),
             'nonce': self.getTransactionCount(),
         }
-        # TODO: Estimate gas (see https://docs.avax .network/learn/platform-overview/transaction-fees/#dynamic-fee-transactions
+        # TODO: Estimate gas (see https://docs.avax.network/learn/platform-overview/transaction-fees/#dynamic-fee-transactions
         # and https://docs.avax.network/learn/platform-overview/transaction-fees/#dynamic-fee-transactions
         return tx
     
     def buildTransactionWithValue(self, to: str, valueInEth: int, gas: int, gasPriceInGwei: int) -> dict:
-        """Build a transaction involving a transfer of value, expressed
-        in the blockchain token (e.g. ETH or AVAX)."""
-        tx = self.buildTransaction(to, gas, gasPriceInGwei)
-        return tx | { 'value': self.w3.toWei(valueInEth, 'ether') }
+        """Build a transaction involving a transfer of value to an address,
+        where the value is expressed in the blockchain token (e.g. ETH or AVAX)."""
+        tx = self.buildBaseTransaction(gas, gasPriceInGwei)
+        return tx | { 'to': to, 'value': self.w3.toWei(valueInEth, 'ether') }
 
     def sendSignedTransaction(self, signedTx: object) -> str:
         """Send a signed transaction and return the tx hash"""
