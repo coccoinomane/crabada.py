@@ -4,3 +4,5 @@ __pycache__
 .hypothesis/
 build/
 reports/
+.DS_Store
+Desktop.ini

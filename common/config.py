@@ -17,7 +17,7 @@ users = [
     {
         'name': getenv('USER_1_NAME'),
         'address': getenv('USER_1_ADDRESS'),
-        'privateKey': getenv('USER_1PRIVATE_KEY'),
+        'privateKey': getenv('USER_1_PRIVATE_KEY'),
         'teams': [ t for t in teams if t['userAddress'] == getenv('USER_1_ADDRESS') ]
     },
 ]
@@ -30,3 +30,4 @@ contract = {
 
 # RPC
 nodeUri = getenv('WEB3_NODE_URI')
+chainId = getenv('CHAIN_ID')
