@@ -1,6 +1,5 @@
 import sys
 sys.path.insert(1, '../..')
-import common
 from libs.crabada.web2client.Web2Client import Web2Client
 from pprint import pprint
 

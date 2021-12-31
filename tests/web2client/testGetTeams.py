@@ -1,12 +1,12 @@
 import sys
-sys.path.insert(1, '..')
-import common
+sys.path.insert(1, '../..')
+from common.config import users
 from libs.crabada.web2client.Web2Client import Web2Client
 from pprint import pprint
 
 # VARS
 client = Web2Client()
-userAddress = common.getenv('USER_ADDRESS')
+userAddress = users[0]['address']
 
 # TEST FUNCTIONS
 def testGetAvailableTeams():

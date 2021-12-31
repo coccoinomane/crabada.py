@@ -1,4 +1,4 @@
-import requests, json, os
+import json, os
 from pprint import pprint
 from web3 import Web3
 

@@ -1,11 +1,11 @@
 import sys
 sys.path.insert(1, '../..')
-import common
+from common.config import nodeUri
 from libs.crabada.web3client.Web3Client import Web3Client
 from pprint import pprint
 
 # VARS
-client = Web3Client(nodeUri=common.getenv('WEB3_NODE_URI'))
+client = Web3Client(nodeUri=nodeUri)
 
 # TEST FUNCTIONS
 def testGetAbi():
