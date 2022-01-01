@@ -6,11 +6,8 @@ from pprint import pprint
 
 # VARS
 client = (Web3Client()
-    .setContractAddress(contract['address'])
     .setNodeUri(nodeUri)
-    .setAbi(contract['abi'])
-    .setCredentials(users[0]['address'], users[0]['privateKey'])
-    .init())
+    .setCredentials(users[0]['address'], users[0]['privateKey']))
 
 # TEST FUNCTIONS
 def testGetNonce():

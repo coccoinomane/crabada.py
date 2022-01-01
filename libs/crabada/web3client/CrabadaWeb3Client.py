@@ -7,17 +7,16 @@ class CrabadaWeb3Client(Web3Client):
     explorer URL:
     https://snowtrace.io/address/0x82a85407bd612f52577909f4a58bfc6873f14da8#tokentxns"""
 
-    contractAddress: str = '0x82a85407bd612f52577909f4a58bfc6873f14da8'
+    # TODO: We should auto-initialize contract address and ABI
+    # contractAddress: str = '0x82a85407bd612f52577909f4a58bfc6873f14da8'
+    # abi = json.load(abifile)
     
-    def __init__(self):
-        self.setContractAddress(self.contractAddress)
-
-    def startGame(self, teamId: int, gas: int, gasPriceInGwei: int):
+    def startGame(self, teamId: int):
         """Send crabs to mine"""
-        tx = self.buildContractTransaction(
-            self.contract.functions.startGame(teamId),
-            gas,
-            gasPriceInGwei,
-        )
-        signedTx = self.signTransaction(tx)
-        return self.sendSignedTransaction(signedTx)
+        tx = self.buildContractTransaction(self.contract.functions.startGame(teamId))
+        return self.signAndSendTransaction(tx)
+
+    def closeGame(self, gameId: int):
+        """Claim reward & send crabs back home"""
+        tx = self.buildContractTransaction(self.contract.functions.closeGame(gameId))
+        return self.signAndSendTransaction(tx)

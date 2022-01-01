@@ -5,10 +5,14 @@ from libs.crabada.web3client.Web3Client import Web3Client
 from pprint import pprint
 
 # VARS
-client = Web3Client().setContractAddress(contract['address']).setNodeUri(nodeUri).setAbi(contract['abi']).init()
+client = (Web3Client()
+    .setNodeUri(nodeUri)
+    .setContract(contract['address'], contract['abi']))
 
 # TEST FUNCTIONS
 def testGetContract():
+    print(">>> ABI")
+    pprint(client.abi)
     print(">>> CONTRACT VARS")
     pprint(vars(client.contract))
     print(">>> CONTRACT FUNCTIONS")

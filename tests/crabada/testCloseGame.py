@@ -13,12 +13,12 @@ client = (CrabadaWeb3Client()
     .setChainId(chainId))
 
 # Contract
-teamId = users[0]['teams'][0]['id']
+gameId = 284549
 
 # TEST FUNCTIONS
-def testStartGame():
-    txHash = client.startGame(teamId)
+def testCloseGame():
+    txHash = client.closeGame(gameId)
     printTxInfo(client, txHash)
 
 # EXECUTE
-testStartGame()
+testCloseGame()

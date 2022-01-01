@@ -24,9 +24,15 @@ For a list of endpoints, see the [Postman collection](https://go.postman.co/work
 
 # To do
 
-* Use EIP-1559 gas
-* Embed gas estimation in client (without need to use parameters)
+* Move gasLimit and maxPriorityFeePerGas from client to .env
 * Write startGame script
 * Write closeGame script
 * Use cron library to schedule scripts
 * Write reinforcement script
+* In AVAX should we be using eth_baseFee and eth_maxPriorityFeePerGas? (https://docs.avax.network/learn/platform-overview/transaction-fees/)
+* Make it work for different chains than AVAX (gas limit, poa middleware...)
+
+# Done
+
+* Use EIP-1559 gas
+* Embed gas estimation in client (without need to use parameters)

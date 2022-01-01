@@ -6,16 +6,10 @@ from pprint import pprint
 
 # VARS
 client = (Web3Client()
-    .setContractAddress(contract['address'])
     .setNodeUri(nodeUri)
-    .setAbi(contract['abi'])
+    .setContract(contract['address'], contract['abi'])
     .setCredentials(users[0]['address'], users[0]['privateKey'])
-    .setChainId(chainId)
-    .init())
-
-# Gas
-gas = 200000 # units
-gasPrice = 25 # gwei
+    .setChainId(chainId))
 
 # Contract
 teamId = users[0]['teams'][0]['id']
@@ -24,7 +18,7 @@ pprint(contractFunction)
 
 # TEST FUNCTIONS
 def testBuildContractTransaction():
-    pprint(client.buildContractTransaction(contractFunction, gas, gasPrice))
+    pprint(client.buildContractTransaction(contractFunction))
 
 # EXECUTE
 testBuildContractTransaction()

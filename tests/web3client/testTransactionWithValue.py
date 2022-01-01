@@ -8,30 +8,27 @@ from pprint import pprint
 # VARS
 client = (Web3Client()
     .setNodeUri(nodeUri)
-    .setAbi(contract['abi'])
     .setCredentials(users[0]['address'], users[0]['privateKey'])
     .setChainId(chainId)
-    .init())
+    .setMaxPriorityFeePerGasInGwei(2))
 
 to = "0xBc3a38C981B13625FAF7729fF105Cb6E15bdDE3A"
 valueInEth = 0.00001 # ETH / AVAX / etc
-gas = 200000 # units
-gasPrice = 25 # gwei
 
 # TEST FUNCTIONS
 def testBuildTransactionWithValue():
-    tx = client.buildTransactionWithValue(to, valueInEth, gas, gasPrice)
+    tx = client.buildTransactionWithValue(to, valueInEth)
     print(">>> TX")
     pprint(tx)
 
 def testSignTransaction():
-    tx = client.buildTransactionWithValue(to, valueInEth, gas, gasPrice)
+    tx = client.buildTransactionWithValue(to, valueInEth)
     signedTx = client.signTransaction(tx)
     print(">>> SIGNED TX")
     pprint(signedTx)
 
 def testSendSignedTransaction():
-    tx = client.buildTransactionWithValue(to, valueInEth, gas, gasPrice)
+    tx = client.buildTransactionWithValue(to, valueInEth)
     signedTx = client.signTransaction(tx)
     txHash = client.sendSignedTransaction(signedTx)
     printTxInfo(client, txHash)
