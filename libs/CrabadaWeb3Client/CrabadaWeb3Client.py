@@ -1,6 +1,6 @@
-from .Web3Client import Web3Client
+from libs.Web3Client.AvalancheWeb3Client import AvalancheWeb3Client
 
-class CrabadaWeb3Client(Web3Client):
+class CrabadaWeb3Client(AvalancheWeb3Client):
     """Interact with a smart contract of the game Crabada
     
     The contract resides on the Avalanche blockchain; here's the

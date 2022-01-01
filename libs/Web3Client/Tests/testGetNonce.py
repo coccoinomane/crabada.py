@@ -1,7 +1,5 @@
-import sys
-sys.path.insert(1, '../..')
 from common.config import nodeUri, contract, users
-from libs.crabada.web3client.Web3Client import Web3Client
+from libs.Web3Client.Web3Client import Web3Client
 from pprint import pprint
 
 # VARS

@@ -1,12 +1,11 @@
-import sys
-sys.path.insert(1, '../..')
-from common.config import nodeUri, contract, users, chainId
-from libs.crabada.web3client.Web3Client import Web3Client
-from tests.helpers.transactions import printTxInfo
+from sys import argv
+from common.config import nodeUri, users, chainId
+from libs.Web3Client.AvalancheWeb3Client import AvalancheWeb3Client
+from libs.Web3Client.Tests.helpers import printTxInfo
 from pprint import pprint
 
 # VARS
-client = (Web3Client()
+client = (AvalancheWeb3Client()
     .setNodeUri(nodeUri)
     .setCredentials(users[0]['address'], users[0]['privateKey'])
     .setChainId(chainId)
@@ -36,5 +35,5 @@ def testSendSignedTransaction():
 # EXECUTE
 testBuildTransactionWithValue()
 testSignTransaction()
-if (len(sys.argv) > 1 and sys.argv[1] == '--send'):
+if (len(argv) > 1 and argv[1] == '--send'):
     testSendSignedTransaction()

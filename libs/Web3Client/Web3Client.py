@@ -1,12 +1,12 @@
 import json
 from web3 import Web3
-from web3.middleware import geth_poa_middleware
-from pprint import pprint
 
 class Web3Client:
-    """Interact with a smart contract.
+    """Client to interact with a blockchain, with smart
+    contract support.
     
-    Simple wrapper of the Web3 library."""
+    Wrapper of the Web3 library intended to make it easier
+    to use."""
 
     ###################
     # TO DO: Risky
@@ -107,10 +107,6 @@ class Web3Client:
     def setNodeUri(self, nodeUri: str):
         self.nodeUri = nodeUri
         self.w3 = self.__getHttpProvider()
-        ###################
-        # TO DO: We should have an (IF AVAX) or (IF POA) here...
-        self.w3.middleware_onion.inject(geth_poa_middleware, layer=0)
-        ###################
         return self
 
     def setCredentials(self, userAddress: str, privateKey: str):

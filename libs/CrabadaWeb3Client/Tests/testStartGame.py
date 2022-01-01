@@ -1,8 +1,6 @@
-import sys
-sys.path.insert(1, '../..')
-from tests.helpers.transactions import printTxInfo
+from libs.CrabadaWeb3Client.Tests.helpers import printTxInfo
 from common.config import nodeUri, users, contract, chainId
-from libs.crabada.web3client.CrabadaWeb3Client import CrabadaWeb3Client
+from libs.CrabadaWeb3Client.CrabadaWeb3Client import CrabadaWeb3Client
 from pprint import pprint
 
 # VARS
@@ -13,12 +11,12 @@ client = (CrabadaWeb3Client()
     .setChainId(chainId))
 
 # Contract
-gameId = 284549
+teamId = users[0]['teams'][0]['id']
 
 # TEST FUNCTIONS
-def testCloseGame():
-    txHash = client.closeGame(gameId)
+def testStartGame():
+    txHash = client.startGame(teamId)
     printTxInfo(client, txHash)
 
 # EXECUTE
-testCloseGame()
+testStartGame()

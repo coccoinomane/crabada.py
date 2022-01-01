@@ -1,10 +1,8 @@
-import sys
-sys.path.insert(1, '../..')
-from libs.crabada.web2client.Web2Client import Web2Client
+from libs.CrabadaWeb2Client.CrabadaWeb2Client import CrabadaWeb2Client
 from pprint import pprint
 
 # VARS
-client = Web2Client()
+client = CrabadaWeb2Client()
 mineId = 269751
 
 # TEST FUNCTIONS
