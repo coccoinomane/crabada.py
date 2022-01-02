@@ -8,12 +8,12 @@ userAddress = users[0]['address']
 
 # TEST FUNCTIONS
 def testGetOpenMines() -> None:
-    params = {"limit": 5, "page": 1, "status": "open", "user_address": userAddress}
-    pprint(client.listMines(params=params).json())
+    params = {"limit": 3, "page": 1, "status": "open", "user_address": userAddress}
+    pprint(client.listMines(params=params))
 
 def testGetAllMines() -> None:
-    params = {"limit": 5, "page": 1, "user_address": userAddress}
-    pprint(client.listMines(params=params).json())
+    params = {"limit": 3, "page": 1, "user_address": userAddress}
+    pprint(client.listMines(params=params))
 
 # EXECUTE
 print(">>> OPEN MINES/GAMES")

@@ -7,7 +7,7 @@ mineId = 269751
 
 # TEST FUNCTIONS
 def testGetMine() -> None:
-    pprint(client.getMine(mineId).json())
+    pprint(client.getMine(mineId))
 
 # EXECUTE
 testGetMine()

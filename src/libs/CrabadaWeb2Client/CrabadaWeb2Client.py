@@ -1,5 +1,5 @@
 
-from typing import Any
+from typing import Any, Tuple
 from eth_typing import Address
 import requests
 from requests.models import Response
@@ -9,12 +9,13 @@ class CrabadaWeb2Client:
 
     baseUri = 'https://idle-api.crabada.com/public/idle'
 
-    def getMine(self, mineId: int, params: dict[str, Any] = {}) -> Response:
+    def getMine(self, mineId: int, params: dict[str, Any] = {}) -> Tuple[Any, Response]:
         """Get information from the given mine"""
         url = self.baseUri + '/mine/' + str(mineId)
-        return requests.request("GET", url, params=params)
+        res = requests.request("GET", url, params=params).json()
+        return res['result'], res
 
-    def listMines(self, params: dict[str, Any] = {}) -> Response:
+    def listMines(self, params: dict[str, Any] = {}) -> Tuple[Any, Response]:
         """Get all mines.
         
         If you want only the open mines, pass status=open in the params.
@@ -26,9 +27,10 @@ class CrabadaWeb2Client:
             "page": 1,
         }
         actualParams = defaultParams | params
-        return requests.request("GET", url, params=actualParams)
+        res = requests.request("GET", url, params=actualParams).json()
+        return res['result'], res
 
-    def listTeams(self, userAddress: Address, params: dict[str, Any] = {}) -> Response:
+    def listTeams(self, userAddress: Address, params: dict[str, Any] = {}) -> Tuple[Any, Response]:
         """Get all teams of a given user address.
         
         If you want only the available teams, pass is_team_available=1
@@ -43,4 +45,5 @@ class CrabadaWeb2Client:
         }
         actualParams = defaultParams | params
         actualParams['user_address'] = userAddress
-        return requests.request("GET", url, params=actualParams)
+        res = requests.request("GET", url, params=actualParams).json()
+        return res['result'], res
