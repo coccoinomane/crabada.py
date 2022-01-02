@@ -5,7 +5,8 @@ from src.common.config import users
 
 # TEST FUNCTIONS
 def testCloseFinishedGames() -> None:
-    closeFinishedGames(users[0]['address'])
+    nFinished = closeFinishedGames(users[0]['address'])
+    print(f'CLOSED {nFinished} GAMES')
 
 # EXECUTE
 testCloseFinishedGames()
