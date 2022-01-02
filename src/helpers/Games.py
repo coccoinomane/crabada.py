@@ -1,6 +1,7 @@
 """Helper functions to handle Crabada games"""
 
-from src.common.logging import logger
+from src.common.logger import logger
+from src.common.txLogger import txLogger
 from typing import Any
 from time import time
 
@@ -21,7 +22,8 @@ def closeFinishedGames(userAddress: Address) -> None:
     finishedGames = [ g for g in openGames if gameIsFinished(g) ]
     for g in finishedGames:
         gameId = g['game_id']
-        # txHash = crabadaWeb3Client.closeGame(g.game_id)
+        # txHash = crabadaWeb3Client.closeGame(g['game_id'])
+        # txLogger.debug(txHash)
         # tx_receipt = crabadaWeb3Client.w3.eth.wait_for_transaction_receipt(txHash)
 
 def gameIsFinished(game: CrabadaGame) -> bool:
