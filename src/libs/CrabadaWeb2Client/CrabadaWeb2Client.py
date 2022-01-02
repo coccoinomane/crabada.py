@@ -14,7 +14,7 @@ class CrabadaWeb2Client:
         url = self.baseUri + '/mine/' + str(mineId)
         return requests.request("GET", url, params=params)
 
-    def listMines(self, userAddress: Address, params: dict[str, Any] = {}) -> Response:
+    def listMines(self, params: dict[str, Any] = {}) -> Response:
         """Get all mines.
         
         If you want only the open mines, pass status=open in the params.
