@@ -12,5 +12,3 @@ crabadaWeb3Client = (CrabadaWeb3Client()
     .setContract(contract['address'], contract['abi'])
     .setCredentials(users[0]['address'], users[0]['privateKey'])
     .setChainId(chainId))
-
-print("CLIENTS LOADED")

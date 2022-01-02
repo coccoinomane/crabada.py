@@ -12,6 +12,7 @@ __pycache__/
 reports/
 .DS_Store
 Desktop.ini
+storage/logs
 
 # due to using tox and pytest
 .tox

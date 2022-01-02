@@ -1,5 +1,6 @@
 """Helper functions to handle Crabada games"""
 
+from src.common.logging import logger
 from typing import Any
 from time import time
 
