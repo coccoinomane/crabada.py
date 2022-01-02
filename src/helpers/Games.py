@@ -1,22 +1,34 @@
 """Helper functions to handle Crabada games"""
 
 from typing import Any
+from time import time
 
 from web3.types import BlockData
-from common.clients import crabadaWeb2Client, crabadaWeb3Client
+from src.common.clients import crabadaWeb2Client, crabadaWeb3Client
 from eth_typing import Address
+
+from src.common.types import CrabadaGame
 
 def closeFinishedGames(userAddress: Address) -> None:
     """Close all open games whose end time is due"""
 
-    openGames = crabadaWeb2Client.listMines(userAddress, {"limit": 100, "page": 1, "status": "open"})
+    openGames = crabadaWeb2Client.listMines({
+        "limit": 200,
+        "status": "open",
+        "user_address": userAddress})
+    
     finishedGames = [ g for g in openGames if gameIsFinished(g) ]
     for g in finishedGames:
-        txHash = crabadaWeb3Client.closeGame(g.game_id)
-        tx_receipt = crabadaWeb3Client.w3.eth.wait_for_transaction_receipt(txHash)
+        gameId = g['game_id']
+        # txHash = crabadaWeb3Client.closeGame(g.game_id)
+        # tx_receipt = crabadaWeb3Client.w3.eth.wait_for_transaction_receipt(txHash)
 
-def gameIsFinished(game: dict[str, Any], latestBlock: BlockData = None) -> bool:
+def gameIsFinished(game: CrabadaGame) -> bool:
     """Return true if the given game is past its end_time"""
-    if latestBlock == None:
-        latestBlock = crabadaWeb3Client.w3.eth.get_block('latest')
-    return game['end_time'] <= latestBlock['number']
+    return game['end_time'] <= time()
+
+def gameIsClosed(game: CrabadaGame) -> bool:
+    """Return true if the given game is closed (meaning the
+    reward has been claimed"""
+    crabadaWeb2Client.getMine(game['game_id'])
+    return game['status'] == 'close'
