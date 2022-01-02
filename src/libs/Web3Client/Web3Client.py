@@ -6,6 +6,7 @@ from web3 import Web3
 from eth_account.datastructures import SignedTransaction
 from web3.contract import Contract, ContractFunction
 from web3.types import Nonce, TxParams
+from eth_typing.encoding import HexStr
 
 class Web3Client:
     """Client to interact with a blockchain, with smart
@@ -30,7 +31,7 @@ class Web3Client:
     # Tx
     ####################
 
-    def signAndSendTransaction(self, tx: TxParams) -> str:
+    def signAndSendTransaction(self, tx: TxParams) -> HexStr:
         signedTx = self.signTransaction(tx)
         return self.sendSignedTransaction(signedTx)
 
@@ -71,7 +72,7 @@ class Web3Client:
         baseTx = self.buildBaseTransaction()
         return contractFunction.buildTransaction(baseTx)
 
-    def sendSignedTransaction(self, signedTx: SignedTransaction) -> str:
+    def sendSignedTransaction(self, signedTx: SignedTransaction) -> HexStr:
         """Send a signed transaction and return the tx hash"""
         tx_hash = self.w3.eth.send_raw_transaction(signedTx.rawTransaction)
         return self.w3.toHex(tx_hash)

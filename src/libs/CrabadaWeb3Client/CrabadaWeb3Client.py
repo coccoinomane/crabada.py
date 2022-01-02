@@ -1,5 +1,6 @@
 from web3.types import TxParams
 from src.libs.Web3Client.AvalancheWeb3Client import AvalancheWeb3Client
+from eth_typing.encoding import HexStr
 
 class CrabadaWeb3Client(AvalancheWeb3Client):
     """Interact with a smart contract of the game Crabada
@@ -12,12 +13,12 @@ class CrabadaWeb3Client(AvalancheWeb3Client):
     # contractAddress: str = '0x82a85407bd612f52577909f4a58bfc6873f14da8'
     # abi = json.load(abifile)
     
-    def startGame(self, teamId: int) -> str:
+    def startGame(self, teamId: int) -> HexStr:
         """Send crabs to mine"""
         tx: TxParams = self.buildContractTransaction(self.contract.functions.startGame(teamId))
         return self.signAndSendTransaction(tx)
 
-    def closeGame(self, gameId: int) -> str:
+    def closeGame(self, gameId: int) -> HexStr:
         """Claim reward & send crabs back home"""
         tx: TxParams = self.buildContractTransaction(self.contract.functions.closeGame(gameId))
         return self.signAndSendTransaction(tx)
