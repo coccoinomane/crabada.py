@@ -1,18 +1,20 @@
 
+from typing import Any
 from eth_typing import Address
 import requests
+from requests.models import Response
 
 class CrabadaWeb2Client:
     """Access the HTTP endpoints of the Crabada P2E game"""
 
     baseUri = 'https://idle-api.crabada.com/public/idle'
 
-    def getMine(self, mineId: int, params: dict = {}):
+    def getMine(self, mineId: int, params: dict[str, Any] = {}) -> Response:
         """Get information from the given mine"""
         url = self.baseUri + '/mine/' + str(mineId)
         return requests.request("GET", url, params=params)
 
-    def listMines(self, userAddress: Address, params: dict = {}):
+    def listMines(self, userAddress: Address, params: dict[str, Any] = {}) -> Response:
         """Get all mines.
         
         If you want only the open mines, pass status=open in the params.
@@ -26,7 +28,7 @@ class CrabadaWeb2Client:
         actualParams = defaultParams | params
         return requests.request("GET", url, params=actualParams)
 
-    def listTeams(self, userAddress: Address, params: dict = {}):
+    def listTeams(self, userAddress: Address, params: dict[str, Any] = {}) -> Response:
         """Get all teams of a given user address.
         
         If you want only the available teams, pass is_team_available=1

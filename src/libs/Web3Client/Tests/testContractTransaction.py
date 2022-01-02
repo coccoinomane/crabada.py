@@ -1,5 +1,5 @@
-from common.config import nodeUri, users, contract, chainId
-from libs.Web3Client.AvalancheWeb3Client import AvalancheWeb3Client
+from src.common.config import nodeUri, users, contract, chainId
+from src.libs.Web3Client.AvalancheWeb3Client import AvalancheWeb3Client
 from pprint import pprint
 
 # VARS
@@ -15,7 +15,7 @@ contractFunction = client.contract.functions.startGame(teamId)
 pprint(contractFunction)
 
 # TEST FUNCTIONS
-def testBuildContractTransaction():
+def testBuildContractTransaction() -> None:
     pprint(client.buildContractTransaction(contractFunction))
 
 # EXECUTE

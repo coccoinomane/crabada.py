@@ -1,5 +1,5 @@
-from common.config import nodeUri, contract
-from libs.Web3Client.Web3Client import Web3Client
+from src.common.config import nodeUri, contract
+from src.libs.Web3Client.Web3Client import Web3Client
 from pprint import pprint
 
 # VARS
@@ -8,7 +8,7 @@ client = (Web3Client()
     .setContract(contract['address'], contract['abi']))
 
 # TEST FUNCTIONS
-def testGetContract():
+def testGetContract() -> None:
     print(">>> ABI")
     pprint(client.abi)
     print(">>> CONTRACT VARS")

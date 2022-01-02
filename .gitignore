@@ -1,8 +1,18 @@
-__pycache__
+# general things to ignore
+build/
+dist/
+*.egg-info/
+*.egg
+*.py[cod]
+__pycache__/
+*.so
+*~
 .env
 .history
-.hypothesis/
-build/
 reports/
 .DS_Store
 Desktop.ini
+
+# due to using tox and pytest
+.tox
+.cache

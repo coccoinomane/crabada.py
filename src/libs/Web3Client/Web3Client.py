@@ -1,5 +1,11 @@
+from __future__ import annotations
 import json
+from typing import Any
+from eth_typing import Address
 from web3 import Web3
+from eth_account.datastructures import SignedTransaction
+from web3.contract import Contract, ContractFunction
+from web3.types import Nonce, TxParams
 
 class Web3Client:
     """Client to interact with a blockchain, with smart
@@ -10,13 +16,13 @@ class Web3Client:
 
     maxPriorityFeePerGasInGwei: int = None
     gasLimit: int = None    
-    contractAddress: str = None
+    contractAddress: Address = None
     contractChecksumAddress: str = None
-    abi: dict = None # contract's ABI, loaded from abi.json
+    abi: dict[str, Any] = None # contract's ABI, loaded from abi.json
     nodeUri: str = None # your node's URI
-    w3: object = None # provider Web3, see https://web3py.readthedocs.io/en/stable/providers.html
-    contract: object = None # the contract instance, see https://web3py.readthedocs.io/en/stable/examples.html#interacting-with-existing-contracts
-    userAddress: str = None
+    w3: Web3 = None # provider Web3, see https://web3py.readthedocs.io/en/stable/providers.html
+    contract: Contract = None # the contract instance, see https://web3py.readthedocs.io/en/stable/examples.html#interacting-with-existing-contracts
+    userAddress: Address = None
     privateKey: str = None
     chainId: int = None
 
@@ -24,39 +30,40 @@ class Web3Client:
     # Tx
     ####################
 
-    def signAndSendTransaction(self, tx:dict) -> str:
+    def signAndSendTransaction(self, tx: TxParams) -> str:
         signedTx = self.signTransaction(tx)
         return self.sendSignedTransaction(signedTx)
 
-    def signTransaction(self, tx: dict):
+    def signTransaction(self, tx: TxParams) -> SignedTransaction:
         """Sign the give transaction; the private key must have
         been set with setCredential().
         """
         return self.w3.eth.account.sign_transaction(tx, self.privateKey)
 
-    def buildBaseTransaction(self) -> dict:
+    def buildBaseTransaction(self) -> TxParams:
         """Build a basic EIP-1559 transaction with just nonce, chain ID and gas;
         you should already have called setChainId() and setNodeUri.
         
         Gas is estimated according to the formula
         maxMaxFeePerGas = 2 * baseFee + maxPriorityFeePerGas."""
-        tx = {
-            'type': '0x2',
+        tx: TxParams = {
+            'type': 0x2,
             'chainId': self.chainId,
-            'gas': self.gasLimit,
+            'gas': self.gasLimit, # type: ignore
             'maxFeePerGas': Web3.toWei(self.estimateMaxFeePerGasInGwei(), 'gwei'),
             'maxPriorityFeePerGas': Web3.toWei(self.maxPriorityFeePerGasInGwei, 'gwei'),
-            'nonce': self.getTransactionCount(),
+            'nonce': self.getNonce(),
         }
         return tx
     
-    def buildTransactionWithValue(self, to: str, valueInEth: int) -> dict:
+    def buildTransactionWithValue(self, to: Address, valueInEth: float) -> TxParams:
         """Build a transaction involving a transfer of value to an address,
         where the value is expressed in the blockchain token (e.g. ETH or AVAX)."""
         tx = self.buildBaseTransaction()
-        return tx | { 'to': to, 'value': self.w3.toWei(valueInEth, 'ether') }
+        txValue: TxParams = { 'to': to, 'value': self.w3.toWei(valueInEth, 'ether') }
+        return tx | txValue
 
-    def buildContractTransaction(self, contractFunction):
+    def buildContractTransaction(self, contractFunction: ContractFunction) -> TxParams:
         """Build a transaction that involves a contract interation.
         
         Requires passing the contract function as detailed in the docs:
@@ -64,16 +71,13 @@ class Web3Client:
         baseTx = self.buildBaseTransaction()
         return contractFunction.buildTransaction(baseTx)
 
-    def sendSignedTransaction(self, signedTx: object) -> str:
+    def sendSignedTransaction(self, signedTx: SignedTransaction) -> str:
         """Send a signed transaction and return the tx hash"""
-        tx_hash = self.w3.eth.sendRawTransaction(signedTx.rawTransaction)
+        tx_hash = self.w3.eth.send_raw_transaction(signedTx.rawTransaction)
         return self.w3.toHex(tx_hash)
 
-    def getTransactionCount(self) -> int:
+    def getNonce(self) -> Nonce:
         return self.w3.eth.get_transaction_count(self.userAddress)
-
-    def getNonce(self) -> int:
-        return self.getTransactionCount()
 
     def estimateMaxFeePerGasInGwei(self) -> int:
         """Gets the base fee from the latest block and returns a maxFeePerGas
@@ -82,14 +86,14 @@ class Web3Client:
         https://ethereum.stackexchange.com/a/113373/89782)"""
         latest_block = self.w3.eth.get_block('latest')
         baseFeeInWei = latest_block['baseFeePerGas'] # in wei
-        baseFeeInGwei = Web3.fromWei(baseFeeInWei, 'gwei')
+        baseFeeInGwei = int(Web3.fromWei(baseFeeInWei, 'gwei'))
         return 2 * baseFeeInGwei + self.maxPriorityFeePerGasInGwei
 
     ####################
     # Setters
     ####################
 
-    def setContract(self, contractAddress: str, abiFile: str):
+    def setContract(self, contractAddress: Address, abiFile: str) -> Web3Client:
         """Load the smart contract, required before running
         buildContractTransaction().
 
@@ -100,25 +104,25 @@ class Web3Client:
         self.contract = self.w3.eth.contract(address=self.contractChecksumAddress, abi=self.abi)
         return self
 
-    def setNodeUri(self, nodeUri: str):
+    def setNodeUri(self, nodeUri: str) -> Web3Client:
         self.nodeUri = nodeUri
         self.w3 = self.__getHttpProvider()
         return self
 
-    def setCredentials(self, userAddress: str, privateKey: str):
+    def setCredentials(self, userAddress: Address, privateKey: str) -> Web3Client:
         self.userAddress = userAddress
         self.privateKey = privateKey
         return self
 
-    def setChainId(self, chainId: int):
+    def setChainId(self, chainId: int) -> Web3Client:
         self.chainId = int(chainId)
         return self
 
-    def setMaxPriorityFeePerGasInGwei(self, maxPriorityFeePerGasInGwei: int):
+    def setMaxPriorityFeePerGasInGwei(self, maxPriorityFeePerGasInGwei: int) -> Web3Client:
         self.maxPriorityFeePerGasInGwei = maxPriorityFeePerGasInGwei
         return self
 
-    def setGasLimit(self, gasLimit: int):
+    def setGasLimit(self, gasLimit: int) -> Web3Client:
         self.gasLimit = gasLimit
         return self
 
@@ -126,9 +130,9 @@ class Web3Client:
     # Private
     ####################
 
-    def __getContractAbi(self, fileName: str) -> json:
+    def __getContractAbi(self, fileName: str) -> Any:
         with open(fileName) as file:
             return json.load(file)
     
-    def __getHttpProvider(self) -> Web3.HTTPProvider:
+    def __getHttpProvider(self) -> Web3:
         return Web3(Web3.HTTPProvider(self.nodeUri))

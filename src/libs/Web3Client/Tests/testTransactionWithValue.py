@@ -1,7 +1,9 @@
 from sys import argv
-from common.config import nodeUri, users, chainId
-from libs.Web3Client.AvalancheWeb3Client import AvalancheWeb3Client
-from libs.Web3Client.Tests.helpers import printTxInfo
+from typing import cast
+from eth_typing import Address
+from src.common.config import nodeUri, users, chainId
+from src.libs.Web3Client.AvalancheWeb3Client import AvalancheWeb3Client
+from src.libs.Web3Client.Helpers.Debug import printTxInfo
 from pprint import pprint
 
 # VARS
@@ -11,22 +13,22 @@ client = (AvalancheWeb3Client()
     .setChainId(chainId)
     .setMaxPriorityFeePerGasInGwei(2))
 
-to = "0xBc3a38C981B13625FAF7729fF105Cb6E15bdDE3A"
+to = cast(Address, "0xBc3a38C981B13625FAF7729fF105Cb6E15bdDE3A")
 valueInEth = 0.00001 # ETH / AVAX / etc
 
 # TEST FUNCTIONS
-def testBuildTransactionWithValue():
+def testBuildTransactionWithValue() -> None:
     tx = client.buildTransactionWithValue(to, valueInEth)
     print(">>> TX")
     pprint(tx)
 
-def testSignTransaction():
+def testSignTransaction() -> None:
     tx = client.buildTransactionWithValue(to, valueInEth)
     signedTx = client.signTransaction(tx)
     print(">>> SIGNED TX")
     pprint(signedTx)
 
-def testSendSignedTransaction():
+def testSendSignedTransaction() -> None:
     tx = client.buildTransactionWithValue(to, valueInEth)
     signedTx = client.signTransaction(tx)
     txHash = client.sendSignedTransaction(signedTx)
