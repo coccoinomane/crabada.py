@@ -1,3 +1,4 @@
+from sys import argv
 from libs.CrabadaWeb3Client.Tests.helpers import printTxInfo
 from common.config import nodeUri, users, contract, chainId
 from libs.CrabadaWeb3Client.CrabadaWeb3Client import CrabadaWeb3Client
@@ -11,7 +12,7 @@ client = (CrabadaWeb3Client()
     .setChainId(chainId))
 
 # Contract
-gameId = 284549
+gameId = argv[1] or 284549
 
 # TEST FUNCTIONS
 def testCloseGame():

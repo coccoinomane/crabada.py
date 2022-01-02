@@ -1,3 +1,4 @@
 python-dotenv==0.19.2
 requests==2.25.1
 web3==5.25.0
+eth-typing==2.2.2
