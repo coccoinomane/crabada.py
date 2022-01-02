@@ -8,11 +8,11 @@ userAddress = users[0]['address']
 
 # TEST FUNCTIONS
 def testGetAvailableTeams():
-    params = {"limit": 5, "page": 1, "is_team_available": 1}
-    pprint(client.getTeams(userAddress, params=params).json())
+    params = {"is_team_available": 1, "limit": 5, "page": 1}
+    pprint(client.listTeams(userAddress, params=params).json())
 
 def testGetAllTeams():
-    pprint(client.getTeams(userAddress).json())
+    pprint(client.listTeams(userAddress).json())
 
 # EXECUTE
 print(">>> AVAILABLE TEAMS")
