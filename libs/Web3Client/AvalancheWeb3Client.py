@@ -5,6 +5,9 @@ class AvalancheWeb3Client(Web3Client):
     """Client to interact with the Avalanche blockchain and
     its smart contracts."""
 
+    maxPriorityFeePerGasInGwei: int = 2 # TODO: fine tune
+    gasLimit: int = 400000 # sensible value for Avalanche
+
     def setNodeUri(self, nodeUri: str):
         """Inject the POA middleware"""
         super().setNodeUri(nodeUri)

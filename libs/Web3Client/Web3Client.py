@@ -8,12 +8,8 @@ class Web3Client:
     Wrapper of the Web3 library intended to make it easier
     to use."""
 
-    ###################
-    # TO DO: Risky
-    maxPriorityFeePerGasInGwei: int = 2 # in Gwei
-    gasLimit: int = 500000
-    ###################
-    
+    maxPriorityFeePerGasInGwei: int = None
+    gasLimit: int = None    
     contractAddress: str = None
     contractChecksumAddress: str = None
     abi: dict = None # contract's ABI, loaded from abi.json
