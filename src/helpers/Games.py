@@ -2,8 +2,10 @@
 
 from src.common.logger import logger
 from src.common.txLogger import txLogger
+from src.helpers.General import firstOrNone
+from src.helpers.Dates import getPrettySeconds
 from src.helpers.Twilio import sendSms
-from typing import Any
+from typing import Any, List
 from time import time
 
 from web3.types import BlockData
@@ -13,6 +15,14 @@ from eth_typing import Address
 from src.common.types import CrabadaGame
 from src.libs.CrabadaWeb3Client.CrabadaWeb3Client import CrabadaWeb3Client
 from src.libs.Web3Client.Helpers.Debug import printTxInfo
+
+def getNextGameToFinish(games: List[CrabadaGame]) -> CrabadaGame:
+    """Given a list of games, return the game that is open and
+    next to finish; returns None if there are no unfinished games.
+    
+    If a game is already finished, it won't be considered"""
+    unfinishedGames = [ g for g in games if not gameIsFinished(g) ]
+    return firstOrNone(sorted(unfinishedGames, key=lambda g: g['end_time']))
 
 def closeFinishedGames(userAddress: Address) -> int:
     """Close all open games whose end time is due; return
@@ -28,7 +38,11 @@ def closeFinishedGames(userAddress: Address) -> int:
     finishedGames = [ g for g in openGames if gameIsFinished(g) ]
     
     if not finishedGames:
-        logger.info('No games to close for user ' + str(userAddress))
+        message = f'No games to close for user {str(userAddress)}'
+        nextGameToFinish = getNextGameToFinish(openGames)
+        if nextGameToFinish:
+            message += f' (next in {getRemainingTimeFormatted(nextGameToFinish)} seconds)'
+        logger.info(message)
         return 0
     
     for i, g in enumerate(finishedGames):
@@ -73,9 +87,18 @@ def sendAvailableTeamsMining(userAddress: Address) -> int:
 
     return i+1
 
+def getRemainingTime(game: CrabadaGame) -> int:
+    """Seconds to the end of the given game"""
+    return int(game['end_time'] - time())
+
+def getRemainingTimeFormatted(game: CrabadaGame) -> str:
+    """Hours, minutes and seconds to the end of the given
+    game"""
+    return getPrettySeconds(getRemainingTime(game))
+
 def gameIsFinished(game: CrabadaGame) -> bool:
     """Return true if the given game is past its end_time"""
-    return game['end_time'] <= time()
+    return getRemainingTime(game) <= 0
 
 def gameIsClosed(game: CrabadaGame) -> bool:
     """Return true if the given game is closed (meaning the
