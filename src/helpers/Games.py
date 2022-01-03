@@ -15,8 +15,10 @@ from src.libs.Web3Client.Helpers.Debug import printTxInfo
 
 def closeFinishedGames(userAddress: Address) -> int:
     """Close all open games whose end time is due; return
-    the number of closed games"""
+    the number of closed games. Tested only with mining
+    games, not yet with looting games.
 
+    TODO: implement paging"""
     openGames = crabadaWeb2Client.listMines({
         "limit": 200,
         "status": "open",
@@ -31,10 +33,35 @@ def closeFinishedGames(userAddress: Address) -> int:
     for i, g in enumerate(finishedGames):
         gameId = g['game_id']
         logger.info(f'Closing game {gameId}...')
-        txHash = crabadaWeb3Client.closeGame(g['game_id'])
+        txHash = crabadaWeb3Client.closeGame(gameId)
         txLogger.info(txHash)
         tx_receipt = crabadaWeb3Client.w3.eth.wait_for_transaction_receipt(txHash)
         logger.info(f'Game {gameId} closed')
+    
+    return i+1
+
+def sendAvailableTeamsMining(userAddress: Address) -> int:
+    """Send all available teams of crabs to mine; a game will be started
+    for each available team; returns the number of games opened.
+
+    TODO: implement paging"""
+    availableTeams = crabadaWeb2Client.listTeams(userAddress, {
+        "is_team_available": 1,
+        "limit": 200,
+        "page": 1})
+
+    if not availableTeams:
+        logger.info('No teams to send for user ' + str(userAddress))
+        return 0
+
+    for i, t in enumerate(availableTeams):
+        teamId = t['team_id']
+        logger.info(f'Sending team {teamId} to mine...')
+        txHash = crabadaWeb3Client.startGame(teamId)
+        txLogger.info(txHash)
+        tx_receipt = crabadaWeb3Client.w3.eth.wait_for_transaction_receipt(txHash)
+        logger.info(f'Team {teamId} sent')
+        # TODO: log the game that was created
     
     return i+1
 

@@ -53,6 +53,7 @@ class CrabadaGame(TypedDict):
     process: List[CrabadaGameProcess]
 
 class CrabadaTeam(TypedDict):
+    team_id: int
     battle_point: int
     crabada_1_armor: int
     crabada_1_class: int
@@ -103,5 +104,4 @@ class CrabadaTeam(TypedDict):
     process_status: Literal['create-game', 'attack', 'reinforce-defence', 'reinforce-attack', 'settle']
     # Not sure LOOTING is an actual status...
     status: Literal['MINING', 'LOOTING']
-    team_id: int
     time_point: int
