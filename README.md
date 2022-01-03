@@ -29,6 +29,7 @@ For a list of endpoints, see the [Postman collection](https://go.postman.co/work
 * Write closeGame script
 * Use cron library to schedule scripts
 * Write reinforcement script
+* Stop if wallet has less than X ETH
 * In AVAX should we be using eth_baseFee and eth_maxPriorityFeePerGas? (https://docs.avax.network/learn/platform-overview/transaction-fees/)
 
 # Done

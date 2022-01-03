@@ -9,7 +9,7 @@ def printTxInfo(client: Web3Client, txHash: HexStr) -> None:
     print(">>> TX SENT!")
     print("Hash = " + txHash)
     print("Waiting for transaction to finalize...")
-    tx_receipt = client.w3.eth.wait_for_transaction_receipt(txHash)
+    tx_receipt = client.getTransactionReceipt(txHash)
     print(">>> TX IS ON THE BLOCKCHAIN :-)")
     pprint(tx_receipt)
     print(">>> ETH SPENT")

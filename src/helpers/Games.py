@@ -30,13 +30,16 @@ def closeFinishedGames(userAddress: Address) -> int:
     games, not yet with looting games.
 
     TODO: implement paging"""
+    
+    # Get open games and the filter only those where
+    # the reward has yet to be claimed
     openGames = crabadaWeb2Client.listMines({
         "limit": 200,
         "status": "open",
         "user_address": userAddress})
-    
     finishedGames = [ g for g in openGames if gameIsFinished(g) ]
     
+    # Print a useful message in case there aren't finished games 
     if not finishedGames:
         message = f'No games to close for user {str(userAddress)}'
         nextGameToFinish = getNextGameToFinish(openGames)
@@ -44,13 +47,14 @@ def closeFinishedGames(userAddress: Address) -> int:
             message += f' (next in {getRemainingTimeFormatted(nextGameToFinish)})'
         logger.info(message)
         return 0
-    
+
+    # Close the finished games
     for i, g in enumerate(finishedGames):
         gameId = g['game_id']
         logger.info(f'Closing game {gameId}...')
         txHash = crabadaWeb3Client.closeGame(gameId)
         txLogger.info(txHash)
-        tx_receipt = crabadaWeb3Client.w3.eth.wait_for_transaction_receipt(txHash)
+        tx_receipt = crabadaWeb3Client.getTransactionReceipt(txHash)
         logger.info(f'Game {gameId} closed')
         if tx_receipt['status'] != 1:
             sendSms(f'Crabada: ERROR closing > {txHash}')
@@ -76,7 +80,7 @@ def sendAvailableTeamsMining(userAddress: Address) -> int:
         logger.info(f'Sending team {teamId} to mine...')
         txHash = crabadaWeb3Client.startGame(teamId)
         txLogger.info(txHash)
-        tx_receipt = crabadaWeb3Client.w3.eth.wait_for_transaction_receipt(txHash)
+        tx_receipt = crabadaWeb3Client.getTransactionReceipt(txHash)
         txLogger.debug(tx_receipt)
         logger.info(f'Team {teamId} sent')
         # TODO: log the game that was created

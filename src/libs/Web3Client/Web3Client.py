@@ -5,7 +5,7 @@ from eth_typing import Address
 from web3 import Web3
 from eth_account.datastructures import SignedTransaction
 from web3.contract import Contract, ContractFunction
-from web3.types import Nonce, TxParams
+from web3.types import Nonce, TxParams, TxReceipt
 from eth_typing.encoding import HexStr
 
 class Web3Client:
@@ -28,18 +28,8 @@ class Web3Client:
     chainId: int = None
 
     ####################
-    # Tx
+    # Build Tx
     ####################
-
-    def signAndSendTransaction(self, tx: TxParams) -> HexStr:
-        signedTx = self.signTransaction(tx)
-        return self.sendSignedTransaction(signedTx)
-
-    def signTransaction(self, tx: TxParams) -> SignedTransaction:
-        """Sign the give transaction; the private key must have
-        been set with setCredential().
-        """
-        return self.w3.eth.account.sign_transaction(tx, self.privateKey)
 
     def buildBaseTransaction(self) -> TxParams:
         """Build a basic EIP-1559 transaction with just nonce, chain ID and gas;
@@ -72,10 +62,34 @@ class Web3Client:
         baseTx = self.buildBaseTransaction()
         return contractFunction.buildTransaction(baseTx)
 
+    ####################
+    # Sign & send Tx
+    ####################
+
+    def signTransaction(self, tx: TxParams) -> SignedTransaction:
+        """Sign the give transaction; the private key must have
+        been set with setCredential().
+        """
+        return self.w3.eth.account.sign_transaction(tx, self.privateKey)
+
     def sendSignedTransaction(self, signedTx: SignedTransaction) -> HexStr:
         """Send a signed transaction and return the tx hash"""
         tx_hash = self.w3.eth.send_raw_transaction(signedTx.rawTransaction)
         return self.w3.toHex(tx_hash)
+
+    def signAndSendTransaction(self, tx: TxParams) -> HexStr:
+        """Sign a transaction and send it"""
+        signedTx = self.signTransaction(tx)
+        return self.sendSignedTransaction(signedTx)
+    
+    def getTransactionReceipt(self, txHash: HexStr) -> TxReceipt:
+        """Given a transaction, wait for the blockchain to confirm
+        it and return the tx receipt."""
+        return self.w3.eth.wait_for_transaction_receipt(txHash)
+
+    ####################
+    # Utils
+    ####################
 
     def getNonce(self) -> Nonce:
         return self.w3.eth.get_transaction_count(self.userAddress)
