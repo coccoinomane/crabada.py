@@ -4,4 +4,4 @@ def getPrettySeconds(s: int) -> str:
     https://stackoverflow.com/a/775075/2972183"""
     m, s = divmod(s, 60)
     h, m = divmod(m, 60)
-    return f'{h:d}h:{m:02d}m:{s:02d}'
+    return f'{h:d}h:{m:02d}m:{s:02d}s'

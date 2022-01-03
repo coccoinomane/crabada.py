@@ -41,7 +41,7 @@ def closeFinishedGames(userAddress: Address) -> int:
         message = f'No games to close for user {str(userAddress)}'
         nextGameToFinish = getNextGameToFinish(openGames)
         if nextGameToFinish:
-            message += f' (next in {getRemainingTimeFormatted(nextGameToFinish)} seconds)'
+            message += f' (next in {getRemainingTimeFormatted(nextGameToFinish)})'
         logger.info(message)
         return 0
     
