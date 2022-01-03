@@ -2,6 +2,7 @@
 
 from src.common.logger import logger
 from src.common.txLogger import txLogger
+from src.helpers.Twilio import sendSms
 from typing import Any
 from time import time
 
@@ -37,6 +38,8 @@ def closeFinishedGames(userAddress: Address) -> int:
         txLogger.info(txHash)
         tx_receipt = crabadaWeb3Client.w3.eth.wait_for_transaction_receipt(txHash)
         logger.info(f'Game {gameId} closed')
+        if tx_receipt['status'] != 1:
+            sendSms(f'Crabada: ERROR closing > {txHash}')
     
     return i+1
 
@@ -60,9 +63,14 @@ def sendAvailableTeamsMining(userAddress: Address) -> int:
         txHash = crabadaWeb3Client.startGame(teamId)
         txLogger.info(txHash)
         tx_receipt = crabadaWeb3Client.w3.eth.wait_for_transaction_receipt(txHash)
+        txLogger.debug(tx_receipt)
         logger.info(f'Team {teamId} sent')
         # TODO: log the game that was created
-    
+        if tx_receipt['status'] != 1:
+            sendSms(f'Crabada: ERROR sending > {txHash}')
+        else:
+            sendSms(f'Crabada: Team sent > {txHash}')
+
     return i+1
 
 def gameIsFinished(game: CrabadaGame) -> bool:

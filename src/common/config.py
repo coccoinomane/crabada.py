@@ -38,3 +38,11 @@ chainId = int(getenv('CHAIN_ID'))
 # GAS
 defaultGas = getenv('DEFAULT_GAS', '200000') # units
 defaultGasPrice = getenv('DEFAULT_GAS_PRICE', '25') # gwei
+
+# TWILIO
+twilio = {
+    "accountSid": getenv('TWILIO_ACCOUNT_SID'),
+    "authToken": getenv('TWILIO_AUTH_TOKEN'),
+    "from": getenv('TWILIO_FROM_NUMBER'),
+    "to": getenv('TWILIO_TO_NUMBERS'),
+}
