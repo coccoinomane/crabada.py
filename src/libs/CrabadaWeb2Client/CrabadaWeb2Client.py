@@ -3,7 +3,7 @@ from typing import Any, List, Tuple
 from eth_typing import Address
 import requests
 
-from src.common.types import CrabadaGame, CrabadaTeam
+from src.libs.CrabadaWeb2Client.types import CrabForLending, Game, Team
 
 class CrabadaWeb2Client:
     """Access the HTTP endpoints of the Crabada P2E game.
@@ -15,7 +15,7 @@ class CrabadaWeb2Client:
 
     baseUri = 'https://idle-api.crabada.com/public/idle'
 
-    def getMine(self, mineId: int, params: dict[str, Any] = {}) -> CrabadaGame:
+    def getMine(self, mineId: int, params: dict[str, Any] = {}) -> Game:
         """Get information from the given mine"""
         res = self.getMine_Raw(mineId, params)
         return res['result']
@@ -24,7 +24,7 @@ class CrabadaWeb2Client:
         url = self.baseUri + '/mine/' + str(mineId)
         return requests.request("GET", url, params=params).json()
 
-    def listMines(self, params: dict[str, Any] = {}) -> List[CrabadaGame]:
+    def listMines(self, params: dict[str, Any] = {}) -> List[Game]:
         """Get all mines.
         
         If you want only the open mines, pass status=open in the params.
@@ -45,7 +45,7 @@ class CrabadaWeb2Client:
         actualParams = defaultParams | params
         return requests.request("GET", url, params=actualParams).json()
 
-    def listTeams(self, userAddress: Address, params: dict[str, Any] = {}) -> List[CrabadaTeam]:
+    def listTeams(self, userAddress: Address, params: dict[str, Any] = {}) -> List[Team]:
         """Get all teams of a given user address.
         
         If you want only the available teams, pass is_team_available=1
@@ -69,7 +69,7 @@ class CrabadaWeb2Client:
         actualParams['user_address'] = userAddress
         return requests.request("GET", url, params=actualParams).json()
 
-    def listCrabsForLending(self, params: dict[str, Any] = {}) -> Any:
+    def listCrabsForLending(self, params: dict[str, Any] = {}) -> List[CrabForLending]:
         """Get all crabs available for lending as reinforcements; you can use
         sortBy and sort parameters, default is orderBy": 'price' and
         "order": 'asc'"""
@@ -88,4 +88,4 @@ class CrabadaWeb2Client:
             "order": 'asc',
         }
         actualParams = defaultParams | params
-        return requests.request("GET", url, params=actualParams).json()
+        return requests.request("GET", url, params=actualParams).json() # type: ignore

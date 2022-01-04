@@ -5,18 +5,15 @@ from src.common.txLogger import txLogger
 from src.helpers.General import firstOrNone
 from src.helpers.Dates import getPrettySeconds
 from src.helpers.Twilio import sendSms
-from typing import Any, List
+from typing import List
 from time import time
 
-from web3.types import BlockData
 from src.common.clients import crabadaWeb2Client, crabadaWeb3Client
 from eth_typing import Address
 
-from src.common.types import CrabadaGame
-from src.libs.CrabadaWeb3Client.CrabadaWeb3Client import CrabadaWeb3Client
-from src.libs.Web3Client.Helpers.Debug import printTxInfo
+from src.libs.CrabadaWeb2Client.types import Game
 
-def getNextGameToFinish(games: List[CrabadaGame]) -> CrabadaGame:
+def getNextGameToFinish(games: List[Game]) -> Game:
     """Given a list of games, return the game that is open and
     next to finish; returns None if there are no unfinished games.
     
@@ -91,20 +88,20 @@ def sendAvailableTeamsMining(userAddress: Address) -> int:
 
     return i+1
 
-def getRemainingTime(game: CrabadaGame) -> int:
+def getRemainingTime(game: Game) -> int:
     """Seconds to the end of the given game"""
     return int(game['end_time'] - time())
 
-def getRemainingTimeFormatted(game: CrabadaGame) -> str:
+def getRemainingTimeFormatted(game: Game) -> str:
     """Hours, minutes and seconds to the end of the given
     game"""
     return getPrettySeconds(getRemainingTime(game))
 
-def gameIsFinished(game: CrabadaGame) -> bool:
+def gameIsFinished(game: Game) -> bool:
     """Return true if the given game is past its end_time"""
     return getRemainingTime(game) <= 0
 
-def gameIsClosed(game: CrabadaGame) -> bool:
+def gameIsClosed(game: Game) -> bool:
     """Return true if the given game is closed (meaning the
     reward has been claimed"""
     crabadaWeb2Client.getMine(game['game_id'])
