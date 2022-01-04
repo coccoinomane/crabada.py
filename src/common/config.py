@@ -35,14 +35,21 @@ contract: ConfigContract = {
 nodeUri = getenv('WEB3_NODE_URI')
 chainId = int(getenv('CHAIN_ID'))
 
-# GAS
+# Gas
 defaultGas = getenv('DEFAULT_GAS', '200000') # units
 defaultGasPrice = getenv('DEFAULT_GAS_PRICE', '25') # gwei
 
-# TWILIO
+# Twilio
 twilio = {
     "accountSid": getenv('TWILIO_ACCOUNT_SID'),
     "authToken": getenv('TWILIO_AUTH_TOKEN'),
-    "from": getenv('TWILIO_FROM_NUMBER'),
-    "to": getenv('TWILIO_TO_NUMBERS'),
+}
+
+# Notifications
+notifications = {
+    "sms": {
+        "enable": True if "1" == str(getenv('NOTIFICATION_SMS', '0')) else False,
+        "from": getenv('NOTIFICATION_SMS_FROM'),
+        "to": getenv('NOTIFICATION_SMS_TO'),
+    }
 }

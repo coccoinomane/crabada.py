@@ -4,7 +4,7 @@ from src.common.logger import logger
 from src.common.txLogger import txLogger
 from src.helpers.General import firstOrNone
 from src.helpers.Dates import getPrettySeconds
-from src.helpers.Twilio import sendSms
+from src.helpers.Sms import sendSms
 from typing import List
 from time import time
 
