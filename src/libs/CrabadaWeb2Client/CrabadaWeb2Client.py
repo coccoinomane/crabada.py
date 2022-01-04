@@ -2,6 +2,7 @@
 from typing import Any, List, Tuple
 from eth_typing import Address
 import requests
+from src.helpers.General import firstOrNone
 
 from src.libs.CrabadaWeb2Client.types import CrabForLending, Game, Team
 
@@ -35,6 +36,13 @@ class CrabadaWeb2Client:
             return res['result']['data'] or []
         except:
             return []
+    
+    def listMyOpenMines(self, userAddress: Address, params: dict[str, Any] = {}) -> List[Game]:
+        """Get all mines that belong to the given user address
+        and that are open"""
+        params['user_address'] = userAddress
+        params['status'] = 'open'
+        return self.listMines(params)
 
     def listMines_Raw(self, params: dict[str, Any] = {}) -> Any:
         url = self.baseUri + '/mines'
@@ -72,12 +80,24 @@ class CrabadaWeb2Client:
     def listCrabsForLending(self, params: dict[str, Any] = {}) -> List[CrabForLending]:
         """Get all crabs available for lending as reinforcements; you can use
         sortBy and sort parameters, default is orderBy": 'price' and
-        "order": 'asc'"""
+        "order": 'asc'
+        
+        IMPORTANT: The price is expressed as the TUS price multiplied by
+        10^18 (like with Weis), which means that price=100000000000000000
+        (18 zeros) is just 1 TUS"""
         res = self.listCrabsForLending_Raw(params)
         try:
             return res['result']['data'] or []
         except:
             return []
+
+    def getCheapestCrabForLending(self, params: dict[str, Any] = {}) -> CrabForLending:
+        """Return the cheapest crab on the market available for lending,
+        or None if no crab is found"""
+        params["limit"] = 1
+        params["orderBy"] = 'price'
+        params["order"] = 'asc'
+        return firstOrNone(self.listCrabsForLending(params))
 
     def listCrabsForLending_Raw(self, params: dict[str, Any] = {}) -> Any:
         url = self.baseUri + '/crabadas/lending'

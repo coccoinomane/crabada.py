@@ -1,4 +1,4 @@
-from web3.types import TxParams
+from web3.types import TxParams, Wei
 from src.libs.Web3Client.AvalancheWeb3Client import AvalancheWeb3Client
 from eth_typing.encoding import HexStr
 
@@ -21,4 +21,11 @@ class CrabadaWeb3Client(AvalancheWeb3Client):
     def closeGame(self, gameId: int) -> HexStr:
         """Claim reward & send crabs back home"""
         tx: TxParams = self.buildContractTransaction(self.contract.functions.closeGame(gameId))
+        return self.signAndSendTransaction(tx)
+
+    def reinforceDefense(self, gameId: int, crabadaId: int, borrowPrice: Wei) -> HexStr:
+        """Hire a crab from the tavern; the price must be expressed in
+        units of 1e-18 TUS. This means that price=1000000000000000000
+        is just 1 TUS"""
+        tx: TxParams = self.buildContractTransaction(self.contract.functions.reinforceDefense(gameId, crabadaId, borrowPrice))
         return self.signAndSendTransaction(tx)

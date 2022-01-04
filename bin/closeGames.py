@@ -13,7 +13,7 @@ from src.helpers.Games import closeFinishedGames
 from src.helpers.General import secondOrNone
 from src.helpers.Users import isRegistered
 from src.common.logger import logger
-from sys import argv, exit
+from sys import argv
 
 userAddress = secondOrNone(argv)
 

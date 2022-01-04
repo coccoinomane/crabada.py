@@ -1,3 +1,4 @@
+from web3 import Web3
 from src.common.types import ConfigContract, ConfigTeam, ConfigUser
 from .dotenv import getenv
 import os
@@ -21,6 +22,7 @@ users: List[ConfigUser] = [
         'name': getenv('USER_1_NAME'),
         'address': cast(Address, getenv('USER_1_ADDRESS')),
         'privateKey': getenv('USER_1_PRIVATE_KEY'),
+        'maxPriceToReinforceInTusWei': Web3.toWei(int(getenv('USER_1_MAX_PRICE_TO_REINFORCE') or "0"), 'ether'), # in TUS wei
         'teams': [ t for t in teams if t['userAddress'] == cast(Address, getenv('USER_1_ADDRESS')) ]
     },
 ]

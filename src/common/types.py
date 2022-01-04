@@ -1,5 +1,6 @@
 from typing import Literal, TypedDict, List
 from eth_typing import Address
+from web3.types import Wei
 
 class ConfigTeam(TypedDict):
     id: int
@@ -9,6 +10,7 @@ class ConfigUser(TypedDict):
     name: str
     address: Address
     privateKey: str
+    maxPriceToReinforceInTusWei: Wei
     teams: List[ConfigTeam]
 
 class ConfigContract(TypedDict):

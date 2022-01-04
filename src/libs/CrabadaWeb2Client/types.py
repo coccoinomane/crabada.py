@@ -1,5 +1,6 @@
 from typing import Literal, TypedDict, List
 from eth_typing import Address
+from web3.types import Wei
 
 class GameProcess(TypedDict):
     action: Literal['create-game', 'attack', 'reinforce-defence', 'reinforce-attack', 'settle']
@@ -95,7 +96,7 @@ class Team(TypedDict):
 class CrabForLending(TypedDict):
     crabada_id: int
     id: int # it seems to be the same as crabada_id...
-    price: int
+    price: Wei # IMPORTANT: this is expressed as the TUS price multiplied by 10^18 (like Wei), which means that a value of 100000000000000000 is 1 TUS
     crabada_name: str
     lender: Address
     is_being_borrowed: Literal[0, 1]
