@@ -9,13 +9,10 @@ Author:
     @coccoinomane (Twitter)
 """
 
-from eth_typing.evm import Address
 from src.helpers.Games import closeFinishedGames
-from src.common.config import users
 from src.helpers.General import secondOrNone
 from src.helpers.Users import isRegistered
 from src.common.logger import logger
-from typing import cast
 from sys import argv, exit
 
 userAddress = secondOrNone(argv)
