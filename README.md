@@ -26,6 +26,7 @@ For a list of endpoints, see the [Postman collection](https://go.postman.co/work
 
 # To do
 
+* Allow to specify contract and ABI ovverriding props
 * Use cron library to schedule scripts
 * Write reinforcement script
 * Validate config values from .env

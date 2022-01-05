@@ -1,6 +1,6 @@
 from sys import argv
 from typing import cast
-from src.helpers.Reinforce import isTooExpensiveForUser
+from src.helpers.Reinforce import isTooExpensiveForUser, minerCanReinforce
 from src.libs.Web3Client.Helpers.Debug import printTxInfo
 from src.common.config import nodeUri, users, contract, chainId
 from src.libs.CrabadaWeb3Client.CrabadaWeb3Client import CrabadaWeb3Client
@@ -50,4 +50,9 @@ def testReinforceDefense() -> None:
 
 # EXECUTE
 printGameInfo()
+
+if not minerCanReinforce(openMines[0]):
+    print(f'Miner cannot reinforce right now')
+    exit(0)
+
 testReinforceDefense()

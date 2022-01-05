@@ -6,6 +6,15 @@ class GameProcess(TypedDict):
     action: Literal['create-game', 'attack', 'reinforce-defence', 'reinforce-attack', 'settle']
     transaction_time: int
 
+class TeamInfo(TypedDict):
+    crabada_id: int
+    photo: str
+    hp: int
+    speed: int
+    armor: int
+    damage: int
+    critical: int
+
 class Game(TypedDict):
     game_id: int
     winner_team_id: int
@@ -38,6 +47,8 @@ class Game(TypedDict):
     end_time: int
     round: Literal[0,1,2,3,4]
     process: List[GameProcess]
+    attack_team_info: List[TeamInfo]
+    defense_team_info: List[TeamInfo]
 
 class Team(TypedDict):
     team_id: int

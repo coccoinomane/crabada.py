@@ -1,15 +1,18 @@
 """Helper functions to handle Crabada games"""
 
+from web3.main import Web3
 from src.common.logger import logger
 from src.common.txLogger import txLogger
 from src.helpers.General import firstOrNone
 from src.helpers.Dates import getPrettySeconds
+from src.helpers.Reinforce import isTooExpensiveForUser, minerCanReinforce
 from src.helpers.Sms import sendSms
 from typing import List
 from time import time
 
 from src.common.clients import crabadaWeb2Client, crabadaWeb3Client
 from eth_typing import Address
+from src.helpers.Users import getUserConfig
 
 from src.libs.CrabadaWeb2Client.types import Game
 
@@ -45,8 +48,10 @@ def closeFinishedGames(userAddress: Address) -> int:
         logger.info(message)
         return 0
 
+    nClosedGames = 0
+
     # Close the finished games
-    for i, g in enumerate(finishedGames):
+    for g in finishedGames:
         gameId = g['game_id']
         logger.info(f'Closing game {gameId}...')
         txHash = crabadaWeb3Client.closeGame(gameId)
@@ -54,9 +59,13 @@ def closeFinishedGames(userAddress: Address) -> int:
         tx_receipt = crabadaWeb3Client.getTransactionReceipt(txHash)
         logger.info(f'Game {gameId} closed')
         if tx_receipt['status'] != 1:
+            logger.error(f'Error closing game {gameId}')
             sendSms(f'Crabada: ERROR closing > {txHash}')
+        else:
+            nClosedGames += 1
+            logger.info(f'Game {gameId} closed correctly')
     
-    return i+1
+    return nClosedGames
 
 def sendAvailableTeamsMining(userAddress: Address) -> int:
     """Send all available teams of crabs to mine; a game will be started
@@ -72,21 +81,70 @@ def sendAvailableTeamsMining(userAddress: Address) -> int:
         logger.info('No teams to send for user ' + str(userAddress))
         return 0
 
-    for i, t in enumerate(availableTeams):
+    # Send the teams
+    nSentTeams = 0
+    for t in availableTeams:
         teamId = t['team_id']
         logger.info(f'Sending team {teamId} to mine...')
         txHash = crabadaWeb3Client.startGame(teamId)
         txLogger.info(txHash)
         tx_receipt = crabadaWeb3Client.getTransactionReceipt(txHash)
         txLogger.debug(tx_receipt)
-        logger.info(f'Team {teamId} sent')
         # TODO: log the game that was created
         if tx_receipt['status'] != 1:
             sendSms(f'Crabada: ERROR sending > {txHash}')
+            logger.error(f'Error sending team {teamId}')
         else:
-            sendSms(f'Crabada: Team sent > {txHash}')
+            nSentTeams += 1
+            logger.info(f'Team {teamId} sent succesfully')
 
-    return i+1
+    return nSentTeams
+
+def reinforceWhereNeeded(userAddress: Address) -> int:
+    """Check if any of the mining teams of the user can be
+    reinforced, and do so if this is the case; return the
+    number of borrowed reinforcements
+    
+    TODO: implement paging
+    TODO: implement lending strategies other than cheapest crab"""
+    
+    user = getUserConfig(userAddress)
+    openMines = crabadaWeb2Client.listMyOpenMines(userAddress)
+    reinforceableMines = [ m for m in openMines if minerCanReinforce(m) ]
+    if not reinforceableMines:
+        logger.info('No mines to reinforce for user ' + str(userAddress))
+        return 0
+    
+    # Reinforce the mines
+    nBorrowedReinforments = 0
+    for mine in reinforceableMines:
+
+        # Find best reinforcement crab to borrow
+        mineId = mine['game_id']
+        reinforcementCrab = crabadaWeb2Client.getCheapestCrabForLending()
+        crabId = reinforcementCrab['crabada_id']
+        if not reinforcementCrab:
+            logger.warning(f"Could not find a crab to lend for mine {mineId}")
+            continue
+        price = reinforcementCrab['price']
+        if isTooExpensiveForUser(price, userAddress):
+            logger.warning(f"Price of crab is {Web3.fromWei(price, 'ether')} TUS which exceeds the user limit of {Web3.fromWei(user['maxPriceToReinforceInTusWei'], 'ether')}")
+            continue
+        logger.info(f"Borrowing crab {crabId} for mine {mineId} at {Web3.fromWei(price, 'ether')} TUS...")
+
+        # Borrow the crab
+        txHash = crabadaWeb3Client.reinforceDefense(mineId, crabId, price)
+        txLogger.info(txHash)
+        tx_receipt = crabadaWeb3Client.getTransactionReceipt(txHash)
+        txLogger.debug(tx_receipt)
+        if tx_receipt['status'] != 1:
+            sendSms(f'Crabada: ERROR reinforcing > {txHash}')
+            logger.error(f'Error reiforcing mine {mineId}')
+        else:
+            nBorrowedReinforments += 1
+            logger.info(f"Mine {mineId} reinforced correctly")
+            
+    return nBorrowedReinforments
 
 def getRemainingTime(game: Game) -> int:
     """Seconds to the end of the given game"""
