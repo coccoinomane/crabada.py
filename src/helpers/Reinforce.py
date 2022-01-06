@@ -20,7 +20,7 @@ def minerCanReinforce(mine: Game) -> bool:
     """Return True if, in the given game, the miner (the defense) can
     reinforce at this moment"""
     return (
-        mine['winner_team_id'] is not None
+        mine['winner_team_id'] is None
         and mine['attack_point'] > 0
         and mine['status'] == 'open'
         and (mine['round'] == 0 or mine['round'] == 2)
