@@ -2,7 +2,7 @@
 from typing import Any, List, Tuple
 from eth_typing import Address
 import requests
-from src.helpers.General import firstOrNone
+from src.helpers.General import firstOrNone, secondOrNone
 
 from src.libs.CrabadaWeb2Client.types import CrabForLending, Game, Team
 
@@ -98,6 +98,14 @@ class CrabadaWeb2Client:
         params["orderBy"] = 'price'
         params["order"] = 'asc'
         return firstOrNone(self.listCrabsForLending(params))
+
+    def getSecondCheapestCrabForLending(self, params: dict[str, Any] = {}) -> CrabForLending:
+        """Return the second cheapest crab on the market available for lending,
+        or None if no crab is found"""
+        params["limit"] = 2
+        params["orderBy"] = 'price'
+        params["order"] = 'asc'
+        return secondOrNone(self.listCrabsForLending(params))
 
     def listCrabsForLending_Raw(self, params: dict[str, Any] = {}) -> Any:
         url = self.baseUri + '/crabadas/lending'

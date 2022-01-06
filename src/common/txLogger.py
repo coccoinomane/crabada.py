@@ -6,6 +6,10 @@ in addition to the standard handlers specified in logger.py"""
 
 import logging
 import logging.handlers
+
+from eth_typing.encoding import HexStr
+from web3.main import Web3
+from web3.types import TxReceipt
 from src.common.logger import f_handler, c_handler
 
 # Create a custom logger
@@ -24,3 +28,10 @@ tx_handler.setFormatter(tx_format)
 txLogger.addHandler(tx_handler)
 txLogger.addHandler(f_handler)
 txLogger.addHandler(c_handler)
+
+def logTx(txReceipt: TxReceipt) -> None:
+    """Given a tx receipt, print to screen the transaction details
+    and its cost"""
+    txLogger.debug(txReceipt)
+    ethSpent = Web3.fromWei(txReceipt['effectiveGasPrice']*txReceipt['gasUsed'], 'ether')
+    txLogger.debug('Spent ' + str(ethSpent) + ' ETH')
