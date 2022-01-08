@@ -45,7 +45,7 @@ def minerCanReinforceForTheFirstTime(mine: Game) -> bool:
     reinforce at this moment for the first time"""
     return (
         mine['winner_team_id'] is None
-        and mine['attack_point'] > 0
+        and mine.get('attack_point', -1) > 0
         and mine['status'] == 'open'
         and mine['round'] == 0
     )
@@ -55,7 +55,7 @@ def minerCanReinforceForTheSecondTime(mine: Game) -> bool:
     reinforce at this moment for the second time"""
     return (
         mine['winner_team_id'] is None
-        and mine['attack_point'] > 0
+        and mine.get('attack_point', -1) > 0
         and mine['status'] == 'open'
         and mine['round'] == 2
     )

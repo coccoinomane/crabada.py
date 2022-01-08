@@ -17,6 +17,7 @@ from src.helpers.Users import getUserConfig
 
 from src.libs.CrabadaWeb2Client.types import Game
 from src.strategies.mining.CheapestCrabStrategy import CheapestCrabStrategy
+from src.strategies.mining.HighestMpStrategy import HighestMpStrategy
 
 def getNextGameToFinish(games: List[Game]) -> Game:
     """Given a list of games, return the game that is open and
@@ -125,7 +126,7 @@ def reinforceWhereNeeded(userAddress: Address) -> int:
 
         # Find best reinforcement crab to borrow
         maxPrice = getUserConfig(userAddress).get('maxPriceToReinforceInTus')
-        strategy = CheapestCrabStrategy(mine, crabadaWeb2Client, strict=False, maxPrice=maxPrice)
+        strategy = HighestMpStrategy(mine, crabadaWeb2Client, strict=False, maxPrice=maxPrice)
         try:
             reinforcementCrab = strategy.getCrab()
         except CrabBorrowPriceTooHigh:

@@ -22,8 +22,8 @@ class ReinforceStrategy(Strategy):
     list2: List[CrabForLending] = []
 
     def __init__(self, game: Game, web2Client: CrabadaWeb2Client, strict: bool = False,
-                 maxPrice = 50,
-                 maxPrice2 = None
+                 maxPrice: Tus = 50,
+                 maxPrice2: Tus = None
                  ) -> None:
         super().__init__(game, web2Client, strict=strict)
         self.maxPrice1 = maxPrice
