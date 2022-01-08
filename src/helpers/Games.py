@@ -125,7 +125,7 @@ def reinforceWhereNeeded(userAddress: Address) -> int:
 
         # Find best reinforcement crab to borrow
         maxPrice = getUserConfig(userAddress).get('maxPriceToReinforceInTus')
-        strategy = CheapestCrabStrategy(mine, crabadaWeb2Client, strict=False, maxPrice1=maxPrice, maxPrice2=maxPrice)
+        strategy = CheapestCrabStrategy(mine, crabadaWeb2Client, strict=False, maxPrice=maxPrice)
         try:
             reinforcementCrab = strategy.getCrab()
         except CrabBorrowPriceTooHigh:

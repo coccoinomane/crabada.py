@@ -22,12 +22,15 @@ class ReinforceStrategy(Strategy):
     list2: List[CrabForLending] = []
 
     def __init__(self, game: Game, web2Client: CrabadaWeb2Client, strict: bool = False,
-                 maxPrice1 = 50,
-                 maxPrice2 = 50
+                 maxPrice = 50,
+                 maxPrice2 = None
                  ) -> None:
         super().__init__(game, web2Client, strict=strict)
-        self.maxPrice1 = maxPrice1
-        self.maxPrice2 = maxPrice2
+        self.maxPrice1 = maxPrice
+        if not maxPrice2:
+            self.maxPrice2 = self.maxPrice1
+        else:
+            self.maxPrice2 = maxPrice2
 
     @staticmethod
     def isApplicable(game: Game) -> Tuple[bool, str]:
@@ -41,22 +44,20 @@ class ReinforceStrategy(Strategy):
         )
 
     @abstractmethod
-    def query1(self, game: Game) -> List[CrabForLending]:
+    def query(self, game: Game) -> List[CrabForLending]:
         """
         Query to get the list of the available crabs for lending,
-        from which we will choose the the first reinforcement
+        from which we will choose the reinforcement.
         """
         pass
 
-    @abstractmethod
     def query2(self, game: Game) -> List[CrabForLending]:
         """
-        Query to get the list of the available crabs for lending,
-        from which we will choose the the second reinforcement
+        Optionally specify a separate query for the second reinforcement
         """
-        pass
+        return self.query(game)
 
-    def crab1(self, game: Game, list: List[CrabForLending]) -> CrabForLending:
+    def crab(self, game: Game, list: List[CrabForLending]) -> CrabForLending:
         """
         Strategy to pick the first reinforcement crab from the list of
         available crabs; by default simply pick the first of the list.
@@ -65,10 +66,9 @@ class ReinforceStrategy(Strategy):
 
     def crab2(self, game: Game, list: List[CrabForLending]) -> CrabForLending:
         """
-        Strategy to pick the second reinforcement crab from the list of
-        available crabs; by default simply pick the first of the list.
+        Optionally specify a separate strategy for the second crab
         """
-        return firstOrNone(list)
+        return self.crab(game, list)
 
     def getCrab(self) -> CrabForLending:
         """
@@ -97,8 +97,8 @@ class ReinforceStrategy(Strategy):
         Fetch and return a reinforcement crab using the strategy set in
         query1() and crab1(). If no crab can be found, return None.
         """
-        self.list1 = self.web2Client.listCrabsForLending(self.query1(self.game))
-        crab = self.crab1(self.game, self.list1)
+        self.list1 = self.web2Client.listCrabsForLending(self.query(self.game))
+        crab = self.crab(self.game, self.list1)
         self.raiseIfPriceTooHigh(crab, self.maxPrice1)
         return crab
 
