@@ -19,9 +19,24 @@ def isTooExpensiveForUser(price: Wei, userAddress: Address) -> bool:
 def minerCanReinforce(mine: Game) -> bool:
     """Return True if, in the given game, the miner (the defense) can
     reinforce at this moment"""
+    return minerCanReinforce1(mine) or minerCanReinforce2(mine)
+
+def minerCanReinforce1(mine: Game) -> bool:
+    """Return True if, in the given game, the miner (the defense) can
+    reinforce at this moment for the first time"""
     return (
         mine['winner_team_id'] is None
         and mine['attack_point'] > 0
         and mine['status'] == 'open'
-        and (mine['round'] == 0 or mine['round'] == 2)
+        and mine['round'] == 0
+    )
+
+def minerCanReinforce2(mine: Game) -> bool:
+    """Return True if, in the given game, the miner (the defense) can
+    reinforce at this moment for the second time"""
+    return (
+        mine['winner_team_id'] is None
+        and mine['attack_point'] > 0
+        and mine['status'] == 'open'
+        and mine['round'] == 2
     )
