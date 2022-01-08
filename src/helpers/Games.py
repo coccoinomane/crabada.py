@@ -1,6 +1,7 @@
 """Helper functions to handle Crabada games"""
 
 from web3.main import Web3
+from src.common.exceptions import CrabBorrowPriceTooHigh
 from src.common.logger import logger
 from src.common.txLogger import txLogger, logTx
 from src.helpers.General import firstOrNone
@@ -15,6 +16,7 @@ from eth_typing import Address
 from src.helpers.Users import getUserConfig
 
 from src.libs.CrabadaWeb2Client.types import Game
+from src.strategies.mining.CheapestCrabStrategy import CheapestCrabStrategy
 
 def getNextGameToFinish(games: List[Game]) -> Game:
     """Given a list of games, return the game that is open and
@@ -119,17 +121,21 @@ def reinforceWhereNeeded(userAddress: Address) -> int:
     nBorrowedReinforments = 0
     for mine in reinforceableMines:
 
-        # Find best reinforcement crab to borrow
         mineId = mine['game_id']
-        reinforcementCrab = crabadaWeb2Client.getSecondCheapestCrabForLending()
-        crabId = reinforcementCrab['crabada_id']
+
+        # Find best reinforcement crab to borrow
+        maxPrice = getUserConfig(userAddress).get('maxPriceToReinforceInTus')
+        strategy = CheapestCrabStrategy(mine, crabadaWeb2Client, strict=False, maxPrice1=maxPrice, maxPrice2=maxPrice)
+        try:
+            reinforcementCrab = strategy.getCrab()
+        except CrabBorrowPriceTooHigh:
+            logger.warning(f"Price of crab is {Web3.fromWei(price, 'ether')} TUS which exceeds the user limit of {user['maxPriceToReinforceInTus']}")
+            continue
         if not reinforcementCrab:
             logger.warning(f"Could not find a crab to lend for mine {mineId}")
             continue
+        crabId = reinforcementCrab['crabada_id']
         price = reinforcementCrab['price']
-        if isTooExpensiveForUser(price, userAddress):
-            logger.warning(f"Price of crab is {Web3.fromWei(price, 'ether')} TUS which exceeds the user limit of {Web3.fromWei(user['maxPriceToReinforceInTusWei'], 'ether')}")
-            continue
         logger.info(f"Borrowing crab {crabId} for mine {mineId} at {Web3.fromWei(price, 'ether')} TUS...")
 
         # Borrow the crab

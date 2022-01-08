@@ -1,3 +1,4 @@
+from typing import Literal
 from eth_typing.evm import Address
 from web3.types import Wei
 from src.common.exceptions import MissingConfig
@@ -18,10 +19,28 @@ def isTooExpensiveForUser(price: Wei, userAddress: Address) -> bool:
 
 def minerCanReinforce(mine: Game) -> bool:
     """Return True if, in the given game, the miner (the defense) can
-    reinforce at this moment"""
-    return minerCanReinforce1(mine) or minerCanReinforce2(mine)
+    reinforce at this moment, regardless of whether its the first or the
+    second time"""
+    return getReinforcementStatus(mine) != 0
 
-def minerCanReinforce1(mine: Game) -> bool:
+def getReinforcementStatus(mine: Game) -> Literal[0,1,2]:
+    """
+    Determines whether the game can be reinforced and
+    at which reinforcement stage we are.
+
+    Returns:
+    - 0 if the mine cannot be reinforced
+    - 1 if the mine can be reinforced the first time
+    - 2 if the mine can be reinforced the second time
+    """
+    if minerCanReinforceForTheFirstTime(mine):
+        return 1
+    elif minerCanReinforceForTheSecondTime(mine):
+        return 2
+    else:
+        return 0
+
+def minerCanReinforceForTheFirstTime(mine: Game) -> bool:
     """Return True if, in the given game, the miner (the defense) can
     reinforce at this moment for the first time"""
     return (
@@ -31,7 +50,7 @@ def minerCanReinforce1(mine: Game) -> bool:
         and mine['round'] == 0
     )
 
-def minerCanReinforce2(mine: Game) -> bool:
+def minerCanReinforceForTheSecondTime(mine: Game) -> bool:
     """Return True if, in the given game, the miner (the defense) can
     reinforce at this moment for the second time"""
     return (

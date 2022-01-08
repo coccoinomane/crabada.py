@@ -32,16 +32,16 @@ class Game(TypedDict):
     attack_point: int
     attack_mine_point: int
     # Rewards
-    tus_reward: int
-    cra_reward: int
-    estimate_looter_lose_cra: int
-    estimate_looter_lose_tus: int
-    estimate_looter_win_cra: int
-    estimate_looter_win_tus: int
-    estimate_miner_lose_cra: int
-    estimate_miner_lose_tus: int
-    estimate_miner_win_cra: int
-    estimate_miner_win_tus: int
+    tus_reward: Wei
+    cra_reward: Wei
+    estimate_looter_lose_cra: Wei
+    estimate_looter_lose_tus: Wei
+    estimate_looter_win_cra: Wei
+    estimate_looter_win_tus: Wei
+    estimate_miner_lose_cra: Wei
+    estimate_miner_lose_tus: Wei
+    estimate_miner_win_cra: Wei
+    estimate_miner_win_tus: Wei
     # Time
     start_time: int
     end_time: int
