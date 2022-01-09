@@ -33,15 +33,19 @@ For a list of endpoints, see the [Postman collection](https://go.postman.co/work
 
 # To do
 
-* Allow to specify contract and ABI ovverriding props
+* Find a way to differentiate/manage mines & loots
+ - How to compute time left to settle?
+ - Do we need an enum?
+ - Do we need different files/classes?
+* Web3Client: Allow to specify contract and ABI ovverriding props
 * Use cron library to schedule scripts
-* Write reinforcement script
 * Validate config values from .env
-* Stop if wallet has less than X ETH
+* Gas contorl: Stop if wallet has less than X ETH + set daily gas limit
 * In AVAX should we be using eth_baseFee and eth_maxPriorityFeePerGas? (https://docs.avax.network/learn/platform-overview/transaction-fees/)
 
 # Done
 
+* Write reinforcement script
 * Write startGame script
 * Write closeGame script
 * Reasonable defaults for gasLimit and maxPriorityFeePerGas for Avalanche
