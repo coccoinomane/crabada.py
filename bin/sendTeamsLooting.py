@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""Crabada script to send mining all available teams for
+"""Crabada script to send looting all available teams for
 the given user address.
 
 Usage:
-    python3 -m bin.closeGames
+    python3 -m bin.sendTeamsLooting
 
 Author:
     @coccoinomane (Twitter)
 """
 
-from src.helpers.Games import sendAvailableTeamsMining
+from src.helpers.Games import sendAvailableTeamsLooting
 from src.helpers.General import secondOrNone
 from src.helpers.Users import isRegistered
 from src.common.logger import logger
@@ -25,4 +25,4 @@ if not isRegistered(userAddress):
     logger.error('The given user address is not registered')
     exit(1)    
 
-nSent = sendAvailableTeamsMining(userAddress)
+nSent = sendAvailableTeamsLooting(userAddress)
