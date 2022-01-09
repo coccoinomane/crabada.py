@@ -29,9 +29,16 @@ class CrabadaWeb3Client(AvalancheWeb3Client):
 
     def closeGame(self, gameId: int) -> HexStr:
         """
-        Claim reward & send crabs back home
+        Close mining game, claim reward & send crabs back home
         """
         tx: TxParams = self.buildContractTransaction(self.contract.functions.closeGame(gameId))
+        return self.signAndSendTransaction(tx)
+
+    def settleGame(self, gameId: int) -> HexStr:
+        """
+        Close looting game, claim reward & send crabs back home
+        """
+        tx: TxParams = self.buildContractTransaction(self.contract.functions.settleGame(gameId))
         return self.signAndSendTransaction(tx)
 
     def reinforceDefense(self, gameId: int, crabadaId: int, borrowPrice: Wei) -> HexStr:

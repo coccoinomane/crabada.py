@@ -83,5 +83,18 @@
         "outputs": [
         ],
         "stateMutability": "nonpayable"
+    },
+    {
+        "type": "function",
+        "name": "settleGame",
+        "inputs": [
+            {
+                "name": "gameId",
+                "type": "uint256"
+            }
+        ],
+        "outputs": [
+        ],
+        "stateMutability": "nonpayable"
     }
 ]
