@@ -9,7 +9,7 @@ Author:
     @coccoinomane (Twitter)
 """
 
-from src.helpers.Games import closeFinishedGames
+from src.helpers.Games import closeFinishedMines
 from src.helpers.General import secondOrNone
 from src.helpers.Users import isRegistered
 from src.common.logger import logger
@@ -25,4 +25,4 @@ if not isRegistered(userAddress):
     logger.error('The given user address is not registered')
     exit(1)    
 
-nSent = closeFinishedGames(userAddress)
+nSent = closeFinishedMines(userAddress)

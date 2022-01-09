@@ -3,6 +3,7 @@ from eth_typing import Address
 from web3.types import Wei
 
 Tus = NewType('Tus', int)
+
 class ConfigTeam(TypedDict):
     id: int
     userAddress: Address

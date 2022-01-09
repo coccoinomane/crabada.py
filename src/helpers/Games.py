@@ -8,7 +8,7 @@ from src.helpers.General import firstOrNone
 from src.helpers.Dates import getPrettySeconds
 from src.helpers.Reinforce import isTooExpensiveForUser, minerCanReinforce
 from src.helpers.Sms import sendSms
-from typing import List
+from typing import List, Literal
 from time import time
 
 from src.common.clients import crabadaWeb2Client, crabadaWeb3Client
@@ -17,6 +17,7 @@ from src.helpers.Users import getUserConfig
 
 from src.libs.CrabadaWeb2Client.types import Game
 from src.strategies.reinforce.CheapestCrabStrategy import CheapestCrabStrategy
+from src.strategies.reinforce.HighestBpStrategy import HighestBpStrategy
 from src.strategies.reinforce.HighestMpStrategy import HighestMpStrategy
 from src.strategies.loot.LowestBpStrategy import LowestBpStrategy
 
@@ -28,25 +29,45 @@ def getNextGameToFinish(games: List[Game]) -> Game:
     unfinishedGames = [ g for g in games if not gameIsFinished(g) ]
     return firstOrNone(sorted(unfinishedGames, key=lambda g: g['end_time']))
 
-def closeFinishedGames(userAddress: Address) -> int:
-    """Close all open games whose end time is due; return
-    the number of closed games. Tested only with mining
-    games, not yet with looting games.
+def closeFinishedMines(userAddress: Address) -> int:
+    """Close all open mining games whose end time is due; return
+    the number of closed games.
 
     TODO: implement paging"""
-    
-    # Get open games and the filter only those where
-    # the reward has yet to be claimed
+
     openGames = crabadaWeb2Client.listMines({
         "limit": 200,
         "status": "open",
         "user_address": userAddress})
-    finishedGames = [ g for g in openGames if gameIsFinished(g) ]
     
+    return _closeGivenGames(openGames, userAddress, 'mine')
+
+def closeFinishedLoots(userAddress: Address) -> int:
+    """Close all open looting games whose end time is due; return
+    the number of closed games.
+
+    TODO: implement paging"""
+
+    openGames = crabadaWeb2Client.listMines({
+        "limit": 200,
+        "status": "open",
+        "looter_address": userAddress})
+
+    return _closeGivenGames(openGames, userAddress, gameType='loot')
+
+
+def _closeGivenGames(games: List[Game], userAddress: Address, gameType: Literal['mine', 'loot']) -> int:
+    """
+    Helper function to close the given games
+    """
+
+    # Games with a reward to claim
+    finishedGames = [ g for g in games if gameIsFinished(g) ]
+
     # Print a useful message in case there aren't finished games 
     if not finishedGames:
-        message = f'No games to close for user {str(userAddress)}'
-        nextGameToFinish = getNextGameToFinish(openGames)
+        message = f'No {gameType}s to close for user {str(userAddress)}'
+        nextGameToFinish = getNextGameToFinish(games)
         if nextGameToFinish:
             message += f' (next in {getRemainingTimeFormatted(nextGameToFinish)})'
         logger.info(message)
@@ -160,7 +181,7 @@ def reinforceWhereNeeded(userAddress: Address) -> int:
     if not reinforceableMines:
         logger.info('No mines to reinforce for user ' + str(userAddress))
         return 0
-    
+
     # Reinforce the mines
     nBorrowedReinforments = 0
     for mine in reinforceableMines:
@@ -169,7 +190,10 @@ def reinforceWhereNeeded(userAddress: Address) -> int:
 
         # Find best reinforcement crab to borrow
         maxPrice = getUserConfig(userAddress).get('maxPriceToReinforceInTus')
-        strategy: HighestMpStrategy = HighestMpStrategy(crabadaWeb2Client).setParams(mine, maxPrice)
+
+        # strategy: HighestMpStrategy = HighestMpStrategy(crabadaWeb2Client).setParams(mine, maxPrice)
+        strategy: HighestBpStrategy = HighestBpStrategy(crabadaWeb2Client).setParams(mine, maxPrice)
+
         try:
             reinforcementCrab = strategy.getCrab()
         except CrabBorrowPriceTooHigh:
