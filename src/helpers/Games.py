@@ -16,8 +16,8 @@ from eth_typing import Address
 from src.helpers.Users import getUserConfig
 
 from src.libs.CrabadaWeb2Client.types import Game
-from src.strategies.mining.CheapestCrabStrategy import CheapestCrabStrategy
-from src.strategies.mining.HighestMpStrategy import HighestMpStrategy
+from src.strategies.reinforce.CheapestCrabStrategy import CheapestCrabStrategy
+from src.strategies.reinforce.HighestMpStrategy import HighestMpStrategy
 
 def getNextGameToFinish(games: List[Game]) -> Game:
     """Given a list of games, return the game that is open and

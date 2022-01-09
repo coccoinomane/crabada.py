@@ -1,6 +1,6 @@
 from typing import List
 from src.libs.CrabadaWeb2Client.types import CrabForLending, Game
-from src.strategies.mining.ReinforceStrategy import ReinforceStrategy
+from src.strategies.reinforce.ReinforceStrategy import ReinforceStrategy
 from src.helpers.General import firstOrNone
 from src.helpers.Price import weiToTus
 
