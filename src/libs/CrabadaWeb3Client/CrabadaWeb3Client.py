@@ -14,18 +14,31 @@ class CrabadaWeb3Client(AvalancheWeb3Client):
     # abi = json.load(abifile)
     
     def startGame(self, teamId: int) -> HexStr:
-        """Send crabs to mine"""
+        """
+        Send crabs to mine
+        """
         tx: TxParams = self.buildContractTransaction(self.contract.functions.startGame(teamId))
         return self.signAndSendTransaction(tx)
 
     def closeGame(self, gameId: int) -> HexStr:
-        """Claim reward & send crabs back home"""
+        """
+        Claim reward & send crabs back home
+        """
         tx: TxParams = self.buildContractTransaction(self.contract.functions.closeGame(gameId))
         return self.signAndSendTransaction(tx)
 
     def reinforceDefense(self, gameId: int, crabadaId: int, borrowPrice: Wei) -> HexStr:
-        """Hire a crab from the tavern; the price must be expressed in
-        units of 1e-18 TUS. This means that price=1000000000000000000
-        is just 1 TUS"""
+        """
+        Hire a crab from the tavern to reinforce the mining team; the
+        price must be expressed in Wei (1 TUS = 10^18 Wei)
+        """
         tx: TxParams = self.buildContractTransaction(self.contract.functions.reinforceDefense(gameId, crabadaId, borrowPrice))
+        return self.signAndSendTransaction(tx)
+
+    def reinforceAttack(self, gameId: int, crabadaId: int, borrowPrice: Wei) -> HexStr:
+        """
+        Hire a crab from the tavern to reinforce the looting team;
+        the price must be expressed in Wei (1 TUS = 10^18 Wei)
+        """
+        tx: TxParams = self.buildContractTransaction(self.contract.functions.reinforceAttack(gameId, crabadaId, borrowPrice))
         return self.signAndSendTransaction(tx)

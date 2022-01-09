@@ -45,5 +45,26 @@
         "outputs": [
         ],
         "stateMutability": "nonpayable"
+    },
+    {
+        "type": "function",
+        "name": "reinforceAttack",
+        "inputs": [
+            {
+                "name": "gameId",
+                "type": "uint256"
+            },
+            {
+                "name": "crabadaId",
+                "type": "uint256"
+            },
+            {
+                "name": "borrowPrice",
+                "type": "uint256"
+            }
+        ],
+        "outputs": [
+        ],
+        "stateMutability": "nonpayable"
     }
 ]
