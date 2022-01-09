@@ -18,6 +18,7 @@ from src.helpers.Users import getUserConfig
 from src.libs.CrabadaWeb2Client.types import Game
 from src.strategies.reinforce.CheapestCrabStrategy import CheapestCrabStrategy
 from src.strategies.reinforce.HighestMpStrategy import HighestMpStrategy
+from src.strategies.loot.LowestBpStrategy import LowestBpStrategy
 
 def getNextGameToFinish(games: List[Game]) -> Game:
     """Given a list of games, return the game that is open and
@@ -81,7 +82,7 @@ def sendAvailableTeamsMining(userAddress: Address) -> int:
         "page": 1})
 
     if not availableTeams:
-        logger.info('No teams to send for user ' + str(userAddress))
+        logger.info('No available teams to send mining for user ' + str(userAddress))
         return 0
 
     # Send the teams
@@ -102,6 +103,48 @@ def sendAvailableTeamsMining(userAddress: Address) -> int:
             logger.info(f'Team {teamId} sent succesfully')
 
     return nSentTeams
+
+def sendAvailableTeamsLooting(userAddress: Address) -> int:
+    """Send all available teams of crabs to loot; a game will be started
+    for each available team; returns the number of games opened.
+
+    TODO: implement paging"""
+    availableTeams = crabadaWeb2Client.listTeams(userAddress, {
+        "is_team_available": 1,
+        "limit": 200,
+        "page": 1})
+
+    if not availableTeams:
+        logger.info('No available teams to send looting for user ' + str(userAddress))
+        return 0
+
+    # Send the teams
+    nAttackedMines = 0
+    for t in availableTeams:
+
+        teamId = t['team_id']
+        logger.info(f'Sending team {teamId} to loot...')
+
+        # Find best mine to loot
+        strategy: LowestBpStrategy = LowestBpStrategy(crabadaWeb2Client).setParams(team=t)
+        mine = strategy.getMine()
+        if not mine:
+            logger.warning(f"Could not find a suitable mine to loot for team {teamId}")
+            continue
+
+        # Send the attack tx
+        txHash = crabadaWeb3Client.attack(mine['game_id'], teamId)
+        txLogger.info(txHash)
+        txReceipt = crabadaWeb3Client.getTransactionReceipt(txHash)
+        logTx(txReceipt)
+        if txReceipt['status'] != 1:
+            sendSms(f'Crabada: ERROR attacking > {txHash}')
+            logger.error(f'Error attacking mine {str(mine["game_id"])} with team {teamId}')
+        else:
+            nAttackedMines += 1
+            logger.info(f'Team {teamId} sent succesfully')
+
+    return nAttackedMines
 
 def reinforceWhereNeeded(userAddress: Address) -> int:
     """Check if any of the mining teams of the user can be
@@ -126,7 +169,7 @@ def reinforceWhereNeeded(userAddress: Address) -> int:
 
         # Find best reinforcement crab to borrow
         maxPrice = getUserConfig(userAddress).get('maxPriceToReinforceInTus')
-        strategy = HighestMpStrategy(crabadaWeb2Client).setParams(mine, maxPrice)
+        strategy: HighestMpStrategy = HighestMpStrategy(crabadaWeb2Client).setParams(mine, maxPrice)
         try:
             reinforcementCrab = strategy.getCrab()
         except CrabBorrowPriceTooHigh:

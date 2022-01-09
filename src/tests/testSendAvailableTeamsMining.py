@@ -6,7 +6,7 @@ from src.common.config import users
 # TEST FUNCTIONS
 def testSendAvailableTeamsMining() -> None:
     nSent = sendAvailableTeamsMining(users[0]['address'])
-    print(f'SENT {nSent} TEAMS')
+    print(f'SENT {nSent} TEAMS MINING')
 
 # EXECUTE
 testSendAvailableTeamsMining()
