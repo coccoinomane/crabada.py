@@ -20,6 +20,13 @@ class CrabadaWeb3Client(AvalancheWeb3Client):
         tx: TxParams = self.buildContractTransaction(self.contract.functions.startGame(teamId))
         return self.signAndSendTransaction(tx)
 
+    def attack(self, gameId: int, teamId: int) -> HexStr:
+        """
+        Attack an open mine
+        """
+        tx: TxParams = self.buildContractTransaction(self.contract.functions.attack(gameId, teamId))
+        return self.signAndSendTransaction(tx)
+
     def closeGame(self, gameId: int) -> HexStr:
         """
         Claim reward & send crabs back home
