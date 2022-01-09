@@ -26,8 +26,6 @@ def testHighestMpStrategy() -> None:
         print('ERROR RAISED: ' + e.__class__.__name__ + ': ' + str(e))
 
     print('>>> FIRST CRAB REINFORCEMENT')
-    print(strategy._getCrab1())
-    exit()
     try:
         print(strategy._getCrab1())
     except Exception as e:
