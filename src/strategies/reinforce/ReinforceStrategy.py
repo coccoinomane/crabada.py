@@ -1,11 +1,11 @@
+from __future__ import annotations
 from abc import abstractmethod
-from typing import List, Tuple
+from typing import Any, List, Tuple
 from src.common.exceptions import CrabBorrowPriceTooHigh
 from src.common.types import Tus
 from src.helpers.General import firstOrNone
 from src.helpers.Price import tusToWei, weiToTus
 from src.helpers.Reinforce import getReinforcementStatus, minerCanReinforce
-from src.libs.CrabadaWeb2Client.CrabadaWeb2Client import CrabadaWeb2Client
 from src.strategies.Strategy import Strategy
 from src.libs.CrabadaWeb2Client.types import CrabForLending, Game
 
@@ -16,31 +16,27 @@ class ReinforceStrategy(Strategy):
     """
 
     game: Game = None # game to apply the strategy to
-    maxPrice1: Tus = None # max price to spend for crab1, in Tus
-    maxPrice2: Tus = None # max price to spend for crab2, in Tus
-    list1: List[CrabForLending] = []
-    list2: List[CrabForLending] = []
+    maxPrice1: Tus = None # max price to spend for the first reinforcement, in Tus
+    maxPrice2: Tus = None # max price to spend for the second reinforcement, in Tus
 
-    def __init__(self, game: Game, web2Client: CrabadaWeb2Client, strict: bool = False,
-                 maxPrice: Tus = 50,
-                 maxPrice2: Tus = None
-                 ) -> None:
-        super().__init__(game, web2Client, strict=strict)
+    def setParams(self, game: Game, maxPrice: Tus = 50, maxPrice2: Tus = None) -> Strategy:
+        self.game = game
         self.maxPrice1 = maxPrice
         if not maxPrice2:
             self.maxPrice2 = self.maxPrice1
         else:
             self.maxPrice2 = maxPrice2
+        return self
 
-    @staticmethod
-    def isApplicable(game: Game) -> Tuple[bool, str]:
+    def isApplicable(self) -> Tuple[bool, str]:
         """
         The strategy can be applied only if the mine can
         be reinforced
         """
+        isApplicable = minerCanReinforce(self.game)
         return (
-            minerCanReinforce(game),
-            f"Miner cannot reinforce mine {game['game_id']} (round = {game['round']}, winner_team_id = {game['winner_team_id']})",
+            isApplicable,
+            '' if isApplicable else f"Miner cannot reinforce mine {self.game['self.game_id']} (round = {self.game['round']}, winner_team_id = {self.game['winner_team_id']})",
         )
 
     @abstractmethod
@@ -97,8 +93,8 @@ class ReinforceStrategy(Strategy):
         Fetch and return a reinforcement crab using the strategy set in
         query1() and crab1(). If no crab can be found, return None.
         """
-        self.list1 = self.web2Client.listCrabsForLending(self.query(self.game))
-        crab = self.crab(self.game, self.list1)
+        crabsForLending = self.web2Client.listCrabsForLending(self.query(self.game))
+        crab = self.crab(self.game, crabsForLending)
         self.raiseIfPriceTooHigh(crab, self.maxPrice1)
         return crab
 
@@ -107,7 +103,7 @@ class ReinforceStrategy(Strategy):
         Fetch and return a reinforcement crab using the strategy set in
         query2() and crab2(). If no crab can be found, return None.
         """
-        self.list2 = self.web2Client.listCrabsForLending(self.query2(self.game))
-        crab = self.crab2(self.game, self.list2)
+        crabsForLending = self.web2Client.listCrabsForLending(self.query2(self.game))
+        crab = self.crab2(self.game, crabsForLending)
         self.raiseIfPriceTooHigh(crab, self.maxPrice2)
         return crab

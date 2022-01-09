@@ -52,8 +52,12 @@ class CrabadaWeb2Client:
         actualParams = defaultParams | params
         return requests.request("GET", url, params=actualParams).json()
 
+    def getTeam(self) -> None:
+        raise Exception("The team route does not exit on the server!")
+
     def listTeams(self, userAddress: Address, params: dict[str, Any] = {}) -> List[Team]:
-        """Get all teams of a given user address.
+        """
+        Get all teams of a given user address.
         
         If you want only the available teams, pass is_team_available=1
         in the params.
@@ -65,6 +69,13 @@ class CrabadaWeb2Client:
             return res['result']['data'] or []
         except:
             return []
+
+    def listAvailableTeams(self, userAddress: Address, params: dict[str, Any] = {}) -> List[Team]:
+        """
+        Get all available teams of a given user address.
+        """
+        actualParams = params | {'is_team_available': 1}
+        return self.listTeams(userAddress, actualParams)
 
     def listTeams_Raw(self, userAddress: Address, params: dict[str, Any] = {}) -> Any:
         url = self.baseUri + '/teams'
