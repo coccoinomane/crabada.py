@@ -1,9 +1,15 @@
+import typing
 from web3 import Web3
-from src.common.types import ConfigContract, ConfigTeam, ConfigUser, Tus
+from src.common.types import ConfigContract, ConfigTeam, ConfigUser, Tus, Task, LootStrategy, ReinforceStrategy
 from .dotenv import getenv
 import os
 from typing import List, cast
+from src.common.exceptions import InvalidConfig, MissingConfig
 from eth_typing import Address
+
+#################
+# Parse
+#################
 
 # Project directory
 rootDir: str = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
@@ -13,6 +19,9 @@ teams: List[ConfigTeam] = [
     {
         'id': int(getenv('USER_1_TEAM_1')),
         'userAddress': cast(Address, getenv('USER_1_ADDRESS')),
+        'task': getenv('USER_1_TEAM_1_TASK', 'mine'),
+        'lootStrategy': getenv('USER_1_TEAM_1_LOOT_STRATEGY', 'LowestBp'),
+        'reinforceStrategy': getenv('USER_1_TEAM_1_REINFORCE_STRATEGY', 'HighestBp'),
     },
 ]
 
@@ -56,3 +65,27 @@ notifications = {
         "to": getenv('NOTIFICATION_SMS_TO'),
     }
 }
+
+#################
+# Validate
+#################
+
+# Validate teams
+for team in teams:
+    if team['task'] not in typing.get_args(Task):
+        raise InvalidConfig(f"Task of team {team['id']} must be one of {str(typing.get_args(Task))}, is {team['task']}")
+    if team['lootStrategy'] not in typing.get_args(LootStrategy):
+        raise InvalidConfig(f"LootStrategy of team {team['id']} must be one of {str(typing.get_args(LootStrategy))}, is {team['lootStrategy']}")
+    if team['reinforceStrategy'] not in typing.get_args(ReinforceStrategy):
+        raise InvalidConfig(f"ReinforceStrategy of team {team['id']} must be one of {str(typing.get_args(ReinforceStrategy))}, is {team['reinforceStrategy']}")
+
+# Validate users
+for user in users:
+    if not user['address']:
+        raise MissingConfig("User has no ADDRESS")
+    maxPrice = user.get('maxPriceToReinforceInTus')
+    if not maxPrice or maxPrice <= 0:
+        raise MissingConfig("User has no or invalid MAX_PRICE_TO_REINFORCE (must be a value greater than zero)")
+
+
+
