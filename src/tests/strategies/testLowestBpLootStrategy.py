@@ -1,16 +1,13 @@
-from typing import cast
-from src.common.types import Tus
 from src.common.config import users
-from src.helpers.General import firstOrNone, secondOrNone, thirdOrNone
+from src.helpers.General import findInList, firstOrNone
 from src.strategies.loot.LowestBpStrategy import LowestBpStrategy
 from src.common.clients import crabadaWeb2Client
-from pprint import pprint
 
 # VARS
 userAddress = users[0]['address']
 teamId = users[0]['teams'][0]['id']
 teams = crabadaWeb2Client.listTeams(userAddress)
-team = firstOrNone([ t for t in teams if t['team_id'] == teamId ])
+team = findInList(teams, 'team_id', teamId)
 
 if not team:
     print('Error getting team with ID ' + str(teamId))

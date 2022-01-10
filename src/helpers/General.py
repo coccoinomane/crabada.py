@@ -23,3 +23,9 @@ def thirdOrNone(list: List[Any]) -> Any:
         return list[2]
     except:
         return None
+
+def findInList(l: List[dict[str, Any]], key: str, value: Any) -> Any:
+    """
+    Search a list of dictionaries for a specific one
+    """
+    return firstOrNone([item for item in l if item[key] == value])

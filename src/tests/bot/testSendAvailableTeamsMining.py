@@ -1,4 +1,4 @@
-from src.helpers.Games import sendAvailableTeamsMining
+from src.bot.sendTeams import sendAvailableTeamsMining
 from src.common.config import users
 
 # VARS

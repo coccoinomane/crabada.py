@@ -5,7 +5,7 @@ from src.common.exceptions import CrabBorrowPriceTooHigh
 from src.common.types import Tus
 from src.helpers.General import firstOrNone
 from src.helpers.Price import tusToWei, weiToTus
-from src.helpers.Reinforce import getReinforcementStatus, minerCanReinforce
+from src.helpers.Reinforce import getMinerReinforcementStatus, minerCanReinforce
 from src.strategies.Strategy import Strategy
 from src.libs.CrabadaWeb2Client.types import CrabForLending, Game
 
@@ -71,7 +71,7 @@ class ReinforceStrategy(Strategy):
         Fetch and return a reinforcement crab, using the strategy.
         If no crab can be found, return None.
         """
-        status = getReinforcementStatus(self.game)
+        status = getMinerReinforcementStatus(self.game)
         if status == 0:
             return None
         elif status == 1:

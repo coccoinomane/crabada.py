@@ -9,7 +9,7 @@ Author:
     @coccoinomane (Twitter)
 """
 
-from src.helpers.Games import closeFinishedMines
+from src.bot.closeMines import closeFinishedMines
 from src.helpers.General import secondOrNone
 from src.helpers.Users import isRegistered
 from src.common.logger import logger

@@ -1,6 +1,5 @@
 """Code from https://www.twilio.com/docs/sms/quickstart/python#install-python-and-the-twilio-helper-library"""
 
-from twilio.rest import Client
 from src.helpers.Sms import sendSms
 from pprint import pprint
 

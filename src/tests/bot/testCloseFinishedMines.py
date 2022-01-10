@@ -1,4 +1,4 @@
-from src.helpers.Games import closeFinishedMines
+from src.bot.closeMines import closeFinishedMines
 from src.common.config import users
 
 # VARS

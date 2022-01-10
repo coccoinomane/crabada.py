@@ -7,7 +7,7 @@ from sys import argv
 
 # VARS
 gameId = secondOrNone(argv)
-maxPrice = cast(Tus, int(thirdOrNone(argv))) or 20
+maxPrice = cast(Tus, int(thirdOrNone(argv) or 25))
 
 if not gameId:
     print('Provide a game ID')
