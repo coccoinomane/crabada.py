@@ -6,12 +6,14 @@ from src.helpers.General import firstOrNone, secondOrNone
 from src.libs.CrabadaWeb2Client.types import CrabForLending, Game, Team
 
 class CrabadaWeb2Client:
-    """Access the HTTP endpoints of the Crabada P2E game.
+    """
+    Access the HTTP endpoints of the Crabada P2E game.
     
     All endpoints have a 'raw' parameter that you can set to true
     in order to get the full JSON response. By default it is false,
     which means you only get the data contained in the response (a
-    list for list endpoints, a dict for specific endpoints)"""
+    list for list endpoints, a dict for specific endpoints)
+    """
 
     baseUri = 'https://idle-api.crabada.com/public/idle'
 
@@ -25,7 +27,8 @@ class CrabadaWeb2Client:
         return requests.request("GET", url, params=params).json()
 
     def listMines(self, params: dict[str, Any] = {}) -> List[Game]:
-        """Get all mines.
+        """
+        Get all mines.
         
         If you want only the open mines, pass status=open in the params.
         If you want only a certain user's mines, use the user_address param.
@@ -37,8 +40,10 @@ class CrabadaWeb2Client:
             return []
     
     def listMyOpenMines(self, userAddress: Address, params: dict[str, Any] = {}) -> List[Game]:
-        """Get all mines that belong to the given user address
-        and that are open"""
+        """
+        Get all mines that belong to the given user address
+        and that are open
+        """
         params['user_address'] = userAddress
         params['status'] = 'open'
         return self.listMines(params)
@@ -88,13 +93,15 @@ class CrabadaWeb2Client:
         return requests.request("GET", url, params=actualParams).json()
 
     def listCrabsForLending(self, params: dict[str, Any] = {}) -> List[CrabForLending]:
-        """Get all crabs available for lending as reinforcements; you can use
+        """
+        Get all crabs available for lending as reinforcements; you can use
         sortBy and sort parameters, default is orderBy": 'price' and
         "order": 'asc'
         
         IMPORTANT: The price is expressed as the TUS price multiplied by
         10^18 (like with Weis), which means that price=100000000000000000
-        (18 zeros) is just 1 TUS"""
+        (18 zeros) is just 1 TUS
+        """
         res = self.listCrabsForLending_Raw(params)
         try:
             return res['result']['data'] or []
@@ -102,16 +109,20 @@ class CrabadaWeb2Client:
             return []
 
     def getCheapestCrabForLending(self, params: dict[str, Any] = {}) -> CrabForLending:
-        """Return the cheapest crab on the market available for lending,
-        or None if no crab is found"""
+        """
+        Return the cheapest crab on the market available for lending,
+        or None if no crab is found
+        """
         params["limit"] = 1
         params["orderBy"] = 'price'
         params["order"] = 'asc'
         return firstOrNone(self.listCrabsForLending(params))
 
     def getSecondCheapestCrabForLending(self, params: dict[str, Any] = {}) -> CrabForLending:
-        """Return the second cheapest crab on the market available for lending,
-        or None if no crab is found"""
+        """
+        Return the second cheapest crab on the market available for lending,
+        or None if no crab is found
+        """
         params["limit"] = 2
         params["orderBy"] = 'price'
         params["order"] = 'asc'

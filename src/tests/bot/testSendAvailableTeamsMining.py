@@ -1,12 +1,12 @@
-from src.bot.sendTeams import sendAvailableTeamsMining
+from src.bot.mining.sendTeamsMining import sendTeamsMining
 from src.common.config import users
 
 # VARS
 
 # TEST FUNCTIONS
-def testSendAvailableTeamsMining() -> None:
-    nSent = sendAvailableTeamsMining(users[0]['address'])
+def testSendTeamsMining() -> None:
+    nSent = sendTeamsMining(users[0]['address'])
     print(f'SENT {nSent} TEAMS MINING')
 
 # EXECUTE
-testSendAvailableTeamsMining()
+testSendTeamsMining()

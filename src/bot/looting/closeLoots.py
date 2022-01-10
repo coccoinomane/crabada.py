@@ -1,6 +1,5 @@
 """
-Helper functions to close (i.e. claim rewards from) all mines
-of a given user
+Settle all loots of a given user
 """
 
 from src.common.logger import logger
@@ -12,45 +11,28 @@ from eth_typing import Address
 from src.helpers.Mines import getNextMineToFinish, getRemainingTimeFormatted, mineIsFinished
 from src.libs.CrabadaWeb2Client.types import Game
 
-def closeFinishedMines(userAddress: Address) -> int:
-    """Close all open mining games whose end time is due; return
-    the number of closed games.
+def closeLoots(userAddress: Address) -> int:
+    """
+    Settle all open loot games that can be settled; return
+    the number of settled games.
 
-    TODO: implement paging"""
+    TODO: implement paging
+    """
 
-    openGames = crabadaWeb2Client.listMines({
-        "limit": 200,
-        "status": "open",
-        "user_address": userAddress})
-    
-    return _closeGivenGames(openGames, userAddress, 'mine')
-
-def closeFinishedLoots(userAddress: Address) -> int:
-    """Close all open looting games whose end time is due; return
-    the number of closed games.
-
-    TODO: implement paging"""
-
-    openGames = crabadaWeb2Client.listMines({
+    openLoots = crabadaWeb2Client.listMines({
         "limit": 200,
         "status": "open",
         "looter_address": userAddress})
-
-    return _closeGivenGames(openGames, userAddress, gameType='loot')
-
-
-def _closeGivenGames(games: List[Game], userAddress: Address, gameType: Literal['mine', 'loot']) -> int:
-    """
-    Helper function to close the given games
-    """
-
+    
     # Games with a reward to claim
-    finishedGames = [ g for g in games if mineIsFinished(g) ]
+    # TODO: this works for mines, for loots, we need to know time of when settle is possible
+    finishedGames = [ g for g in openLoots if mineIsFinished(g) ]
 
     # Print a useful message in case there aren't finished games 
     if not finishedGames:
-        message = f'No {gameType}s to close for user {str(userAddress)}'
-        nextGameToFinish = getNextMineToFinish(games)
+        message = f'No loots to close for user {str(userAddress)}'
+        nextGameToFinish = getNextMineToFinish(openLoots)
+        # TODO: this works for mines, for loots, we need to know time of when settle is possible
         if nextGameToFinish:
             message += f' (next in {getRemainingTimeFormatted(nextGameToFinish)})'
         logger.info(message)

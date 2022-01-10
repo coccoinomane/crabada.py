@@ -37,6 +37,8 @@ For a list of endpoints, see the [Postman collection](https://go.postman.co/work
  - How to compute time left to settle?
  - Do we need an enum?
  - Do we need different files/classes?
+* Implement a team's task parameter; more in general: how to run cron job for mining vs for looting?
+* In Python all class attributes are static > should declare them in the constructor?
 * Web3Client: Allow to specify contract and ABI ovverriding props
 * Use cron library to schedule scripts
 * Validate config values from .env

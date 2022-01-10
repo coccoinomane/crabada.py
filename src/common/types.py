@@ -5,15 +5,16 @@ from web3.types import Wei
 Tus = NewType('Tus', int)
 
 Task = Literal['loot', 'mine']
-LootStrategy = Literal['LowestBp']
-ReinforceStrategy = Literal['CheapestCrab', 'HighestMp', 'HighestBp']
+LootStrategyName = Literal['LowestBp']
+ReinforceStrategyName = Literal['CheapestCrab', 'HighestMp', 'HighestBp']
 
 class ConfigTeam(TypedDict):
     id: int
     userAddress: Address
     task: Task
-    lootStrategy: LootStrategy
-    reinforceStrategy: ReinforceStrategy
+    lootStrategyName: LootStrategyName
+    reinforceStrategyName: ReinforceStrategyName
+
 class ConfigUser(TypedDict):
     name: str
     address: Address

@@ -18,7 +18,7 @@ class ReinforceStrategy(Strategy):
     game: Game = None # game to apply the strategy to
     maxPrice1: Tus = None # max price to spend for the first reinforcement, in Tus
     maxPrice2: Tus = None # max price to spend for the second reinforcement, in Tus
-
+    
     def setParams(self, game: Game, maxPrice: Tus = 50, maxPrice2: Tus = None) -> Strategy:
         self.game = game
         self.maxPrice1 = maxPrice

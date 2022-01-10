@@ -3,8 +3,7 @@ from eth_typing.evm import Address
 from web3.types import Wei
 from src.common.exceptions import MissingConfig
 from src.helpers.Mines import mineHasBeenAttacked, mineIsOpen, mineIsSettled
-
-from src.helpers.Users import getUserConfig
+from src.models.User import User
 from src.libs.CrabadaWeb2Client.types import Game
 
 def minerCanReinforce(mine: Game) -> bool:
@@ -108,8 +107,5 @@ def reinforcementIsTooExpensive(price: Wei, userAddress: Address) -> bool:
     
     The price must be given as it is returned by the listCrabsForLending
     endpoint, that is, in Wei, that is, in units of 1e-18 TUS."""
-    maxPrice = getUserConfig(userAddress).get('maxPriceToReinforceInTusWei')
-    # TODO: move to config validation
-    if not maxPrice or maxPrice <= 0:
-        raise MissingConfig("User has no or invalid MAX_PRICE_TO_REINFORCE (must be a value greater than zero)")
+    maxPrice = User(userAddress).config.get('maxPriceToReinforceInTusWei')
     return price > maxPrice

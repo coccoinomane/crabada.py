@@ -1,11 +1,34 @@
-class MissingConfig(Exception):
+
+#################
+# User
+#################
+
+class UserException(Exception):
     pass
 
-class InvalidConfig(Exception):
+#################
+# Strategies
+#################
+
+class StrategyException(Exception):
     pass
 
-class StrategyNotApplicable(Exception):
+class StrategyNotApplicable(StrategyException):
     pass
 
-class CrabBorrowPriceTooHigh(Exception):
+class CrabBorrowPriceTooHigh(StrategyException):
     pass
+
+#################
+# Config
+#################
+
+class ConfigException(Exception):
+    pass
+
+class MissingConfig(ConfigException):
+    pass
+
+class InvalidConfig(ConfigException):
+    pass
+

@@ -1,4 +1,3 @@
 """
-Helper functions that automate blockchain actions for the given
-user wallet.
+Staff that automates blockchain actions
 """

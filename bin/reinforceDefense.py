@@ -9,14 +9,11 @@ Author:
     @coccoinomane (Twitter)
 """
 
-from src.bot.reinforce import reinforceWhereNeeded
+from src.bot.mining.reinforceDefense import reinforceDefense
 from src.helpers.General import secondOrNone
-from src.helpers.Users import isRegistered
+from src.models.User import User
 from src.common.logger import logger
 from sys import argv
-
-from src.common.logger import logger
-from src.common.txLogger import txLogger
 
 userAddress = secondOrNone(argv)
 
@@ -24,8 +21,8 @@ if not userAddress:
     logger.error('Specify a user address')
     exit(1)
 
-if not isRegistered(userAddress):
+if not User.isRegistered(userAddress):
     logger.error('The given user address is not registered')
     exit(1)    
 
-nReinforced = reinforceWhereNeeded(userAddress)
+nReinforced = reinforceDefense(userAddress)
