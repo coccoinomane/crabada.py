@@ -3,22 +3,12 @@ Helper functions to send mining/looting all available teams
 of a given user
 """
 
-from web3.main import Web3
-from src.common.exceptions import CrabBorrowPriceTooHigh
 from src.common.logger import logger
 from src.common.txLogger import txLogger, logTx
-from src.helpers.Reinforce import minerCanReinforce
 from src.helpers.Sms import sendSms
-from typing import List, Literal
-
 from src.common.clients import crabadaWeb2Client, crabadaWeb3Client
 from eth_typing import Address
-from src.helpers.Users import getUserConfig
-
-from src.libs.CrabadaWeb2Client.types import Game
-from src.strategies.reinforce.HighestBpStrategy import HighestBpStrategy
-from src.strategies.reinforce.HighestMpStrategy import HighestMpStrategy
-from src.strategies.loot.LowestBpStrategy import LowestBpStrategy
+from src.strategies.loot.LowestBpLootStrategy import LowestBpLootStrategy
 
 def sendAvailableTeamsMining(userAddress: Address) -> int:
     """Send all available teams of crabs to mine; a game will be started
@@ -75,7 +65,7 @@ def sendAvailableTeamsLooting(userAddress: Address) -> int:
         logger.info(f'Sending team {teamId} to loot...')
 
         # Find best mine to loot
-        strategy: LowestBpStrategy = LowestBpStrategy(crabadaWeb2Client).setParams(team=t)
+        strategy: LowestBpLootStrategy = LowestBpLootStrategy(crabadaWeb2Client).setParams(team=t)
         mine = strategy.getMine()
         if not mine:
             logger.warning(f"Could not find a suitable mine to loot for team {teamId}")

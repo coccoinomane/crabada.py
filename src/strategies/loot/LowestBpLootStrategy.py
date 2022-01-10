@@ -3,7 +3,7 @@ from src.libs.CrabadaWeb2Client.types import Game, Team
 from src.strategies.loot.LootStrategy import LootStrategy
 from src.helpers.General import firstOrNone
 
-class LowestBpStrategy(LootStrategy):
+class LowestBpLootStrategy(LootStrategy):
     """
     Looting strategy that chooses the mine with the lowest
     defense points

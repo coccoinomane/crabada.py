@@ -11,7 +11,7 @@ from src.helpers.Sms import sendSms
 from src.common.clients import crabadaWeb2Client, crabadaWeb3Client
 from eth_typing import Address
 from src.helpers.Users import getUserConfig
-from src.strategies.reinforce.HighestMpStrategy import HighestMpStrategy
+from src.strategies.reinforce.HighestMpReinforceStrategy import HighestMpReinforceStrategy
 
 def reinforceWhereNeeded(userAddress: Address) -> int:
     """Check if any of the mining teams of the user can be
@@ -37,8 +37,8 @@ def reinforceWhereNeeded(userAddress: Address) -> int:
         # Find best reinforcement crab to borrow
         maxPrice = getUserConfig(userAddress).get('maxPriceToReinforceInTus')
 
-        strategy: HighestMpStrategy = HighestMpStrategy(crabadaWeb2Client).setParams(mine, maxPrice)
-        # strategy: HighestBpStrategy = HighestBpStrategy(crabadaWeb2Client).setParams(mine, maxPrice)
+        strategy: HighestMpReinforceStrategy = HighestMpReinforceStrategy(crabadaWeb2Client).setParams(mine, maxPrice)
+        # strategy: HighestBpReinforceStrategy = HighestBpReinforceStrategy(crabadaWeb2Client).setParams(mine, maxPrice)
 
         try:
             reinforcementCrab = strategy.getCrab()
