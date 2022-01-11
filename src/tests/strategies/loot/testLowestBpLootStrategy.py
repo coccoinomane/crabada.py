@@ -7,7 +7,7 @@ from src.common.clients import crabadaWeb2Client
 userAddress = users[0]['address']
 teamId = users[0]['teams'][0]['id']
 teams = crabadaWeb2Client.listTeams(userAddress)
-team = findInList(teams, 'team_id', teamId)
+team = findInList(teams, 'team_id', teamId)  # type: ignore
 
 if not team:
     print('Error getting team with ID ' + str(teamId))

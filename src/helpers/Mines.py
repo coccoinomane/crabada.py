@@ -26,7 +26,7 @@ def mineIsSettled(mine: Game) -> bool:
     """
     Return True if the given game is settled
     """
-    mine['winner_team_id'] is not None
+    return mine['winner_team_id'] is not None
 
 def mineIsFinished(game: Game) -> bool:
     """

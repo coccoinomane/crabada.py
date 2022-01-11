@@ -13,10 +13,16 @@ class UserException(Exception):
 class StrategyException(Exception):
     pass
 
+class StrategyNotFound(StrategyException):
+    pass
+
 class StrategyNotApplicable(StrategyException):
     pass
 
 class CrabBorrowPriceTooHigh(StrategyException):
+    pass
+
+class StrategyNotSet(StrategyException):
     pass
 
 #################

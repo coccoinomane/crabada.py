@@ -4,14 +4,27 @@ from web3.types import Wei
 
 Tus = NewType('Tus', int)
 
-Task = Literal['loot', 'mine']
+"""
+Task assigned to a team
+"""
+TeamTask = Literal['loot', 'mine']
+
+"""
+Strategy that a team should follow to choose the best mine
+to loot
+"""
 LootStrategyName = Literal['LowestBp']
+
+"""
+Strategy that the team should follow to get the best
+reincorcement
+"""
 ReinforceStrategyName = Literal['CheapestCrab', 'HighestMp', 'HighestBp']
 
 class ConfigTeam(TypedDict):
     id: int
     userAddress: Address
-    task: Task
+    task: TeamTask
     lootStrategyName: LootStrategyName
     reinforceStrategyName: ReinforceStrategyName
 

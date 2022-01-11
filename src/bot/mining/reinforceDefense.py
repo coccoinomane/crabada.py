@@ -12,7 +12,7 @@ from src.helpers.Sms import sendSms
 from src.common.clients import crabadaWeb2Client, crabadaWeb3Client
 from eth_typing import Address
 from src.models.User import User
-from src.strategies.StrategyFactory import makeReinforceStrategy
+from src.strategies.StrategyFactory import getBestReinforcement, makeReinforceStrategy
 from src.strategies.reinforce.ReinforceStrategy import ReinforceStrategy
 
 def reinforceDefense(userAddress: Address) -> int:
@@ -36,17 +36,16 @@ def reinforceDefense(userAddress: Address) -> int:
     nBorrowedReinforments = 0
     for mine in reinforceableMines:
 
-        mineId = mine['game_id']
-
         # Find best reinforcement crab to borrow
+        mineId = mine['game_id']
         maxPrice = user.config['maxPriceToReinforceInTus']
         strategyName = user.getTeamConfig(mine['team_id']).get('reinforceStrategyName')
-        strategy: ReinforceStrategy = makeReinforceStrategy(strategyName, crabadaWeb2Client).setParams(mine, maxPrice)
+        # strategy: ReinforceStrategy = makeReinforceStrategy(strategyName, crabadaWeb2Client).setParams(mine, maxPrice)
 
         try:
-            crab = strategy.getCrab()
+            crab = getBestReinforcement(userAddress, mine, maxPrice)
         except CrabBorrowPriceTooHigh:
-            logger.warning(f"Price of crab is {Web3.fromWei(price, 'ether')} TUS which exceeds the user limit of {user.config['maxPriceToReinforceInTus']}")
+            logger.warning(f"Price of crab is {Web3.fromWei(price, 'ether')} TUS which exceeds the user limit of {maxPrice}")
             continue
         if not crab:
             logger.warning(f"Could not find a crab to lend for mine {mineId}")

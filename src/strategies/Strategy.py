@@ -16,15 +16,15 @@ class Strategy(ABC):
     def __init__(self, web2Client: CrabadaWeb2Client) -> None:
         self.web2Client = web2Client
 
-    def setParams(*args, **kwargs) -> Strategy:
+    def setParams(self, *args: Any, **kwargs: Any) -> Strategy:
         """
         Set here the parameters of the strategy as class attributes. For example,
         if the strategy needs a maxPrice parameter, the will just to set the
         maxPrice attribute: self.maxPrice = maxPrice
         """
-        pass
+        return self
 
-    def raiseIfNotApplicable(self):
+    def raiseIfNotApplicable(self) -> None:
         """
         Raise error if the strategy is not applicable
         """

@@ -1,9 +1,11 @@
 from __future__ import annotations
+from typing import Tuple
 from eth_typing import Address
 from src.common.config import users
 from src.common.exceptions import UserException
-from src.common.types import ConfigTeam, ConfigUser
+from src.common.types import ConfigTeam, ConfigUser, TeamTask
 from src.helpers.General import findInList, firstOrNone
+from src.libs.CrabadaWeb2Client.types import Game, Team, TeamStatus
 from src.models.Model import Model
 
 class User(Model):
@@ -21,9 +23,37 @@ class User(Model):
 
     def getTeamConfig(self, teamId: int) -> ConfigTeam:
         """
-        Return the configuration of the user's team with given the team ID
+        Return the configuration of the team with the given team ID;
+        if the team does not belong to the current user, return None.
         """
-        return findInList(self.config['teams'], 'id', teamId)
+        return findInList(self.config['teams'], 'id', teamId)  # type: ignore
+
+    def getTeamConfigFromMine(self, mine: Game) -> Tuple[ConfigTeam, TeamStatus]:
+        """
+        Given a game, return the team mining or looting it; if the current user
+        has no teams in the game, return None.
+
+        To check whether the returned team is mining or looting, you can use the
+        second returned value which is either 'loot' or 'mine'.
+
+        TODO: Here we assume that the user cannot have both teams in the same
+        game. Verify this is ok.
+        """
+
+        miningTeamId = mine['team_id']
+        miningTeamConfig = self.getTeamConfig(miningTeamId)
+        if miningTeamConfig:
+            return (miningTeamConfig, 'MINING')
+
+        lootingTeamId = mine['attack_team_id']
+        lootingTeamConfig = self.getTeamConfig(lootingTeamId)
+        if lootingTeamConfig:
+            return (lootingTeamConfig, 'LOOTING')
+        
+        return (None, None)
+
+        
+
 
     @staticmethod
     def isRegistered(userAddress: Address) -> bool:

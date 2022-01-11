@@ -37,7 +37,6 @@ def sendTeamsMining(userAddress: Address) -> int:
         txLogger.info(txHash)
         txReceipt = crabadaWeb3Client.getTransactionReceipt(txHash)
         logTx(txReceipt)
-        # TODO: log the game that was created
         if txReceipt['status'] != 1:
             sendSms(f'Crabada: ERROR sending > {txHash}')
             logger.error(f'Error sending team {teamId}')

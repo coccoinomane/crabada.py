@@ -1,4 +1,4 @@
-from typing import List
+from typing import Any, List
 from src.libs.CrabadaWeb2Client.types import CrabForLending, Game
 from src.strategies.reinforce.ReinforceStrategy import ReinforceStrategy
 from src.helpers.General import firstOrNone
@@ -10,7 +10,7 @@ class HighestBpReinforceStrategy(ReinforceStrategy):
     which has the highest battle point value
     """
 
-    def query(self, game: Game) -> List[CrabForLending]:
+    def query(self, game: Game) -> dict[str, Any]:
         return {
             "limit": 200, # TODO: make it an argument
             "orderBy": 'price',

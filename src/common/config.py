@@ -1,6 +1,6 @@
 import typing
 from web3 import Web3
-from src.common.types import ConfigContract, ConfigTeam, ConfigUser, Tus, Task, LootStrategyName, ReinforceStrategyName
+from src.common.types import ConfigContract, ConfigTeam, ConfigUser, Tus, TeamTask, LootStrategyName, ReinforceStrategyName
 from .dotenv import getenv
 import os
 from typing import List, cast
@@ -19,7 +19,7 @@ teams: List[ConfigTeam] = [
     {
         'id': int(getenv('USER_1_TEAM_1')),
         'userAddress': cast(Address, getenv('USER_1_ADDRESS')),
-        'task': cast(Task, getenv('USER_1_TEAM_1_TASK', 'mine')),
+        'task': cast(TeamTask, getenv('USER_1_TEAM_1_TASK', 'mine')),
         'lootStrategyName': cast(LootStrategyName, getenv('USER_1_TEAM_1_LOOT_STRATEGY', 'LowestBp')),
         'reinforceStrategyName': cast(ReinforceStrategyName, getenv('USER_1_TEAM_1_REINFORCE_STRATEGY', 'HighestBp')),
     },
@@ -72,8 +72,8 @@ notifications = {
 
 # Validate teams
 for team in teams:
-    if team['task'] not in typing.get_args(Task):
-        raise InvalidConfig(f"task of team {team['id']} must be one of {str(typing.get_args(Task))}, is '{team['task']}'")
+    if team['task'] not in typing.get_args(TeamTask):
+        raise InvalidConfig(f"task of team {team['id']} must be one of {str(typing.get_args(TeamTask))}, is '{team['task']}'")
     if team['lootStrategyName'] not in typing.get_args(LootStrategyName):
         raise InvalidConfig(f"lootStrategy of team {team['id']} must be one of {str(typing.get_args(LootStrategyName))}, is '{team['lootStrategyName']}'")
     if team['reinforceStrategyName'] not in typing.get_args(ReinforceStrategyName):

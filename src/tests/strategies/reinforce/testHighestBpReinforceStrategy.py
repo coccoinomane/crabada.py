@@ -21,7 +21,7 @@ def testHighestBpStrategy() -> None:
 
     print('>>> CRAB REINFORCEMENT WITH AUTOMATIC SELECTION')
     try:
-        print(strategy.getCrab()) # Will print note if mine is not reinforceable
+        print(strategy.getCrab('MINING')) # Will print note if mine is not reinforceable
     except Exception as e:
         print('ERROR RAISED: ' + e.__class__.__name__ + ': ' + str(e))
 

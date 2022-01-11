@@ -1,5 +1,8 @@
+from typing import cast
 from web3 import Web3
 from web3.types import Wei
+
+from src.common.types import Tus
 
 def tusToWei(tus: int) -> Wei:
     """
@@ -10,8 +13,8 @@ def tusToWei(tus: int) -> Wei:
     """
     return Web3.toWei(tus, 'ether')
 
-def weiToTus(wei: Wei) -> int:
+def weiToTus(wei: Wei) -> Tus:
     """
     Convert Wei to TUS
     """
-    return Web3.fromWei(wei, 'ether')
+    return cast(Tus, Web3.fromWei(wei, 'ether'))

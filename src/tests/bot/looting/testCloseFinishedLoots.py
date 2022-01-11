@@ -1,4 +1,4 @@
-from src.bot.closeMines import closeFinishedLoots
+from src.bot.mining.closeMines import closeFinishedLoots
 from src.common.config import users
 
 # VARS

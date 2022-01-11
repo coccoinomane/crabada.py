@@ -2,11 +2,19 @@ from typing import Literal, TypedDict, List
 from eth_typing import Address
 from web3.types import Wei
 
+"""
+Possible states for a team
+"""
+TeamStatus = Literal['MINING', 'LOOTING', 'AVAILABLE']
+
 class GameProcess(TypedDict):
     action: Literal['create-game', 'attack', 'reinforce-defence', 'reinforce-attack', 'settle']
     transaction_time: int
 
-class TeamInfo(TypedDict):
+class TeamMember(TypedDict):
+    """
+    Synthetic info about a team member as returned by mine endpoints
+    """
     crabada_id: int
     photo: str
     hp: int
@@ -47,8 +55,8 @@ class Game(TypedDict):
     end_time: int
     round: Literal[0,1,2,3,4]
     process: List[GameProcess]
-    attack_team_info: List[TeamInfo]
-    defense_team_info: List[TeamInfo]
+    attack_team_info: List[TeamMember]
+    defense_team_info: List[TeamMember]
 
 class Team(TypedDict):
     team_id: int
@@ -101,7 +109,7 @@ class Team(TypedDict):
     owner: Address
     process_status: Literal['create-game', 'attack', 'reinforce-defence', 'reinforce-attack', 'settle']
     # Not sure LOOTING is an actual status...
-    status: Literal['MINING', 'LOOTING']
+    status: TeamStatus
     time_point: int
 
 class CrabForLending(TypedDict):

@@ -1,4 +1,4 @@
-from typing import List
+from typing import Any, List
 from src.libs.CrabadaWeb2Client.types import Game, Team
 from src.strategies.loot.LootStrategy import LootStrategy
 from src.helpers.General import firstOrNone
@@ -9,7 +9,7 @@ class LowestBpLootStrategy(LootStrategy):
     defense points
     """
 
-    def query(self, team: Team) -> List[Game]:
+    def query(self, team: Team) -> dict[str, Any]:
         return {
             "can_loot": 1,
             "status": "open",

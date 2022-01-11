@@ -1,13 +1,13 @@
 from __future__ import annotations
 from abc import abstractmethod
-from typing import Any, List, Tuple
-from src.common.exceptions import CrabBorrowPriceTooHigh
+from typing import List, Tuple
+from src.common.exceptions import CrabBorrowPriceTooHigh, StrategyException
 from src.common.types import Tus
 from src.helpers.General import firstOrNone
 from src.helpers.Price import tusToWei, weiToTus
-from src.helpers.Reinforce import getMinerReinforcementStatus, minerCanReinforce
+from src.helpers.Reinforce import getMinerReinforcementStatus, getLooterReinforcementStatus, looterCanReinforce, minerCanReinforce
 from src.strategies.Strategy import Strategy
-from src.libs.CrabadaWeb2Client.types import CrabForLending, Game
+from src.libs.CrabadaWeb2Client.types import CrabForLending, Game, TeamStatus
 
 class ReinforceStrategy(Strategy):
     """
@@ -33,10 +33,10 @@ class ReinforceStrategy(Strategy):
         The strategy can be applied only if the mine can
         be reinforced
         """
-        isApplicable = minerCanReinforce(self.game)
+        isApplicable = minerCanReinforce(self.game) or looterCanReinforce(self.game)
         return (
             isApplicable,
-            '' if isApplicable else f"Miner cannot reinforce mine {self.game['self.game_id']} (round = {self.game['round']}, winner_team_id = {self.game['winner_team_id']})",
+            '' if isApplicable else f"Game cannot be reinforced {self.game['self.game_id']} (round = {self.game['round']}, winner_team_id = {self.game['winner_team_id']})",
         )
 
     @abstractmethod
@@ -45,7 +45,7 @@ class ReinforceStrategy(Strategy):
         Query to get the list of the available crabs for lending,
         from which we will choose the reinforcement.
         """
-        pass
+        return []
 
     def query2(self, game: Game) -> List[CrabForLending]:
         """
@@ -66,17 +66,29 @@ class ReinforceStrategy(Strategy):
         """
         return self.crab(game, list)
 
-    def getCrab(self) -> CrabForLending:
+    def getCrab(self, lootingOrMining: TeamStatus) -> CrabForLending:
         """
-        Fetch and return a reinforcement crab, using the strategy.
-        If no crab can be found, return None.
+        Fetch and return a reinforcement crab, using the strategy;
+        if no crab can be found, return None.
+        
+        Contrary to getCrab1 and getCrab2, this function automatically decides
+        which reinforcement (first vs second) is needed based on the game's
+        status. This is why it needs to know whether your team is mining or
+        looting.
         """
-        status = getMinerReinforcementStatus(self.game)
-        if status == 0:
+        
+        if lootingOrMining == 'LOOTING':
+            status = getLooterReinforcementStatus(self.game)
+        elif lootingOrMining == 'MINING':
+            status = getMinerReinforcementStatus(self.game)
+        else:
+            raise StrategyException(f"Team is neither LOOTING nor MINING, [value passed={lootingOrMining}]")
+
+        if status == 0: # mine cannot be reinforced
             return None
-        elif status == 1:
+        elif status == 1: # first reinforcement
             return self._getCrab1()
-        elif status == 2:
+        elif status == 2: # second reinforcement
             return self._getCrab2()
 
     def raiseIfPriceTooHigh(self, crab: CrabForLending, maxPrice: Tus):
