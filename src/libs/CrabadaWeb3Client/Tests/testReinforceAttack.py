@@ -1,11 +1,12 @@
 from typing import cast
-from src.helpers.Reinforce import isTooExpensiveForUser, minerCanReinforce
+from src.helpers.Reinforce import minerCanReinforce
 from src.libs.Web3Client.Helpers.Debug import printTxInfo
 from src.common.config import nodeUri, users, contract, chainId
 from src.libs.CrabadaWeb3Client.CrabadaWeb3Client import CrabadaWeb3Client
 from src.libs.CrabadaWeb2Client.CrabadaWeb2Client import CrabadaWeb2Client
 from web3 import Web3
 from pprint import pprint
+from src.models.User import User
 
 # VARS
 web3Client = cast(CrabadaWeb3Client, (CrabadaWeb3Client()
@@ -29,7 +30,7 @@ if not cheapestCrab:
     exit(1)
 
 price = cheapestCrab['price']
-if isTooExpensiveForUser(price, userAddress):
+if User(userAddress).isTooExpensiveToBorrowTusWei(price):
     print(f"Price of crab is {Web3.fromWei(price, 'ether')} TUS which exceeds the user limit of {Web3.fromWei(users[0]['maxPriceToReinforceInTusWei'], 'ether')}")
     exit(1)
 

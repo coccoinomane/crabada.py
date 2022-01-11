@@ -1,9 +1,10 @@
 from __future__ import annotations
 from typing import Tuple
 from eth_typing import Address
+from web3.types import Wei
 from src.common.config import users
 from src.common.exceptions import UserException
-from src.common.types import ConfigTeam, ConfigUser, TeamTask
+from src.common.types import ConfigTeam, ConfigUser, TeamTask, Tus
 from src.helpers.General import findInList, firstOrNone
 from src.libs.CrabadaWeb2Client.types import Game, Team, TeamStatus
 from src.models.Model import Model
@@ -52,8 +53,17 @@ class User(Model):
         
         return (None, None)
 
-        
+    def isTooExpensiveToBorrowTus(self, price: Tus) -> bool:
+        """
+        Return whether a crab costs too much to borrow for the user
+        """
+        return price > self.config['maxPriceToReinforceInTus']
 
+    def isTooExpensiveToBorrowTusWei(self, price: Wei) -> bool:
+        """
+        Return whether a crab costs too much to borrow for the user
+        """
+        return price > self.config['maxPriceToReinforceInTusWei']
 
     @staticmethod
     def isRegistered(userAddress: Address) -> bool:

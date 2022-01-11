@@ -1,6 +1,6 @@
 from __future__ import annotations
 from abc import abstractmethod
-from typing import List, Tuple
+from typing import List, Tuple, cast
 from src.common.exceptions import CrabBorrowPriceTooHigh, StrategyException
 from src.common.types import Tus
 from src.helpers.General import firstOrNone
@@ -19,7 +19,7 @@ class ReinforceStrategy(Strategy):
     maxPrice1: Tus = None # max price to spend for the first reinforcement, in Tus
     maxPrice2: Tus = None # max price to spend for the second reinforcement, in Tus
     
-    def setParams(self, game: Game, maxPrice: Tus = 50, maxPrice2: Tus = None) -> Strategy:
+    def setParams(self, game: Game, maxPrice: Tus = cast(Tus, 50), maxPrice2: Tus = None) -> Strategy:
         self.game = game
         self.maxPrice1 = maxPrice
         if not maxPrice2:
@@ -36,7 +36,7 @@ class ReinforceStrategy(Strategy):
         isApplicable = minerCanReinforce(self.game) or looterCanReinforce(self.game)
         return (
             isApplicable,
-            '' if isApplicable else f"Game cannot be reinforced {self.game['self.game_id']} (round = {self.game['round']}, winner_team_id = {self.game['winner_team_id']})",
+            '' if isApplicable else f"Game cannot be reinforced {self.game['game_id']} (round = {self.game['round']}, winner_team_id = {self.game['winner_team_id']})",
         )
 
     @abstractmethod
@@ -91,7 +91,7 @@ class ReinforceStrategy(Strategy):
         elif status == 2: # second reinforcement
             return self._getCrab2()
 
-    def raiseIfPriceTooHigh(self, crab: CrabForLending, maxPrice: Tus):
+    def raiseIfPriceTooHigh(self, crab: CrabForLending, maxPrice: Tus) -> None:
         """
         Raise an exception if the price of the given crab is higher
         than the given max price; the latter should be give in TUS,

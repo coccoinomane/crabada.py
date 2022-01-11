@@ -7,6 +7,7 @@ from src.common.txLogger import txLogger, logTx
 from src.helpers.Sms import sendSms
 from src.common.clients import crabadaWeb2Client, crabadaWeb3Client
 from eth_typing import Address
+from src.strategies.StrategyFactory import getBestMineToLoot
 from src.strategies.loot.LowestBpLootStrategy import LowestBpLootStrategy
 
 def sendTeamsLooting(userAddress: Address) -> int:
@@ -35,8 +36,7 @@ def sendTeamsLooting(userAddress: Address) -> int:
         logger.info(f'Sending team {teamId} to loot...')
 
         # Find best mine to loot
-        strategy: LowestBpLootStrategy = LowestBpLootStrategy(crabadaWeb2Client).setParams(team=t)
-        mine = strategy.getMine()
+        mine = getBestMineToLoot(t)
         if not mine:
             logger.warning(f"Could not find a suitable mine to loot for team {teamId}")
             continue
@@ -54,13 +54,3 @@ def sendTeamsLooting(userAddress: Address) -> int:
             logger.info(f'Team {teamId} sent succesfully')
 
     return nAttackedMines
-
-def getBestMineToLoot():
-    """
-    Find best mine to loot using the user-provided strategy
-    """
-    strategy: LowestBpLootStrategy = LowestBpLootStrategy(crabadaWeb2Client).setParams(team=t)
-    mine = strategy.getMine()
-    if not mine:
-        logger.warning(f"Could not find a suitable mine to loot for team {teamId}")
-        continue

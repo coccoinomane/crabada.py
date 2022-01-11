@@ -83,7 +83,7 @@ def looterCanReinforceForTheFirstTime(mine: Game) -> bool:
     """
     return (
         not mineIsSettled(mine)
-        and mineHasBeenAttacked()
+        and mineHasBeenAttacked(mine)
         and mineIsOpen(mine)
         and mine['round'] == 1
     )
