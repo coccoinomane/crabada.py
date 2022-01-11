@@ -48,6 +48,16 @@ class CrabadaWeb2Client:
         params['status'] = 'open'
         return self.listMines(params)
 
+    def listMyOpenLoots(self, looterAddress: Address, params: dict[str, Any] = {}) -> List[Game]:
+        """
+        Get all mines that are being looted by the given looter address
+        and that are open
+        """
+        params.pop('user_address', None)
+        params['looter_address'] = looterAddress
+        params['status'] = 'open'
+        return self.listMines(params)
+
     def listMines_Raw(self, params: dict[str, Any] = {}) -> Any:
         url = self.baseUri + '/mines'
         defaultParams = {

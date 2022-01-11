@@ -1,5 +1,5 @@
 """
-Helper functions to reinforce all mines of a given user
+Helper functions to reinforce all loots of a given user
 """
 
 from web3.main import Web3
@@ -13,20 +13,20 @@ from eth_typing import Address
 from src.models.User import User
 from src.strategies.StrategyFactory import getBestReinforcement
 
-def reinforceDefense(userAddress: Address) -> int:
+def reinforceAttack(looterAddress: Address) -> int:
     """
-    Check if any of the teams of the user that are mining can be
+    Check if any of the teams of the user that are looting can be
     reinforced, and do so if this is the case; return the
     number of borrowed reinforcements.
     
     TODO: implement paging
     """
     
-    user = User(userAddress)
-    openMines = crabadaWeb2Client.listMyOpenMines(userAddress)
-    reinforceableMines = [ m for m in openMines if minerCanReinforce(m) ]
+    user = User(looterAddress)
+    openLoots = crabadaWeb2Client.listMyOpenLoots(looterAddress)
+    reinforceableMines = [ m for m in openLoots if minerCanReinforce(m) ]
     if not reinforceableMines:
-        logger.info('No mines to reinforce for user ' + str(userAddress))
+        logger.info('No loots to reinforce for user ' + str(looterAddress))
         return 0
 
     # Reinforce the mines
@@ -38,7 +38,7 @@ def reinforceDefense(userAddress: Address) -> int:
         maxPrice = user.config['maxPriceToReinforceInTus']
         strategyName = user.getTeamConfig(mine['team_id']).get('reinforceStrategyName')
         try:
-            crab = getBestReinforcement(userAddress, mine, maxPrice)
+            crab = getBestReinforcement(looterAddress, mine, maxPrice)
         except CrabBorrowPriceTooHigh:
             logger.warning(f"Price of crab is {Web3.fromWei(crab['price'], 'ether')} TUS which exceeds the user limit of {maxPrice} [strategyName={strategyName}]")
             continue
@@ -51,7 +51,7 @@ def reinforceDefense(userAddress: Address) -> int:
         logger.info(f"Borrowing crab {crabId} for mine {mineId} at {Web3.fromWei(price, 'ether')} TUS... [strategy={strategyName}, BP={crab['battle_point']}, MP={crab['mine_point']}]")
 
         # Borrow the crab
-        txHash = crabadaWeb3Client.reinforceDefense(mineId, crabId, price)
+        txHash = crabadaWeb3Client.reinforceAttack(mineId, crabId, price)
         txLogger.info(txHash)
         txReceipt = crabadaWeb3Client.getTransactionReceipt(txHash)
         logTx(txReceipt)

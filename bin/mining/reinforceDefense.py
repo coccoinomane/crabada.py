@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Crabada script to reinforce all teams of the given
-user that are currently mining.
+"""
+Crabada script to reinforce all mining teams of the given user
 
 Usage:
-    python3 -m bin.reinforce
+    python3 -m bin.mining.reinforceDefense <userAddress>
 
 Author:
     @coccoinomane (Twitter)

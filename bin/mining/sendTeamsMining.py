@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Crabada script to send mining all available teams for
-the given user address.
+"""
+Crabada script to send mining all available teams for
+the given user.
 
 Usage:
-    python3 -m bin.sendTeamsMining
+    python3 -m bin.mining.sendTeamsMining <userAddress>
 
 Author:
     @coccoinomane (Twitter)

@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Crabada script to send looting all available teams for
-the given user address.
+"""
+Crabada script to send mining all available teams for
+the given user.
 
 Usage:
-    python3 -m bin.sendTeamsLooting
+    python3 -m bin.sendTeamsLooting <userAddress>
 
 Author:
     @coccoinomane (Twitter)

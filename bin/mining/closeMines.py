@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Crabada script to close all finished mines for
-the given user address.
+"""
+Crabada script to close and claim rewards for all finished mines
+for the given user address.
 
 Usage:
-    python3 -m bin.closeGames
+    python3 -m bin.mining.closeGames <userAddress>
 
 Author:
     @coccoinomane (Twitter)
