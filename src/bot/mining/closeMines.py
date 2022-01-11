@@ -41,16 +41,16 @@ def closeMines(userAddress: Address) -> int:
     # Close the finished games
     for g in finishedGames:
         gameId = g['game_id']
-        logger.info(f'Closing game {gameId}...')
+        logger.info(f'Closing mine {gameId}...')
         txHash = crabadaWeb3Client.closeGame(gameId)
         txLogger.info(txHash)
         txReceipt = crabadaWeb3Client.getTransactionReceipt(txHash)
         logTx(txReceipt)
         if txReceipt['status'] != 1:
-            logger.error(f'Error closing game {gameId}')
-            sendSms(f'Crabada: ERROR closing > {txHash}')
+            logger.error(f'Error closing mine {gameId}')
+            sendSms(f'Crabada: ERROR closing mine > {txHash}')
         else:
             nClosedGames += 1
-            logger.info(f'Game {gameId} closed correctly')
+            logger.info(f'Mine {gameId} closed correctly')
     
     return nClosedGames
