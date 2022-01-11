@@ -36,7 +36,7 @@ def sendTeamsLooting(userAddress: Address) -> int:
         logger.info(f'Sending team {teamId} to loot...')
 
         # Find best mine to loot
-        mine = getBestMineToLoot(t)
+        mine = getBestMineToLoot(userAddress, t)
         if not mine:
             logger.warning(f"Could not find a suitable mine to loot for team {teamId}")
             continue
@@ -47,7 +47,7 @@ def sendTeamsLooting(userAddress: Address) -> int:
         txReceipt = crabadaWeb3Client.getTransactionReceipt(txHash)
         logTx(txReceipt)
         if txReceipt['status'] != 1:
-            sendSms(f'Crabada: ERROR attacking > {txHash}')
+            # sendSms(f'Crabada: ERROR attacking > {txHash}')
             logger.error(f'Error attacking mine {str(mine["game_id"])} with team {teamId}')
         else:
             nAttackedMines += 1
