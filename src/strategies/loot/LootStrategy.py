@@ -12,10 +12,12 @@ class LootStrategy(Strategy):
     """
 
     team: Team = None # team to send looting
+    minesToFetch: int = None # number of mines to consider, the lowest the fastest
     lootableMines: List[Game] = []
 
-    def setParams(self, team: Team) -> Strategy:
+    def setParams(self, team: Team, minesToFetch: int = 5) -> Strategy:
         self.team = team
+        self.minesToFetch = minesToFetch
         return self
 
     def isApplicable(self) -> Tuple[bool, str]:

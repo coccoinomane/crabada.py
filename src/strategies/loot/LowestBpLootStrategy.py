@@ -14,7 +14,7 @@ class LowestBpLootStrategy(LootStrategy):
             "can_loot": 1,
             "status": "open",
             "looter_address": team["owner"],
-            "limit": 200, # TODO: make it an argument
+            "limit": self.minesToFetch,
             "orderBy": 'game_id',
             "order": 'desc',
         }
