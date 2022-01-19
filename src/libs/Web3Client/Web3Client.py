@@ -5,7 +5,7 @@ from eth_typing import Address
 from web3 import Web3
 from eth_account.datastructures import SignedTransaction
 from web3.contract import Contract, ContractFunction
-from web3.types import BlockData, Nonce, TxParams, TxReceipt
+from web3.types import BlockData, Nonce, TxParams, TxReceipt, TxData
 from eth_typing.encoding import HexStr
 
 class Web3Client:
@@ -97,10 +97,17 @@ class Web3Client:
     
     def getTransactionReceipt(self, txHash: HexStr) -> TxReceipt:
         """
-        Given a transaction, wait for the blockchain to confirm
+        Given a transaction hash, wait for the blockchain to confirm
         it and return the tx receipt.
         """
         return self.w3.eth.wait_for_transaction_receipt(txHash)
+
+    def getTransaction(self, txHash: HexStr) -> TxData:
+        """
+        Given a transaction hash, get the transaction; will raise error
+        if the transaction has not been mined yet.
+        """
+        return self.w3.eth.get_transaction(txHash)
 
     ####################
     # Utils
