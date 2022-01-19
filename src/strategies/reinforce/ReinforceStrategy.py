@@ -3,9 +3,9 @@ from abc import abstractmethod
 from typing import List, Tuple, cast
 from src.common.exceptions import CrabBorrowPriceTooHigh, StrategyException
 from src.common.types import Tus
-from src.helpers.General import firstOrNone
-from src.helpers.Price import tusToWei, weiToTus
-from src.helpers.Reinforce import getMinerReinforcementStatus, getLooterReinforcementStatus, looterCanReinforce, minerCanReinforce
+from src.helpers.general import firstOrNone
+from src.helpers.price import tusToWei, weiToTus
+from src.helpers.reinforce import getMinerReinforcementStatus, getLooterReinforcementStatus, looterCanReinforce, minerCanReinforce
 from src.strategies.Strategy import Strategy
 from src.libs.CrabadaWeb2Client.types import CrabForLending, Game, TeamStatus
 

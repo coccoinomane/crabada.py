@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from typing import List, Tuple
-from src.helpers.General import firstOrNone
-from src.helpers.Teams import teamCanLoot
+from src.helpers.general import firstOrNone
+from src.helpers.teams import teamCanLoot
 from src.strategies.Strategy import Strategy
 from src.libs.CrabadaWeb2Client.types import Game, Team
 

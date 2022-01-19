@@ -1,7 +1,7 @@
 from typing import Any, List, Tuple
 from eth_typing import Address
 import requests
-from src.helpers.General import firstOrNone, secondOrNone
+from src.helpers.general import firstOrNone, secondOrNone
 
 from src.libs.CrabadaWeb2Client.types import CrabForLending, Game, Team
 

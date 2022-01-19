@@ -1,8 +1,8 @@
 from typing import Any, List
 from src.libs.CrabadaWeb2Client.types import CrabForLending, Game
 from src.strategies.reinforce.ReinforceStrategy import ReinforceStrategy
-from src.helpers.General import firstOrNone
-from src.helpers.Price import weiToTus
+from src.helpers.general import firstOrNone
+from src.helpers.price import weiToTus
 
 class HighestMpReinforceStrategy(ReinforceStrategy):
     """

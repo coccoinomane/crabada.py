@@ -2,7 +2,7 @@ from typing import Literal
 from eth_typing.evm import Address
 from web3.types import Wei
 from src.common.exceptions import MissingConfig
-from src.helpers.Mines import mineHasBeenAttacked, mineIsOpen, mineIsSettled
+from src.helpers.mines import mineHasBeenAttacked, mineIsOpen, mineIsSettled
 from src.models.User import User
 from src.libs.CrabadaWeb2Client.types import Game
 

@@ -10,7 +10,7 @@ Author:
 """
 
 from src.bot.looting.reinforceAttack import reinforceAttack
-from src.helpers.General import secondOrNone
+from src.helpers.general import secondOrNone
 from src.models.User import User
 from src.common.logger import logger
 from sys import argv

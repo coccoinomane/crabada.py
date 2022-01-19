@@ -1,5 +1,5 @@
 from src.common.config import users
-from src.helpers.General import findInList, firstOrNone
+from src.helpers.general import findInList, firstOrNone
 from src.strategies.loot.LowestBpLootStrategy import LowestBpLootStrategy
 from src.common.clients import crabadaWeb2Client
 

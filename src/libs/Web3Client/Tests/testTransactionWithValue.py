@@ -3,7 +3,7 @@ from typing import cast
 from eth_typing import Address
 from src.common.config import nodeUri, users, chainId
 from src.libs.Web3Client.AvalancheWeb3Client import AvalancheWeb3Client
-from src.libs.Web3Client.Helpers.Debug import printTxInfo
+from src.libs.Web3Client.helpers.debug import printTxInfo
 from pprint import pprint
 
 # VARS

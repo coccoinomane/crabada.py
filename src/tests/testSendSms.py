@@ -1,6 +1,6 @@
 """Code from https://www.twilio.com/docs/sms/quickstart/python#install-python-and-the-twilio-helper-library"""
 
-from src.helpers.Sms import sendSms
+from src.helpers.sms import sendSms
 from pprint import pprint
 
 # VARS

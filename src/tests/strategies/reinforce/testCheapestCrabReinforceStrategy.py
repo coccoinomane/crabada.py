@@ -1,6 +1,6 @@
 from typing import cast
 from src.common.types import Tus
-from src.helpers.General import secondOrNone, thirdOrNone
+from src.helpers.general import secondOrNone, thirdOrNone
 from src.strategies.reinforce.CheapestCrabReinforceStrategy import CheapestCrabReinforceStrategy
 from src.common.clients import crabadaWeb2Client
 from sys import argv

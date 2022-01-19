@@ -5,10 +5,10 @@ of a given user
 
 from src.common.logger import logger
 from src.common.txLogger import txLogger, logTx
-from src.helpers.Sms import sendSms
+from src.helpers.sms import sendSms
 from src.common.clients import crabadaWeb2Client, crabadaWeb3Client
 from eth_typing import Address
-from src.helpers.Mines import getNextMineToFinish, getRemainingTimeFormatted, mineIsFinished
+from src.helpers.mines import getNextMineToFinish, getRemainingTimeFormatted, mineIsFinished
 from src.libs.CrabadaWeb2Client.types import Game
 
 def closeMines(userAddress: Address) -> int:

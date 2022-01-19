@@ -1,4 +1,4 @@
-from src.helpers.General import secondOrNone
+from src.helpers.general import secondOrNone
 from src.libs.CrabadaWeb2Client.CrabadaWeb2Client import CrabadaWeb2Client
 from pprint import pprint
 from sys import argv

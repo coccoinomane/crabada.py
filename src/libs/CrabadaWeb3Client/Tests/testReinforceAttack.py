@@ -1,6 +1,6 @@
 from typing import cast
-from src.helpers.Reinforce import minerCanReinforce
-from src.libs.Web3Client.Helpers.Debug import printTxInfo
+from src.helpers.reinforce import minerCanReinforce
+from src.libs.Web3Client.helpers.debug import printTxInfo
 from src.common.config import nodeUri, users, contract, chainId
 from src.libs.CrabadaWeb3Client.CrabadaWeb3Client import CrabadaWeb3Client
 from src.libs.CrabadaWeb2Client.CrabadaWeb2Client import CrabadaWeb2Client

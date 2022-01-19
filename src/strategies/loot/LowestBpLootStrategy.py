@@ -1,7 +1,7 @@
 from typing import Any, List
 from src.libs.CrabadaWeb2Client.types import Game, Team
 from src.strategies.loot.LootStrategy import LootStrategy
-from src.helpers.General import firstOrNone
+from src.helpers.general import firstOrNone
 
 class LowestBpLootStrategy(LootStrategy):
     """

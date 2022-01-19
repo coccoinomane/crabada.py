@@ -3,10 +3,10 @@ Helper functions to handle Crabada mines / gamess
 """
 
 from typing import List
-from src.helpers.Dates import getPrettySeconds
+from src.helpers.dates import getPrettySeconds
 from time import time
 from src.common.clients import crabadaWeb2Client
-from src.helpers.General import firstOrNone
+from src.helpers.general import firstOrNone
 from src.libs.CrabadaWeb2Client.types import Game
 
 def mineHasBeenAttacked(mine: Game) -> bool:

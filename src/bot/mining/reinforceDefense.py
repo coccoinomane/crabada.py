@@ -6,8 +6,8 @@ from web3.main import Web3
 from src.common.exceptions import CrabBorrowPriceTooHigh
 from src.common.logger import logger
 from src.common.txLogger import txLogger, logTx
-from src.helpers.Reinforce import minerCanReinforce
-from src.helpers.Sms import sendSms
+from src.helpers.reinforce import minerCanReinforce
+from src.helpers.sms import sendSms
 from src.common.clients import crabadaWeb2Client, crabadaWeb3Client
 from eth_typing import Address
 from src.models.User import User
