@@ -11,7 +11,6 @@ client = cast(CrabadaWeb3Client, (CrabadaWeb3Client()
     .setCredentials(users[0]['address'], users[0]['privateKey'])
     .setChainId(chainId)))
 
-# Contract
 gameId = int(argv[1]) if len(argv) > 1 else 284549
 
 # TEST FUNCTIONS

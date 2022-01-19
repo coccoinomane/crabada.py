@@ -12,7 +12,6 @@ client = cast(CrabadaWeb3Client, (CrabadaWeb3Client()
     .setCredentials(users[0]['address'], users[0]['privateKey'])
     .setChainId(chainId)))
 
-# Contract
 teamId = users[0]['teams'][0]['id']
 mineId = int(secondOrNone(argv))
 
