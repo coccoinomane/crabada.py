@@ -1,7 +1,6 @@
 """
-Extract event log from a contract transaction; you need to
-replace myEvent() with the event name, which should be defined in
-the contract's ABI.
+Extract event log from a startGame contract transaction; the event
+is called gameStarted and should be defined in the contract's ABI.
 
 Docs: https://web3py.readthedocs.io/en/stable/contracts.html#events
 """
@@ -17,7 +16,7 @@ from pprint import pprint
 from web3 import Web3
 
 # VARS
-txHash = cast(HexStr, (secondOrNone(argv) or "0xc333db84c2c5d114f8168d92b9114c6325ae541f2758a5ae539055539721d00c"))
+txHash = cast(HexStr, (secondOrNone(argv) or "0x41705baf18b1ebc8ec204926a8524d3530aada11bd3c249ca4a330ed047f005e"))
 
 client = cast(CrabadaWeb3Client, (CrabadaWeb3Client()
     .setNodeUri(nodeUri)
@@ -26,7 +25,7 @@ client = cast(CrabadaWeb3Client, (CrabadaWeb3Client()
 
 tx = client.getTransaction(txHash)
 txReceipt = client.getTransactionReceipt(txHash)
-logs = client.contract.events.myEvent().processReceipt(txReceipt)
+logs = client.contract.events.StartGame().processReceipt(txReceipt)
 
 # TEST FUNCTIONS
 def testContractEvents() -> None:
