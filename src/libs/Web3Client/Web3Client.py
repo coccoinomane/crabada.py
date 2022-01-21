@@ -157,9 +157,15 @@ class Web3Client:
         self.contract = self.w3.eth.contract(address=self.contractChecksumAddress, abi=self.abi)
         return self
 
-    def setNodeUri(self, nodeUri: str) -> Web3Client:
+    def setNodeUri(self, nodeUri: str = None) -> Web3Client:
+        """
+        Set node URI and initalize provider (HTTPS & WS supported).
+        
+        Provide an empty nodeUri to use autodetection,
+        docs here https://web3py.readthedocs.io/en/stable/providers.html#how-automated-detection-works
+        """
         self.nodeUri = nodeUri
-        self.w3 = self.__getHttpProvider()
+        self.w3 = self.__getProvider()
         return self
 
     def setCredentials(self, userAddress: Address, privateKey: str) -> Web3Client:
@@ -187,5 +193,10 @@ class Web3Client:
         with open(fileName) as file:
             return json.load(file)
     
-    def __getHttpProvider(self) -> Web3:
-        return Web3(Web3.HTTPProvider(self.nodeUri))
+    def __getProvider(self) -> Web3:
+        if (self.nodeUri[0:4] == 'http'):
+            return Web3(Web3.HTTPProvider(self.nodeUri))
+        elif (self.nodeUri[0:2] == 'ws'):
+            return Web3(Web3.WebsocketProvider(self.nodeUri))
+        else:
+            return Web3()

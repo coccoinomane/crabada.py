@@ -11,7 +11,7 @@ class AvalancheWeb3Client(Web3Client):
     maxPriorityFeePerGasInGwei: int = 2 # TODO: fine tune
     gasLimit: int = 400000 # sensible value for Avalanche
 
-    def setNodeUri(self, nodeUri: str) -> AvalancheWeb3Client:
+    def setNodeUri(self, nodeUri: str = None) -> AvalancheWeb3Client:
         """
         Inject the POA middleware
         """
