@@ -26,18 +26,28 @@ For a list of endpoints, see the [Postman collection](https://go.postman.co/work
 - [Claim tx](https://snowtrace.io/tx/0x55a75966158e03c22058ac24dbe855ee7aa2437d719c61b54cf14c4a906d9631)
 - [Claim tx](https://snowtrace.io/tx/0x65d7d2783f7817f3302cee3b5f1ca0dd3bb7ace19b172770df00800a51403124) (different sequence)
 
-## Looting
+### Looting
 
 - [Attack tx](https://snowtrace.io/tx/0x21a7f94f6e02103b55d9b9fa53243ae1ac0eab8531f5588cfc4a0e6ace126902)
 - [Settle tx](https://snowtrace.io/tx/0xb6853b50dd85e59062964a060e796ffcd13e3d72711e0789127f2f3d81f523d1)
 
+# Events
+
+### startGame
+
+- Method > 0xe5ed1d59
+- Example transaction > [0x41705baf18b1ebc8ec204926a8524d3530aada11bd3c249ca4a330ed047f005e](https://snowtrace.io/tx/0x41705baf18b1ebc8ec204926a8524d3530aada11bd3c249ca4a330ed047f005e) (click on "Logs")
+- Topics:
+ 0. 0x0eef6f7452b7d2ee11184579c086fb47626e796a83df2b2e16254df60ab761eb
+ 1. Mine number, e.g. 605198
+ 2. Team number, e.g. 4476
+ 3. Game duration in seconds, e.g. 14400 is 4 hours
+ 4. CRA reward for miner win, in Wei, e.g. 4125000000000000000 is 4.125 CRA (with prime)
+ 5. TUS reward for miner win, in Wei, e.g. 334125000000000000000 is 334.125 TUS (with prime)
+
 # To do
 
-* Find a way to differentiate/manage mines & loots
- - How to compute time left to settle?
- - Do we need an enum?
- - Do we need different files/classes?
-* Implement a team's task parameter; more in general: how to run cron job for mining vs for looting?
+
 * In Python all class attributes are static > should declare them in the constructor?
 * Web3Client: Allow to specify contract and ABI ovverriding props
 * Use cron library to schedule scripts
@@ -47,6 +57,8 @@ For a list of endpoints, see the [Postman collection](https://go.postman.co/work
 
 # Done
 
+* Implement a team's task parameter; more in general: how to run cron job for mining vs for looting?
+* Find a way to differentiate/manage mines & loots
 * Write reinforcement script
 * Write startGame script
 * Write closeGame script
