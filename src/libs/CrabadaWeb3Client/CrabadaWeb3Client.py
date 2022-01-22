@@ -1,18 +1,25 @@
+from typing import cast
+import json
+from eth_typing import Address
 from web3.types import TxParams, Wei
-from src.libs.Web3Client.AvalancheWeb3Client import AvalancheWeb3Client
+from src.libs.Web3Client.Web3Client import Web3Client
+from src.libs.Web3Client.AvalancheCWeb3Client import AvalancheCWeb3Client
 from eth_typing.encoding import HexStr
+import os
 
-class CrabadaWeb3Client(AvalancheWeb3Client):
-    """Interact with a smart contract of the game Crabada
+class CrabadaWeb3Client(AvalancheCWeb3Client):
+    """
+    Interact with a smart contract of the game Crabada
     
     The contract resides on the Avalanche blockchain; here's the
     explorer URL:
-    https://snowtrace.io/address/0x82a85407bd612f52577909f4a58bfc6873f14da8#tokentxns"""
+    https://snowtrace.io/address/0x82a85407bd612f52577909f4a58bfc6873f14da8#tokentxns
+    """
 
-    # TODO: We should auto-initialize contract address and ABI
-    # contractAddress: str = '0x82a85407bd612f52577909f4a58bfc6873f14da8'
-    # abi = json.load(abifile)
-    
+    contractAddress = cast(Address, '0x82a85407bd612f52577909f4a58bfc6873f14da8')
+    abiDir = os.path.dirname(os.path.realpath(__file__)) + '/abi'
+    abi = Web3Client.getContractAbiFromFile(abiDir + '/abi-crabada.json')
+
     def startGame(self, teamId: int) -> HexStr:
         """
         Send crabs to mine

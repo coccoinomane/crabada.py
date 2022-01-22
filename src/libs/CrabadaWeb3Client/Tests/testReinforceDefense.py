@@ -1,7 +1,7 @@
 from typing import cast
 from src.helpers.reinforce import minerCanReinforce
 from src.libs.Web3Client.helpers.debug import printTxInfo
-from src.common.config import nodeUri, users, contract, chainId
+from src.common.config import nodeUri, users
 from src.libs.CrabadaWeb3Client.CrabadaWeb3Client import CrabadaWeb3Client
 from src.libs.CrabadaWeb2Client.CrabadaWeb2Client import CrabadaWeb2Client
 from web3 import Web3
@@ -11,9 +11,7 @@ from src.models.User import User
 # VARS
 web3Client = cast(CrabadaWeb3Client, (CrabadaWeb3Client()
     .setNodeUri(nodeUri)
-    .setContract(contract['address'], contract['abi'])
-    .setCredentials(users[0]['address'], users[0]['privateKey'])
-    .setChainId(chainId)))
+    .setCredentials(users[0]['address'], users[0]['privateKey'])))
 
 web2Client = CrabadaWeb2Client()
 

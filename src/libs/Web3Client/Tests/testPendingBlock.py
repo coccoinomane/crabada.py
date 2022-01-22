@@ -7,13 +7,13 @@ not support pending transactions (e.g. because it is not
 a full validator node).
 """
 from src.common.config import nodeUri, users
-from src.libs.Web3Client.AvalancheWeb3Client import AvalancheWeb3Client
+from src.libs.Web3Client.AvalancheCWeb3Client import AvalancheCWeb3Client
 import pprint
 
 from src.libs.Web3Client.helpers.debug import pprintAttributeDict
 
 # VARS
-client = (AvalancheWeb3Client()
+client = (AvalancheCWeb3Client()
     .setNodeUri(nodeUri)
     .setCredentials(users[0]['address'], users[0]['privateKey']))
 

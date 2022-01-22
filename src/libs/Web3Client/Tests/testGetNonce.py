@@ -1,4 +1,4 @@
-from src.common.config import nodeUri, contract, users
+from src.common.config import nodeUri, users
 from src.libs.Web3Client.Web3Client import Web3Client
 from pprint import pprint
 

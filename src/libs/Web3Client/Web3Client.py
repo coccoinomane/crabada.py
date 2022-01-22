@@ -7,27 +7,35 @@ from eth_account.datastructures import SignedTransaction
 from web3.contract import Contract, ContractFunction
 from web3.types import BlockData, Nonce, TxParams, TxReceipt, TxData
 from eth_typing.encoding import HexStr
+from src.libs.Web3Client.exceptions import MissingParameter
 
 class Web3Client:
+    """"""
+    
     """
     Client to interact with a blockchain, with smart
     contract support.
     
     Wrapper of the Web3 library intended to make it easier
     to use.
-    """
-
-    maxPriorityFeePerGasInGwei: int = None
-    gasLimit: int = None    
-    contractAddress: Address = None
-    contractChecksumAddress: str = None
-    abi: dict[str, Any] = None # contract's ABI, loaded from abi.json
-    nodeUri: str = None # your node's URI
-    w3: Web3 = None # provider Web3, see https://web3py.readthedocs.io/en/stable/providers.html
-    contract: Contract = None # the contract instance, see https://web3py.readthedocs.io/en/stable/examples.html#interacting-with-existing-contracts
+    
+    Attributes
+    ----------
+    maxPriorityFeePerGasInGwei : int
+    gasLimit : int
+    contractAddress : Address
+    abi: dict[str, Any] = None
+    nodeUri: str = None
     userAddress: Address = None
     privateKey: str = None
     chainId: int = None
+    
+    Derived attributes
+    ----------
+    contractChecksumAddress: str = None
+    w3: Web3 = None
+    contract: Contract = None
+    """
 
     ####################
     # Build Tx
@@ -36,7 +44,8 @@ class Web3Client:
     def buildBaseTransaction(self) -> TxParams:
         """
         Build a basic EIP-1559 transaction with just nonce, chain ID and gas;
-        you should already have called setChainId() and setNodeUri.
+        before invoking this method you need to have specified a chainId and
+        called setNodeUri().
         
         Gas is estimated according to the formula
         maxMaxFeePerGas = 2 * baseFee + maxPriorityFeePerGas.
@@ -144,16 +153,21 @@ class Web3Client:
     # Setters
     ####################
 
-    def setContract(self, contractAddress: Address, abiFile: str) -> Web3Client:
+    def setContract(self, address: Address, abiFile: str = None, abi: dict[str, Any] = None) -> Web3Client:
         """
         Load the smart contract, required before running
         buildContractTransaction().
 
         Run only after setting the node URI (setNodeUri)
         """
-        self.contractAddress = contractAddress
-        self.contractChecksumAddress = Web3.toChecksumAddress(contractAddress)
-        self.abi = self.__getContractAbi(abiFile) # Read the contract's ABI from a JSON file
+        self.contractAddress = address
+        self.contractChecksumAddress = Web3.toChecksumAddress(address)
+        if abiFile: # Read the contract's ABI from a JSON file
+            self.abi = self.getContractAbiFromFile(abiFile)
+        elif abi: # read the contract's ABI from a string
+            self.abi = abi
+        if not self.abi:
+            raise MissingParameter('Missing ABI')
         self.contract = self.w3.eth.contract(address=self.contractChecksumAddress, abi=self.abi)
         return self
 
@@ -165,7 +179,12 @@ class Web3Client:
         docs here https://web3py.readthedocs.io/en/stable/providers.html#how-automated-detection-works
         """
         self.nodeUri = nodeUri
-        self.w3 = self.__getProvider()
+        self.w3 = self.getProvider()
+        # Set the contract if possible, e.g. if the subclass defines address & ABI.
+        try:
+            self.setContract(address=self.contractAddress, abi=self.abi)
+        except:
+            pass
         return self
 
     def setCredentials(self, userAddress: Address, privateKey: str) -> Web3Client:
@@ -186,14 +205,15 @@ class Web3Client:
         return self
 
     ####################
-    # Private
+    # Protected
     ####################
 
-    def __getContractAbi(self, fileName: str) -> Any:
+    @staticmethod
+    def getContractAbiFromFile(fileName: str) -> Any:
         with open(fileName) as file:
             return json.load(file)
     
-    def __getProvider(self) -> Web3:
+    def getProvider(self) -> Web3:
         if (self.nodeUri[0:4] == 'http'):
             return Web3(Web3.HTTPProvider(self.nodeUri))
         elif (self.nodeUri[0:2] == 'ws'):

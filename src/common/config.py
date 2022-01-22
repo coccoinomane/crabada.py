@@ -1,6 +1,6 @@
 import typing
 from web3 import Web3
-from src.common.types import ConfigContract, ConfigTeam, ConfigUser, Tus, TeamTask, LootStrategyName, ReinforceStrategyName
+from src.common.types import ConfigTeam, ConfigUser, Tus, TeamTask, LootStrategyName, ReinforceStrategyName
 from .dotenv import getenv
 import os
 from typing import List, cast
@@ -37,15 +37,8 @@ users: List[ConfigUser] = [
     },
 ]
 
-# Contract
-contract: ConfigContract = {
-    'address': cast(Address, '0x82a85407bd612f52577909f4a58bfc6873f14da8'),
-    'abi': rootDir + '/contracts/abi-crabada.json',
-}
-
 # RPC
 nodeUri = getenv('WEB3_NODE_URI')
-chainId = int(getenv('CHAIN_ID'))
 
 # Gas
 defaultGas = getenv('DEFAULT_GAS', '200000') # units

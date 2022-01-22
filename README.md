@@ -47,16 +47,16 @@ For a list of endpoints, see the [Postman collection](https://go.postman.co/work
 
 # To do
 
-
-* In Python all class attributes are static > should declare them in the constructor?
-* Web3Client: Allow to specify contract and ABI ovverriding props
 * Use cron library to schedule scripts
 * Validate config values from .env
-* Gas contorl: Stop if wallet has less than X ETH + set daily gas limit
+* Gas control: Stop if wallet has less than X ETH + set daily gas limit
 * In AVAX should we be using eth_baseFee and eth_maxPriorityFeePerGas? (https://docs.avax.network/learn/platform-overview/transaction-fees/)
+* Why use our own env variable for node uri (WEB3_NODE_URI) when web3 has a builtin one (WEB3_PROVIDER_URI)?
 
 # Done
 
+* Web3Client: Allow to specify contract and ABI ovverriding props
+* In Python all class attributes are static > should declare them in the constructor? Even better: declare them only in docstring
 * Implement a team's task parameter; more in general: how to run cron job for mining vs for looting?
 * Find a way to differentiate/manage mines & loots
 * Write reinforcement script

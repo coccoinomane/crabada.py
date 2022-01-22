@@ -1,16 +1,15 @@
 from sys import argv
 from typing import cast
 from eth_typing import Address
-from src.common.config import nodeUri, users, chainId
-from src.libs.Web3Client.AvalancheWeb3Client import AvalancheWeb3Client
+from src.common.config import nodeUri, users
+from src.libs.Web3Client.AvalancheCWeb3Client import AvalancheCWeb3Client
 from src.libs.Web3Client.helpers.debug import printTxInfo
 from pprint import pprint
 
 # VARS
-client = (AvalancheWeb3Client()
+client = (AvalancheCWeb3Client()
     .setNodeUri(nodeUri)
     .setCredentials(users[0]['address'], users[0]['privateKey'])
-    .setChainId(chainId)
     .setMaxPriorityFeePerGasInGwei(2))
 
 to = cast(Address, "0xBc3a38C981B13625FAF7729fF105Cb6E15bdDE3A")
