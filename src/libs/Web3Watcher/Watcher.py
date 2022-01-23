@@ -35,7 +35,8 @@ class Watcher(ABC):
     # Settable
     logger: Logger = logging # type: ignore
     filterParams: Union[FilterParams, BlockParams] = {}
-    handlers: List[Callable[..., Any]] = []
+    handlers: List[Callable[[LogReceipt], None]] = []
+    notFoundHandlers: List[Callable[[], None]] = []
     
     # Derived
     filter: Any = None
@@ -47,10 +48,18 @@ class Watcher(ABC):
     
     def addHandler(self, handler: Callable[[LogReceipt], None]) -> Watcher:
         """
-        Add a handler to the queue; the handler will process the log
-        entry in the order they were provided.
+        Add a handler to the queue; all handlers will be executed when a log
+        entry is found, in the order they were added.
         """
         self.handlers.append(handler)
+        return self
+    
+    def addNotFoundHandler(self, notFoundHandler: Callable[[], None]) -> Watcher:
+        """
+        Add a handler to the 'not found' queue; all handlers will be executed
+        when a log entry is NOT found, in the order they were added.
+        """
+        self.notFoundHandlers.append(notFoundHandler)
         return self
     
     def setFilterParams(self, params: Union[FilterParams, BlockParams]) -> Watcher:
@@ -82,6 +91,7 @@ class Watcher(ABC):
             newLogs = cast(List[LogReceipt], filter.get_new_entries())
             if (not newLogs):
                 self.logger.debug("Watcher: No new log entry found")
+                self.handleNotFound()
             for logEntry in newLogs:
                 self.logger.debug("Watcher: New log entry!")
                 self.handleLogEntry(logEntry)
@@ -96,6 +106,7 @@ class Watcher(ABC):
             newLogs = cast(List[LogReceipt], filter.get_new_entries())
             if (not newLogs):
                 self.logger.debug("Watcher: No new log entry found")
+                self.handleNotFound()
             for logEntry in newLogs:
                 self.logger.debug("Watcher: New log entry!")
                 self.handleLogEntry(logEntry)
@@ -108,6 +119,13 @@ class Watcher(ABC):
         """
         for handler in self.handlers:
             handler(logEntry)
+
+    def handleNotFound(self) -> None:
+        """
+        What to do in the event no log is found in the latest poll
+        """
+        for notFoundHandler in self.notFoundHandlers:
+            notFoundHandler()
 
     def run(self, pollInterval: float) -> None:
         """
