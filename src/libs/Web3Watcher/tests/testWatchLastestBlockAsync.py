@@ -6,7 +6,7 @@ from sys import argv
 
 # VARS
 pollInterval = float(secondOrNone(argv)) or 2 # seconds
-doAsync = False
+doAsync = True
 handler = lambda log: print(log)
 
 # TEST FUNCTIONS

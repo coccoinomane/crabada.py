@@ -1,11 +1,13 @@
 from __future__ import annotations
 from typing import cast, Union, Any, Callable, List
 from logging import Logger
+
 from src.libs.Web3Client.Web3Client import Web3Client
 from web3.types import FilterParams, LogReceipt
 from abc import ABC
 import logging
 import time
+import asyncio
 from web3.types import BlockParams
 
 class Watcher(ABC):
@@ -34,15 +36,13 @@ class Watcher(ABC):
     logger: Logger = logging # type: ignore
     filterParams: Union[FilterParams, BlockParams] = {}
     handlers: List[Callable[..., Any]] = []
-    doAsync: bool = True
-    pollInterval: int = 2
     
     # Derived
     filter: Any = None
-    
 
-    def __init__(self, client: Web3Client ) -> None:
+    def __init__(self, client: Web3Client, doAsync: bool = False) -> None:
         self.client = client
+        self.doAsync = doAsync
         pass
     
     def addHandler(self, handler: Callable[[LogReceipt], None]) -> Watcher:
@@ -73,7 +73,7 @@ class Watcher(ABC):
         self.logger = logger
         return self
 
-    def loop(self, filter: Any, pollInterval: int) -> None:
+    def loop(self, filter: Any, pollInterval: float) -> None:
         """
         Infinite loop where we look for new log entries and fire
         the handlers to process them
@@ -85,7 +85,21 @@ class Watcher(ABC):
             for logEntry in newLogs:
                 self.logger.debug("Watcher: New log entry!")
                 self.handleLogEntry(logEntry)
-            time.sleep(self.pollInterval)
+            time.sleep(pollInterval)
+
+    async def asyncLoop(self, filter: Any, pollInterval: float) -> None:
+        """
+        Infinite loop where we look for new log entries and fire
+        the handlers asynchronously to process them
+        """
+        while True:
+            newLogs = cast(List[LogReceipt], filter.get_new_entries())
+            if (not newLogs):
+                self.logger.debug("Watcher: No new log entry found")
+            for logEntry in newLogs:
+                self.logger.debug("Watcher: New log entry!")
+                self.handleLogEntry(logEntry)
+            await asyncio.sleep(pollInterval)
 
     def handleLogEntry(self, logEntry: LogReceipt) -> None:
         """
@@ -95,9 +109,15 @@ class Watcher(ABC):
         for handler in self.handlers:
             handler(logEntry)
 
-    def run(self, pollInterval: int) -> None:
+    def run(self, pollInterval: float) -> None:
         """
-        Start watching for whatever block or logEntry
-        was set as a filter
+        Start watching for log entries
         """
-        self.loop(self.filter, pollInterval)
+        if (self.doAsync):
+            loop = asyncio.get_event_loop()
+            try:
+                loop.run_until_complete(asyncio.gather(self.asyncLoop(self.filter, pollInterval)))
+            finally:
+                loop.close()
+        else:
+            self.loop(self.filter, pollInterval)

@@ -12,7 +12,7 @@ handler = lambda log: print(log)
 # TEST FUNCTIONS
 def testWatchLatestBlock() -> None:
     client = AvalancheCWeb3Client().setNodeUri(nodeUri)
-    watcher = Watcher(client, doAsync).setFilterParams('latest')
+    watcher = Watcher(client, doAsync).setFilterParams('pending')
     watcher.addHandler(lambda log: print(log))
     watcher.run(pollInterval)
 
