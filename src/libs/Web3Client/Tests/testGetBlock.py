@@ -1,4 +1,4 @@
-from src.common.config import nodeUri, users
+from src.common.config import nodeUri
 from src.libs.Web3Client.AvalancheCWeb3Client import AvalancheCWeb3Client
 from pprint import pprint
 
@@ -6,8 +6,7 @@ from src.libs.Web3Client.helpers.debug import pprintAttributeDict
 
 # VARS
 client = (AvalancheCWeb3Client()
-    .setNodeUri(nodeUri)
-    .setCredentials(users[0]['address'], users[0]['privateKey']))
+    .setNodeUri(nodeUri))
 
 # TEST FUNCTIONS
 def testGetBlock() -> None:

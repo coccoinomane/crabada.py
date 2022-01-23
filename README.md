@@ -47,6 +47,8 @@ For a list of endpoints, see the [Postman collection](https://go.postman.co/work
 
 # To do
 
+* Extend Web3Watcher with async loop
+* Use @property to define classattributes > https://realpython.com/python-property/
 * Use cron library to schedule scripts
 * Validate config values from .env
 * Gas control: Stop if wallet has less than X ETH + set daily gas limit
@@ -55,6 +57,7 @@ For a list of endpoints, see the [Postman collection](https://go.postman.co/work
 
 # Done
 
+* Define a Web3Watcher class to watch for logs
 * Web3Client: Allow to specify contract and ABI ovverriding props
 * In Python all class attributes are static > should declare them in the constructor? Even better: declare them only in docstring
 * Implement a team's task parameter; more in general: how to run cron job for mining vs for looting?
