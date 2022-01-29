@@ -24,6 +24,7 @@ ReinforceStrategyName = Literal['CheapestCrab', 'HighestMp', 'HighestBp']
 class ConfigTeam(TypedDict):
     id: int
     userAddress: Address
+    battlePoints: int
     task: TeamTask
     lootStrategyName: LootStrategyName
     reinforceStrategyName: ReinforceStrategyName

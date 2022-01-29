@@ -24,6 +24,14 @@ def thirdOrNone(list: List[Any]) -> Any:
     except:
         return None
 
+def fourthOrNone(list: List[Any]) -> Any:
+    """Return the fourth element of a list or None
+    if 1) it is not set or 2) it is falsey"""
+    try:
+        return list[3]
+    except:
+        return None
+
 def findInList(l: List[dict[str, Any]], key: str, value: Any) -> Any:
     """
     Search a list of dictionaries for a specific one

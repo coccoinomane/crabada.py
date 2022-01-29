@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Tuple
+from typing import List, Tuple
 from eth_typing import Address
 from web3.types import Wei
 from src.common.config import users
@@ -28,6 +28,12 @@ class User(Model):
         if the team does not belong to the current user, return None.
         """
         return findInList(self.config['teams'], 'id', teamId)  # type: ignore
+
+    def getTeams(self) -> List[ConfigTeam]:
+        """
+        Return the user teams as specified in the configuration
+        """
+        return self.config['teams']
 
     def getTeamConfigFromMine(self, mine: Game) -> Tuple[ConfigTeam, TeamStatus]:
         """

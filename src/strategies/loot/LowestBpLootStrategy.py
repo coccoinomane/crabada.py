@@ -6,7 +6,10 @@ from src.helpers.general import firstOrNone
 class LowestBpLootStrategy(LootStrategy):
     """
     Looting strategy that chooses the mine with the lowest
-    defense points
+    defense points.
+    
+    Takes the list of attackable mines from the web2 endpoints,
+    which means it is SLOW and will be unlikely to ever succeed
     """
 
     def query(self, team: Team) -> dict[str, Any]:

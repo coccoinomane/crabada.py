@@ -19,7 +19,8 @@ teams: List[ConfigTeam] = [
     {
         'id': int(getenv('USER_1_TEAM_1')),
         'userAddress': cast(Address, getenv('USER_1_ADDRESS')),
-        'task': cast(TeamTask, getenv('USER_1_TEAM_1_TASK', 'mine')),
+        'battlePoints': int(getenv('USER_1_TEAM_1_BATTLE_POINTS')),
+        'task': cast(TeamTask, getenv('USER_1_TEAM_1_TASK', 'mine')), # not implemented yet
         'lootStrategyName': cast(LootStrategyName, getenv('USER_1_TEAM_1_LOOT_STRATEGY', 'LowestBp')),
         'reinforceStrategyName': cast(ReinforceStrategyName, getenv('USER_1_TEAM_1_REINFORCE_STRATEGY', 'HighestBp')),
     },
