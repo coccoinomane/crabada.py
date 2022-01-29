@@ -216,6 +216,8 @@
         "type": "function"
     },
     {
+        "name": "StartGame",
+        "type": "event",
         "anonymous": false,
         "inputs": [
             {
@@ -248,8 +250,61 @@
                 "name": "tusReward",
                 "type": "uint256"
             }
-        ],
-        "name": "StartGame",
-        "type": "event"
+        ]
+    },
+    {
+        "name": "Attack",
+        "type": "event",
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "gameId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "unknown1",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "attackTeamId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "defenseTeamId",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "unknown2",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "unknown3MaybeTimeBeforeNextStep",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "attackPoint",
+                "type": "uint256"
+            },
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "defensePoint",
+                "type": "uint256"
+            }
+        ]
     }
 ]
