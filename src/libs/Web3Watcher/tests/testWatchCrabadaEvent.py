@@ -10,12 +10,11 @@ from sys import argv
 
 # VARS
 client = cast(CrabadaWeb3Client, (CrabadaWeb3Client()
-    .setNodeUri(nodeUri)
-    .setCredentials(users[0]['address'], users[0]['privateKey'])))
+    .setNodeUri(nodeUri)))
 event = client.contract.events.StartGame()
 filter = event.createFilter(fromBlock='latest')
 
-pollInterval = float(secondOrNone(argv)) or 2 # seconds
+pollInterval = float(secondOrNone(argv) or 2) # seconds
 doAsync = True
 handler = lambda log: print(log)
 

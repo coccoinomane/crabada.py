@@ -5,7 +5,7 @@ from src.helpers.general import secondOrNone
 from sys import argv
 
 # VARS
-pollInterval = float(secondOrNone(argv)) or 2 # seconds
+pollInterval = float(secondOrNone(argv) or 2) # seconds
 doAsync = True
 handler = lambda log: print(log)
 
