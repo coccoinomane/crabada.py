@@ -1,7 +1,7 @@
 from __future__ import annotations
 import json
-from typing import Any
-from eth_typing import Address
+from typing import Any, Dict, Optional, Sequence
+from eth_typing import Address, BlockIdentifier, ChecksumAddress
 from web3 import Web3
 from eth_account.datastructures import SignedTransaction
 from web3.contract import Contract, ContractFunction
@@ -10,8 +10,6 @@ from eth_typing.encoding import HexStr
 from src.libs.Web3Client.exceptions import MissingParameter
 
 class Web3Client:
-    """"""
-    
     """
     Client to interact with a blockchain, with smart
     contract support.
@@ -25,10 +23,10 @@ class Web3Client:
     gasLimit : int
     contractAddress : Address
     abi: dict[str, Any] = None
+    chainId: int = None
     nodeUri: str = None
     userAddress: Address = None
     privateKey: str = None
-    chainId: int = None
     
     Derived attributes
     ----------
@@ -117,6 +115,26 @@ class Web3Client:
         if the transaction has not been mined yet.
         """
         return self.w3.eth.get_transaction(txHash)
+
+    ####################
+    # Watch
+    ####################
+    
+    # def watch(
+    #         eventName: str,
+    #         argument_filters: Optional[Dict[str, Any]] = None,
+    #         fromBlock: Optional[BlockIdentifier] = None,
+    #         toBlock: BlockIdentifier = "latest",
+    #         address: Optional[ChecksumAddress] = None,
+    #         topics: Optional[Sequence[Any]] = None) -> None:
+    #     """
+    #     Watch for a certain event
+    #     """
+    #     method_to_call = getattr(foo, 'bar')
+    #     result = method_to_call()
+    #     event = client.contract.events.StartGame()
+    #     filter = event.createFilter(fromBlock='latest' ...)
+        
 
     ####################
     # Utils
