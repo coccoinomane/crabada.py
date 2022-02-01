@@ -30,6 +30,9 @@ For a list of endpoints, see the [Postman collection](https://go.postman.co/work
 
 - [Attack tx](https://snowtrace.io/tx/0x21a7f94f6e02103b55d9b9fa53243ae1ac0eab8531f5588cfc4a0e6ace126902)
 - [Settle tx](https://snowtrace.io/tx/0xb6853b50dd85e59062964a060e796ffcd13e3d72711e0789127f2f3d81f523d1)
+- [Block with fierce competition for attacking](https://snowtrace.io/txs?block=10345304). The `startGame` call happened two blocks earlier ([link](https://snowtrace.io/tx/0x429bf6ad1fadf7666bb32e004572b2cd7e95f88fc6aeac2fd6052d338f663fc7)), [this](https://snowtrace.io/tx/0xa416719950157ebb7e2fc7078cd1ae3a98232c9229fc4f27ef678b38a3618205) was the transaction who succedeed.
+- Another [startGame](https://snowtrace.io/tx/0x1ea87957255498b626423f578b8ca01e950deca53c7ada96b94c55012aa0c307), another [successful bot attack](https://snowtrace.io/tx/0x47766dce7c005f796d6f6272a4a3365ac473eb8d7f8a39d2ec195ddc9f2e56e8), this time with only 1 block difference.
+- Again a [startGame](https://snowtrace.io/tx/0xb1cac8f04de6f432858ddabb687f23c221cc5ed34b80639b54f54807afb3a793) that was [successfully attacked](https://snowtrace.io/tx/0x9363a133c736b06233688425978e8d7fd8b09f02a6b92129c3ee72f07e08ebbf) by a bot after two blocks.
 
 # Events
 
@@ -47,7 +50,6 @@ For a list of endpoints, see the [Postman collection](https://go.postman.co/work
 
 # To do
 
-* Extend Web3Watcher with async loop
 * Use @property to define classattributes > https://realpython.com/python-property/
 * Use cron library to schedule scripts
 * Validate config values from .env
@@ -57,6 +59,7 @@ For a list of endpoints, see the [Postman collection](https://go.postman.co/work
 
 # Done
 
+* Extend Web3Watcher with async loop
 * Define a Web3Watcher class to watch for logs
 * Web3Client: Allow to specify contract and ABI ovverriding props
 * In Python all class attributes are static > should declare them in the constructor? Even better: declare them only in docstring
