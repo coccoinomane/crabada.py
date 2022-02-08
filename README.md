@@ -1,14 +1,29 @@
-Scripts to interact with [Crabada](play.crabada.com)'s smart contracts.
+Scripts & bots to interact with [Crabada](play.crabada.com)'s smart contracts.
+
+# Features
+
+- Send multiple teams mining.
+- Choose between several reinforcement strategies.
+- Automatically close the mines and claim rewards.
+- Easy to run the bot using a simple cron.
+
+# Looting
+
+Building a looting bot is more difficult than a mining one, because there is more competition and you need to be faster than the other bots.
+
+I am currently working towards this end, and so far the results have been satisfying.
+
+Contact me if you are interested in the looting bot, but please be aware that it will not be free to use 🙂
 
 # Quick start
 
+1. Install dependencies: `pip install -r requirements.txt`.
 1. Copy .env.local in .env and customize .env
-2. Make sure you `cd` in the root folder of the project (the same where this readme is)
-3. Run one of the scripts in the script folder, for example `python3 -m bin.mining.sendTeams` to run sendTeams.py
+1. Make sure you `cd` in the root folder of the project (the same where this readme is)
+1. Run any of the scripts, for example `python3 -m bin.mining.sendTeams` to send teams mining.
 
-# Contracts
+Tested with Python 3.9.10.
 
-- [Crabada: Game](https://snowtrace.io/address/0x82a85407bd612f52577909f4a58bfc6873f14da8) > [Decompiled](https://snowtrace.io/bytecode-decompiler?a=0x82a85407bd612f52577909f4a58bfc6873f14da8)
 
 # Crabada.com Endpoints
 
@@ -16,9 +31,13 @@ The Crabada API has REST endpoints with base uri https://idle-api.crabada.com/pu
 
 For a list of endpoints, see the [Postman collection](https://go.postman.co/workspace/Crypto~19d2a5ae-faa1-4999-af6e-e1c4c8428a7e/collection/18622998-191ed6a2-1026-4ae2-8fbd-a9f5b233bc9c).
 
-# Response examples
+# Contract
 
-### Mining
+The idle game contract can be found at the following link:
+
+- [Crabada: Game](https://snowtrace.io/address/0x82a85407bd612f52577909f4a58bfc6873f14da8) > [Decompiled](https://snowtrace.io/bytecode-decompiler?a=0x82a85407bd612f52577909f4a58bfc6873f14da8)
+
+### Mining transactions
 
 - [Start mining expedition tx](https://snowtrace.io/tx/0x46594658e0f65181d65bd6c229837d9fff962a0480e13d21f542733c0c1dbbb6)
 - [First reinforcement tx](https://snowtrace.io/tx/0x1d8e002f497b925fba9f76b8909fa87d59a45d99e7e8ca9a1e0f6119b23da4b7)
@@ -26,13 +45,13 @@ For a list of endpoints, see the [Postman collection](https://go.postman.co/work
 - [Claim tx](https://snowtrace.io/tx/0x55a75966158e03c22058ac24dbe855ee7aa2437d719c61b54cf14c4a906d9631)
 - [Claim tx](https://snowtrace.io/tx/0x65d7d2783f7817f3302cee3b5f1ca0dd3bb7ace19b172770df00800a51403124) (different sequence)
 
-### Looting
+### Looting transactions
 
 - [Attack tx](https://snowtrace.io/tx/0x21a7f94f6e02103b55d9b9fa53243ae1ac0eab8531f5588cfc4a0e6ace126902)
 - [Settle tx](https://snowtrace.io/tx/0xb6853b50dd85e59062964a060e796ffcd13e3d72711e0789127f2f3d81f523d1)
-- [Block with fierce competition for attacking](https://snowtrace.io/txs?block=10345304). The `startGame` call happened two blocks earlier ([link](https://snowtrace.io/tx/0x429bf6ad1fadf7666bb32e004572b2cd7e95f88fc6aeac2fd6052d338f663fc7)), [this](https://snowtrace.io/tx/0xa416719950157ebb7e2fc7078cd1ae3a98232c9229fc4f27ef678b38a3618205) was the transaction who succedeed.
-- Another [startGame](https://snowtrace.io/tx/0x1ea87957255498b626423f578b8ca01e950deca53c7ada96b94c55012aa0c307), another [successful bot attack](https://snowtrace.io/tx/0x47766dce7c005f796d6f6272a4a3365ac473eb8d7f8a39d2ec195ddc9f2e56e8), this time with only 1 block difference.
-- Again a [startGame](https://snowtrace.io/tx/0xb1cac8f04de6f432858ddabb687f23c221cc5ed34b80639b54f54807afb3a793) that was [successfully attacked](https://snowtrace.io/tx/0x9363a133c736b06233688425978e8d7fd8b09f02a6b92129c3ee72f07e08ebbf) by a bot after two blocks.
+- [startGame](https://snowtrace.io/tx/0x429bf6ad1fadf7666bb32e004572b2cd7e95f88fc6aeac2fd6052d338f663fc7) attacked [after 2 blocks](https://snowtrace.io/tx/0xa416719950157ebb7e2fc7078cd1ae3a98232c9229fc4f27ef678b38a3618205); look [how many tried to attack](https://snowtrace.io/txs?block=10345304) it without success!
+- [startGame](https://snowtrace.io/tx/0x1ea87957255498b626423f578b8ca01e950deca53c7ada96b94c55012aa0c307) attacked [after 1 block](https://snowtrace.io/tx/0x47766dce7c005f796d6f6272a4a3365ac473eb8d7f8a39d2ec195ddc9f2e56e8).
+- [startGame](https://snowtrace.io/tx/0xb1cac8f04de6f432858ddabb687f23c221cc5ed34b80639b54f54807afb3a793) attacked [after 2 blocks](https://snowtrace.io/tx/0x9363a133c736b06233688425978e8d7fd8b09f02a6b92129c3ee72f07e08ebbf).
 
 # Events
 
