@@ -4,7 +4,7 @@ Scripts to interact with [Crabada](play.crabada.com)'s smart contracts.
 
 1. Copy .env.local in .env and customize .env
 2. Make sure you `cd` in the root folder of the project (the same where this readme is)
-3. Run one of the scripts in the script folder, for example `python3 -m bin.sendTeams` to run sendTeams.py
+3. Run one of the scripts in the script folder, for example `python3 -m bin.mining.sendTeams` to run sendTeams.py
 
 # Contracts
 
