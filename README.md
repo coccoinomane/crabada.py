@@ -69,6 +69,10 @@ The idle game contract can be found at the following link:
 
 # To do
 
+* Fix lower-case folders bug (pull request #1)
+* Add Twilio to reqs
+* Adapt bot for anti-bot measures coming on 5th of March
+* Add cron example to README
 * Use @property to define classattributes > https://realpython.com/python-property/
 * Use cron library to schedule scripts
 * Validate config values from .env
