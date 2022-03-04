@@ -31,22 +31,27 @@ In order to run the bot without human supervision, you'll need to set a cron job
 I would recommend to setup the cron job on a remote server (for example on Vultr or AWS).
 If you can't be bothered, you can also do it on your computer: just make sure you keep the computer turned on all the time.
 
+### Cron job on Mac 
+
 Follow these instructions to make the bot send all available teams mining & collect rewards for you:
 
 1. Open crontab > `env EDITOR=nano crontab -e`
 2. Insert the following lines:
-```
-*/30 * * * * cd $HOME/crabada.py && /usr/local/bin/python -m bin.mining.sendTeamsMining <your address>
-15/30 * * * * cd $HOME/crabada.py && /usr/local/bin/python -m bin.mining.closeMines <your address>
-```
+    ```
+    */30 * * * * cd $HOME/crabada.py && /usr/local/bin/python -m bin.mining.sendTeamsMining <your address>
+    15/30 * * * * cd $HOME/crabada.py && /usr/local/bin/python -m bin.mining.closeMines <your address>
+    ```
 3. Customize the lines with the path to the script and your wallet address.
 4. The cron job will run twice every 30 minutes. Feel free to change the frequency; if in doubt use [Crontab Guru](https://crontab.guru/).
 5. If you want to reinforce defense too, just add another line to the crontab that runs bin.mining.reinforceDefense.
 
-The above instructions should work on Linux with minimal modifications.
+### Cron job on Linux
 
-__If you know how to set up a cron job on Windows, feel free to submit a pull request :-)__
+The above instructions for the Mac should work fine on Linux with minimal modifications.
 
+### Cron job on Windows
+
+I do not have a Windows machine to run tests; __if you know how to set up a cron job on Windows, feel free to add the instructions here :-)__
 
 # Crabada.com Endpoints
 
