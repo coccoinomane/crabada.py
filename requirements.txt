@@ -3,3 +3,4 @@ requests==2.26.0
 types-requests==2.26.0
 web3==5.25.0
 eth-typing==2.2.2
+twilio==7.4.0
