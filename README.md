@@ -18,11 +18,34 @@ Contact me if you are interested in the looting bot, but please be aware that it
 # Quick start
 
 1. Install dependencies: `pip install -r requirements.txt`.
-1. Copy .env.local in .env and customize .env
+1. Copy .env.example in .env and customize .env
 1. Make sure you `cd` in the root folder of the project (the same where this readme is)
-1. Run any of the scripts, for example `python3 -m bin.mining.sendTeams` to send teams mining.
+1. Run any of the scripts, for example `python -m bin.mining.sendTeams <your address>` to send teams mining.
 
 Tested with Python 3.9.10.
+
+# Cron jobs
+
+In order to run the bot without human supervision, you'll need to set a cron job.
+
+I would recommend to setup the cron job on a remote server (for example on Vultr or AWS).
+If you can't be bothered, you can also do it on your computer: just make sure you keep the computer turned on all the time.
+
+Follow these instructions to make the bot send all available teams mining & collect rewards for you:
+
+1. Open crontab > `env EDITOR=nano crontab -e`
+2. Insert the following lines:
+```
+*/30 * * * * cd $HOME/crabada.py && /usr/local/bin/python -m bin.mining.sendTeamsMining <your address>
+15/30 * * * * cd $HOME/crabada.py && /usr/local/bin/python -m bin.mining.closeMines <your address>
+```
+3. Customize the lines with the path to the script and your wallet address.
+4. The cron job will run twice every 30 minutes. Feel free to change the frequency; if in doubt use [Crontab Guru](https://crontab.guru/).
+5. If you want to reinforce defense too, just add another line to the crontab that runs bin.mining.reinforceDefense.
+
+The above instructions should work on Linux with minimal modifications.
+
+__If you know how to set up a cron job on Windows, feel free to submit a pull request :-)__
 
 
 # Crabada.com Endpoints
@@ -69,19 +92,19 @@ The idle game contract can be found at the following link:
 
 # To do
 
-* Fix lower-case folders bug (pull request #1)
-* Add Twilio to reqs
 * Adapt bot for anti-bot measures coming on 5th of March
-* Add cron example to README
-* Use @property to define classattributes > https://realpython.com/python-property/
-* Use cron library to schedule scripts
 * Validate config values from .env
 * Gas control: Stop if wallet has less than X ETH + set daily gas limit
-* In AVAX should we be using eth_baseFee and eth_maxPriorityFeePerGas? (https://docs.avax.network/learn/platform-overview/transaction-fees/)
-* Why use our own env variable for node uri (WEB3_NODE_URI) when web3 has a builtin one (WEB3_PROVIDER_URI)?
+* Better gas estimation ([eth_baseFee and eth_maxPriorityFeePerGas](https://docs.avax.network/learn/platform-overview/transaction-fees/))
+* Use web3 default variable WEB3_PROVIDER_URI instead of WEB3_NODE_URI
+* Use @property to define classattributes > https://realpython.com/python-property/
+* Use cron library to schedule scripts
 
 # Done
 
+* Add cron example to README
+* Add Twilio to reqs
+* Fix lower-case folders bug (pull request #1)
 * Extend Web3Watcher with async loop
 * Define a Web3Watcher class to watch for logs
 * Web3Client: Allow to specify contract and ABI ovverriding props
