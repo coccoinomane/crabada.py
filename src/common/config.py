@@ -29,7 +29,6 @@ teams: List[ConfigTeam] = [
 # Users
 users: List[ConfigUser] = [
     {
-        'name': getenv('USER_1_NAME'),
         'address': cast(Address, getenv('USER_1_ADDRESS')),
         'privateKey': getenv('USER_1_PRIVATE_KEY'),
         'maxPriceToReinforceInTus': cast(Tus, int(getenv('USER_1_MAX_PRICE_TO_REINFORCE')) or 0), # in TUS
