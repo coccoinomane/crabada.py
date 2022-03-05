@@ -2,10 +2,11 @@ Scripts & bots to interact with [Crabada](play.crabada.com)'s smart contracts.
 
 # Features
 
-- Send multiple teams mining.
+- Automatically send crabs mining.
+- Automatically claim rewards.
 - Choose between several reinforcement strategies.
-- Automatically close the mines and claim rewards.
-- Easy to run the bot using a simple cron.
+- Run the bot without human supervision.
+- Send multiple teams mining (experimental)
 
 # Looting
 
@@ -18,22 +19,24 @@ Contact me if you are interested in the looting bot, but please be aware that it
 # Quick start
 
 1. Install dependencies: `pip install -r requirements.txt`.
-1. Copy .env.example in .env and customize .env
+1. Copy _.env.example_ in _.env_ and customize the latter.
 1. Make sure you `cd` in the root folder of the project (the same where this readme is)
-1. Run any of the scripts, for example `python -m bin.mining.sendTeams <your address>` to send teams mining.
+1. Run any of the scripts in the _bin_ folder.
+
+For example, run `python -m bin.mining.sendTeams <your address>` to send teams mining and `python -m bin.mining.closeMines <your address>` to claim rewards on finished mines.
 
 Tested with Python 3.9.10.
 
-# Cron jobs
+# Run without human supervision
 
 In order to run the bot without human supervision, you'll need to set a cron job.
 
-I would recommend to setup the cron job on a remote server (for example on Vultr or AWS).
+I would recommend to set the cron job on a remote server (for example on Vultr or AWS).
 If you can't be bothered, you can also do it on your computer: just make sure you keep the computer turned on all the time.
 
-### Cron job on Mac 
+### Mac instructions
 
-Follow these instructions to make the bot send all available teams mining & collect rewards for you:
+Follow these instructions to send all available teams mining & to collect rewards for you:
 
 1. Open crontab > `env EDITOR=nano crontab -e`
 2. Insert the following lines:
@@ -47,13 +50,28 @@ Follow these instructions to make the bot send all available teams mining & coll
 
 Note: When editing python path (/usr/local/bin/python), use "which python3" or "which python" in Terminal to determine where your python3 is installed.
 
-### Cron job on Linux
+### Linux instructions
 
 The above instructions for the Mac should work fine on Linux with minimal modifications.
 
-### Cron job on Windows
+### Windows instructions
 
-I do not have a Windows machine to run tests; __if you know how to set up a cron job on Windows, feel free to add the instructions here :-)__
+I do not have a Windows machine to run tests; __if you know how to reliably set a cron job on Windows, feel free to add the instructions here :-)__
+
+# Support for multiple teams
+
+The bot can send multiple teams mining with one command, here's how:
+
+1. Register the teams in the .env file:
+    ```bash
+    USER_1_TEAM_1="1111"
+    USER_1_TEAM_2="2222"
+    USER_1_TEAM_3="3333"
+    ```
+2. Run `python -m bin.mining.sendTeamsMining <your address>` to send all available teams mining.
+3. Claim rewards on finished mines with `python -m bin.mining.closeMines <your address>`.
+
+Please note that __multi-team support has not been thoroughly tested yet__: [create an issue](https://github.com/coccoinomane/dex-sniper.hardhat/issues/new) if you encounter any problem :-)
 
 # Crabada.com Endpoints
 
@@ -99,7 +117,9 @@ The idle game contract can be found at the following link:
 
 # To do
 
+* Use a virtual environment to manage dependencies
 * Adapt bot for anti-bot measures coming on 5th of March
+* Multi-user support: send teams from multiple wallets
 * Validate config values from .env
 * Gas control: Stop if wallet has less than X ETH + set daily gas limit
 * Better gas estimation ([eth_baseFee and eth_maxPriorityFeePerGas](https://docs.avax.network/learn/platform-overview/transaction-fees/))
