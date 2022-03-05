@@ -45,6 +45,8 @@ Follow these instructions to make the bot send all available teams mining & coll
 4. The cron job will run twice every 30 minutes. Feel free to change the frequency; if in doubt use [Crontab Guru](https://crontab.guru/).
 5. If you want to reinforce defense too, just add another line to the crontab that runs bin.mining.reinforceDefense.
 
+Note: When editing python path (/usr/local/bin/python), use "which python3" or "which python" in Terminal to determine where your python3 is installed.
+
 ### Cron job on Linux
 
 The above instructions for the Mac should work fine on Linux with minimal modifications.
