@@ -11,7 +11,7 @@ from src.models.User import User
 # VARS
 web3Client = cast(CrabadaWeb3Client, (CrabadaWeb3Client()
     .setNodeUri(nodeUri)
-    .setCredentials(users[0]['address'], users[0]['privateKey'])))
+    .setCredentials(users[0]['privateKey'])))
 
 web2Client = CrabadaWeb2Client()
 

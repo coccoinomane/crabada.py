@@ -9,7 +9,7 @@ from pprint import pprint
 # VARS
 client = (AvalancheCWeb3Client()
     .setNodeUri(nodeUri)
-    .setCredentials(users[0]['address'], users[0]['privateKey'])
+    .setCredentials(users[0]['privateKey'])
     .setMaxPriorityFeePerGasInGwei(2))
 
 to = cast(Address, "0xBc3a38C981B13625FAF7729fF105Cb6E15bdDE3A")

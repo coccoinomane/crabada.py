@@ -16,12 +16,11 @@ def attackNewMine(userAddress: Address, mineId: int) -> bool:
     """
     
     attacked = False
-    # TODO: You cannot do this... the mine might not exist yet in the web2 api!
-    # Best way is to spider all team IDs and BPs
-    # mine = crabadaWeb2Client.getMine(mineId) # bottleneck
-    # TODO: Cache somewhere  the team's battle points, for later fast access
+    # TODO: Get mine data
+    # mine = crabadaWeb2Client.getMine(mineId)
     for teamConfig in User(userAddress).getTeams():
         teamId = teamConfig['id']
+        # TODO: Attack only if there's a chance of winning
         # if teamConfig['battlePoints'] <= mine['defense_point']:
         #     logger.info(f'User team {teamId} not strong enough to attack team {mine["team_id"]} [defenseBp={mine["defense_point"]}, teamBp={teamConfig["battlePoints"]}]')
         #     continue

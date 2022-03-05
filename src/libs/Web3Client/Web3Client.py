@@ -1,6 +1,7 @@
 from __future__ import annotations
 import json
 from typing import Any, Dict, Optional, Sequence
+from eth_account import Account
 from eth_typing import Address, BlockIdentifier, ChecksumAddress
 from web3 import Web3
 from eth_account.datastructures import SignedTransaction
@@ -140,8 +141,10 @@ class Web3Client:
     # Utils
     ####################
 
-    def getNonce(self) -> Nonce:
-        return self.w3.eth.get_transaction_count(self.userAddress)
+    def getNonce(self, address: str = None) -> Nonce:
+        if not address:
+            address = self.userAddress
+        return self.w3.eth.get_transaction_count(address)
 
     def estimateMaxFeePerGasInGwei(self) -> int:
         """
@@ -205,9 +208,10 @@ class Web3Client:
             pass
         return self
 
-    def setCredentials(self, userAddress: Address, privateKey: str) -> Web3Client:
-        self.userAddress = userAddress
+    def setCredentials(self, privateKey: str) -> Web3Client:
         self.privateKey = privateKey
+        account = Account.from_key(self.privateKey)
+        self.userAddress = account.address
         return self
 
     def setChainId(self, chainId: int) -> Web3Client:
