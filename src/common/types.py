@@ -30,7 +30,6 @@ class ConfigTeam(TypedDict):
     reinforceStrategyName: ReinforceStrategyName
 
 class ConfigUser(TypedDict):
-    name: str
     address: Address
     privateKey: str
     maxPriceToReinforceInTus: Tus
