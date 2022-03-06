@@ -4,7 +4,7 @@ from eth_typing import Address
 from web3.types import Wei
 from src.common.config import users
 from src.common.exceptions import UserException
-from src.common.types import ConfigTeam, ConfigUser, TeamTask, Tus
+from src.common.types import ConfigTeam, ConfigUser, Tus
 from src.helpers.general import findInList, firstOrNone
 from src.libs.CrabadaWeb2Client.types import Game, Team, TeamStatus
 from src.models.Model import Model
