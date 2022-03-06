@@ -2,7 +2,7 @@ from typing import Literal, NewType, TypedDict, List
 from eth_typing import Address
 from web3.types import Wei
 
-Tus = NewType('Tus', int)
+Tus = NewType('Tus', float)
 
 """
 Task assigned to a team
