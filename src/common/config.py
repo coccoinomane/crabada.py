@@ -1,7 +1,7 @@
 import typing
 from web3 import Web3
 from src.common.types import ConfigTeam, ConfigUser, Tus, TeamTask, LootStrategyName, ReinforceStrategyName
-from .dotenv import getenv
+from .dotenv import getenv, parseFloat, parseInt
 import os
 from typing import List, cast
 from src.common.exceptions import InvalidConfig, MissingConfig
@@ -11,31 +11,32 @@ from eth_typing import Address
 # Parse
 #################
 
-# Project directory
-rootDir: str = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-
 # Teams
-teams: List[ConfigTeam] = [
-    {
-        'id': int(getenv('USER_1_TEAM_1')),
+teams: List[ConfigTeam] = []
+teamNumber = 1
+while getenv(f'USER_1_TEAM_{teamNumber}'):
+    teams.append({
+        'id': parseInt(f'USER_1_TEAM_{teamNumber}'),
         'userAddress': cast(Address, getenv('USER_1_ADDRESS')),
-        'battlePoints': int(getenv('USER_1_TEAM_1_BATTLE_POINTS')),
-        'task': cast(TeamTask, getenv('USER_1_TEAM_1_TASK', 'mine')), # not implemented yet
-        'lootStrategyName': cast(LootStrategyName, getenv('USER_1_TEAM_1_LOOT_STRATEGY', 'LowestBp')),
-        'reinforceStrategyName': cast(ReinforceStrategyName, getenv('USER_1_TEAM_1_REINFORCE_STRATEGY', 'HighestBp')),
-    },
-]
+        'battlePoints': parseInt(f'USER_1_TEAM_{teamNumber}_BATTLE_POINTS'),
+        'task': cast(TeamTask, getenv(f'USER_1_TEAM_{teamNumber}_TASK', 'mine')), # not implemented yet
+        'lootStrategyName': cast(LootStrategyName, getenv(f'USER_1_TEAM_{teamNumber}_LOOT_STRATEGY', 'LowestBp')),
+        'reinforceStrategyName': cast(ReinforceStrategyName, getenv(f'USER_1_TEAM_{teamNumber}_REINFORCE_STRATEGY', 'HighestBp')),
+    })
+    teamNumber += 1
 
 # Users
-users: List[ConfigUser] = [
-    {
-        'address': cast(Address, getenv('USER_1_ADDRESS')),
-        'privateKey': getenv('USER_1_PRIVATE_KEY'),
-        'maxPriceToReinforceInTus': cast(Tus, int(getenv('USER_1_MAX_PRICE_TO_REINFORCE')) or 0), # in TUS
-        'maxPriceToReinforceInTusWei': Web3.toWei(int(getenv('USER_1_MAX_PRICE_TO_REINFORCE') or 0), 'ether'), # in TUS wei
-        'teams': [ t for t in teams if t['userAddress'] == cast(Address, getenv('USER_1_ADDRESS')) ]
-    },
-]
+users: List[ConfigUser] = []
+userNumber = 1
+while getenv(f'USER_{userNumber}_PRIVATE_KEY'):
+    users.append({
+        'address': cast(Address, getenv(f'USER_{userNumber}_ADDRESS')),
+        'privateKey': getenv(f'USER_{userNumber}_PRIVATE_KEY'),
+        'maxPriceToReinforceInTus': cast(Tus, parseFloat(f'USER_{userNumber}_MAX_PRICE_TO_REINFORCE') or 0), # in TUS
+        'maxPriceToReinforceInTusWei': Web3.toWei(parseFloat(f'USER_{userNumber}_MAX_PRICE_TO_REINFORCE') or 0, 'ether'), # in TUS wei
+        'teams': [ t for t in teams if t['userAddress'] == cast(Address, getenv(f'USER_{userNumber}_ADDRESS')) ]
+    })
+    userNumber += 1
 
 # RPC
 nodeUri = getenv('WEB3_NODE_URI')
