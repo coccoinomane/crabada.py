@@ -23,7 +23,7 @@ Contact me if you are interested in the looting bot, but please be aware that it
 1. Make sure you `cd` in the root folder of the project (the same where this readme is)
 1. Run any of the scripts in the _bin_ folder.
 
-For example, run `python -m bin.mining.sendTeams <your address>` to send teams mining and `python -m bin.mining.closeMines <your address>` to claim rewards on finished mines.
+For example, run `python -m bin.mining.sendTeamsMining <your address>` to send teams mining and `python -m bin.mining.closeMines <your address>` to claim rewards on finished mines.
 
 Tested with Python 3.9.10.
 
