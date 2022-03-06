@@ -117,18 +117,23 @@ The idle game contract can be found at the following link:
 
 # To do
 
+* Adapt bot for anti-bot measures of the 7th of March
+* Looting: No need to fetch team information from endpoint!
+* Looting: Implement faction advantage
 * Use a virtual environment to manage dependencies
-* Adapt bot for anti-bot measures coming on 5th of March
 * Multi-user support: send teams from multiple wallets
-* Validate config values from .env
+
+# Might do
+
+* Use cron library to schedule scripts
 * Gas control: Stop if wallet has less than X ETH + set daily gas limit
 * Better gas estimation ([eth_baseFee and eth_maxPriorityFeePerGas](https://docs.avax.network/learn/platform-overview/transaction-fees/))
 * Use web3 default variable WEB3_PROVIDER_URI instead of WEB3_NODE_URI
 * Use @property to define classattributes > https://realpython.com/python-property/
-* Use cron library to schedule scripts
 
 # Done
 
+* Better validation of config values from .env
 * Add cron example to README
 * Add Twilio to reqs
 * Fix lower-case folders bug (pull request #1)
