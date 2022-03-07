@@ -12,7 +12,7 @@ contractAbi = CrabadaWeb3Client.abi
 client = (AvalancheCWeb3Client()
     .setNodeUri(nodeUri)
     .setContract(address=contractAddress, abi=contractAbi)
-    .setCredentials(users[0]['address'], users[0]['privateKey']))
+    .setCredentials(users[0]['privateKey']))
 
 # Contract
 teamId = users[0]['teams'][0]['id']

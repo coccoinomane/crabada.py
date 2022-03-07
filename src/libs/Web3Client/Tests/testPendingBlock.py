@@ -15,7 +15,7 @@ from src.libs.Web3Client.helpers.debug import pprintAttributeDict
 # VARS
 client = (AvalancheCWeb3Client()
     .setNodeUri(nodeUri)
-    .setCredentials(users[0]['address'], users[0]['privateKey']))
+    .setCredentials(users[0]['privateKey']))
 
 latest = client.w3.eth.get_block('latest')
 pending = client.w3.eth.get_block('pending')

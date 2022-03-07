@@ -10,4 +10,4 @@ crabadaWeb2Client = CrabadaWeb2Client()
 
 crabadaWeb3Client = cast(CrabadaWeb3Client,(CrabadaWeb3Client()
     .setNodeUri(nodeUri)
-    .setCredentials(users[0]['address'], users[0]['privateKey'])))
+    .setCredentials(users[0]['privateKey'])))

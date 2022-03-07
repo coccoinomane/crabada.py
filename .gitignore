@@ -16,3 +16,4 @@ Desktop.ini
 # due to using tox and pytest
 .tox
 .cache
+.vscode

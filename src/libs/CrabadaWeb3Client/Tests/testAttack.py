@@ -8,7 +8,7 @@ from sys import argv
 # VARS
 client = cast(CrabadaWeb3Client, (CrabadaWeb3Client()
     .setNodeUri(nodeUri)
-    .setCredentials(users[0]['address'], users[0]['privateKey'])))
+    .setCredentials(users[0]['privateKey'])))
 
 teamId = users[0]['teams'][0]['id']
 mineId = int(secondOrNone(argv))

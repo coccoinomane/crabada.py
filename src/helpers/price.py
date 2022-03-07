@@ -4,7 +4,7 @@ from web3.types import Wei
 
 from src.common.types import Tus
 
-def tusToWei(tus: int) -> Wei:
+def tusToWei(tus: float) -> Wei:
     """
     Convert TUS to Wei; this is required before making comparisons
     because the Crabada APIs (both Web2 and Web3) always return Wei.

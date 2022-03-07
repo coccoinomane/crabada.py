@@ -7,7 +7,7 @@ from src.libs.CrabadaWeb3Client.CrabadaWeb3Client import CrabadaWeb3Client
 # VARS
 client = cast(CrabadaWeb3Client, (CrabadaWeb3Client()
     .setNodeUri(nodeUri)
-    .setCredentials(users[0]['address'], users[0]['privateKey'])))
+    .setCredentials(users[0]['privateKey'])))
 
 gameId = int(argv[1]) if len(argv) > 1 else 284549
 

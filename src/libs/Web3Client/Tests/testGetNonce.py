@@ -5,7 +5,7 @@ from pprint import pprint
 # VARS
 client = (Web3Client()
     .setNodeUri(nodeUri)
-    .setCredentials(users[0]['address'], users[0]['privateKey']))
+    .setCredentials(users[0]['privateKey']))
 
 # TEST FUNCTIONS
 def testGetNonce() -> None:
