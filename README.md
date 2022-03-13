@@ -18,6 +18,7 @@ Contact me if you are interested in the looting bot, but please be aware that it
 
 # Quick start
 
+1. Make sure you have Python 3.9 or later installed.
 1. Install dependencies: `pip install -r requirements.txt`.
 1. Copy _.env.example_ in _.env_ and customize the latter.
 1. Make sure you `cd` in the root folder of the project (the same where this readme is)
@@ -25,7 +26,14 @@ Contact me if you are interested in the looting bot, but please be aware that it
 
 For example, run `python -m bin.mining.sendTeamsMining <your address>` to send teams mining and `python -m bin.mining.closeMines <your address>` to claim rewards on finished mines.
 
-Tested with Python 3.9.10.
+## Requirements
+
+The bot requires Python 3.9; I have personally tested it on:
+
+- **Mac Os 11 (Big Sur)** > Install python3 and pip3 with [Homebrew](https://brew.sh/) > `brew install python3`
+- **Debian GNU/Linux 11 (bullseye)** > Install python3 and pip with apt-get > `apt-get install python3 pip git`
+
+Users told me that they managed to run the bot on Ubuntu, too.
 
 # Run without human supervision
 
@@ -41,14 +49,14 @@ Follow these instructions to send all available teams mining & to collect reward
 1. Open crontab > `env EDITOR=nano crontab -e`
 2. Insert the following lines:
     ```
-    */30 * * * * cd $HOME/crabada.py && /usr/local/bin/python -m bin.mining.sendTeamsMining <your address>
-    15/30 * * * * cd $HOME/crabada.py && /usr/local/bin/python -m bin.mining.closeMines <your address>
+    0,30 * * * * cd $HOME/crabada.py && /usr/local/bin/python -m bin.mining.sendTeamsMining <your address>
+    15,45 * * * * cd $HOME/crabada.py && /usr/local/bin/python -m bin.mining.closeMines <your address>
     ```
 3. Customize the lines with the path to the script and your wallet address.
 4. The cron job will run twice every 30 minutes. Feel free to change the frequency; if in doubt use [Crontab Guru](https://crontab.guru/).
 5. If you want to reinforce defense too, just add another line to the crontab that runs bin.mining.reinforceDefense.
 
-Note: When editing python path (/usr/local/bin/python), use "which python3" or "which python" in Terminal to determine where your python3 is installed.
+Note: When editing python path (/usr/local/bin/python), use `which python3` or `which python` in Terminal to determine where your python3 is installed.
 
 ### Linux instructions
 
@@ -117,10 +125,10 @@ The idle game contract can be found at the following link:
 
 # To do
 
+* Use a virtual environment to manage dependencies
 * Adapt bot for anti-bot measures of the 7th of March
 * Looting: No need to fetch team information from endpoint!
 * Looting: Implement faction advantage
-* Use a virtual environment to manage dependencies
 * Multi-user support: send teams from multiple wallets
 
 # Might do
