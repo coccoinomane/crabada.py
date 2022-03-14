@@ -5,8 +5,9 @@ from src.common.config import users
 
 # TEST FUNCTIONS
 def testReinforceAttack() -> None:
-    nBorrowed = reinforceAttack(users[0]['address'])
-    print(f'BORROWED {nBorrowed} REINFORCEMENT')
+    nBorrowed = reinforceAttack(users[0]["address"])
+    print(f"BORROWED {nBorrowed} REINFORCEMENT")
+
 
 # EXECUTE
 testReinforceAttack()

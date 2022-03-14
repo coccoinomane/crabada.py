@@ -9,13 +9,15 @@ from sys import argv
 contractAddress = CrabadaWeb3Client.contractAddress
 contractAbi = CrabadaWeb3Client.abi
 
-client = (AvalancheCWeb3Client()
+client = (
+    AvalancheCWeb3Client()
     .setNodeUri(nodeUri)
     .setContract(address=contractAddress, abi=contractAbi)
-    .setCredentials(users[0]['privateKey']))
+    .setCredentials(users[0]["privateKey"])
+)
 
 # Contract
-teamId = users[0]['teams'][0]['id']
+teamId = users[0]["teams"][0]["id"]
 contractFunction = client.contract.functions.startGame(teamId)
 pprint(contractFunction)
 
@@ -23,12 +25,14 @@ pprint(contractFunction)
 def testBuildContractTransaction() -> None:
     pprint(client.buildContractTransaction(contractFunction))
 
+
 def testSendContractTransaction() -> None:
     tx = client.buildContractTransaction(contractFunction)
     txHash = client.signAndSendTransaction(tx)
     printTxInfo(client, txHash)
 
+
 # EXECUTE
 testBuildContractTransaction()
-if (len(argv) > 1 and argv[1] == '--send'):
+if len(argv) > 1 and argv[1] == "--send":
     testSendContractTransaction()

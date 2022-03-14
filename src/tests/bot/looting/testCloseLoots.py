@@ -5,8 +5,9 @@ from src.common.config import users
 
 # TEST FUNCTIONS
 def testCloseLoots() -> None:
-    nFinished = closeLoots(users[0]['address'])
-    print(f'CLOSED {nFinished} LOOTING GAMES')
+    nFinished = closeLoots(users[0]["address"])
+    print(f"CLOSED {nFinished} LOOTING GAMES")
+
 
 # EXECUTE
 testCloseLoots()

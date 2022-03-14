@@ -6,13 +6,15 @@ from src.helpers.mines import mineHasBeenAttacked, mineIsOpen, mineIsSettled
 from src.models.User import User
 from src.libs.CrabadaWeb2Client.types import Game
 
+
 def minerCanReinforce(mine: Game) -> bool:
     """Return True if, in the given game, the miner (the defense) can
     reinforce at this moment, regardless of whether its the first or the
     second time"""
     return getMinerReinforcementStatus(mine) != 0
 
-def getMinerReinforcementStatus(mine: Game) -> Literal[0,1,2]:
+
+def getMinerReinforcementStatus(mine: Game) -> Literal[0, 1, 2]:
     """
     Determines whether the game can be reinforced and
     at which reinforcement stage we are.
@@ -29,6 +31,7 @@ def getMinerReinforcementStatus(mine: Game) -> Literal[0,1,2]:
     else:
         return 0
 
+
 def minerCanReinforceForTheFirstTime(mine: Game) -> bool:
     """
     Return True if, in the given game, the miner (the defense) can
@@ -38,8 +41,9 @@ def minerCanReinforceForTheFirstTime(mine: Game) -> bool:
         not mineIsSettled(mine)
         and mineHasBeenAttacked(mine)
         and mineIsOpen(mine)
-        and mine['round'] == 0
+        and mine["round"] == 0
     )
+
 
 def minerCanReinforceForTheSecondTime(mine: Game) -> bool:
     """
@@ -50,8 +54,9 @@ def minerCanReinforceForTheSecondTime(mine: Game) -> bool:
         not mineIsSettled(mine)
         and mineHasBeenAttacked(mine)
         and mineIsOpen(mine)
-        and mine['round'] == 2
+        and mine["round"] == 2
     )
+
 
 def looterCanReinforce(mine: Game) -> bool:
     """Return True if, in the given game, the looter (the attack) can
@@ -59,7 +64,8 @@ def looterCanReinforce(mine: Game) -> bool:
     second time"""
     return getLooterReinforcementStatus(mine) != 0
 
-def getLooterReinforcementStatus(mine: Game) -> Literal[0,1,2]:
+
+def getLooterReinforcementStatus(mine: Game) -> Literal[0, 1, 2]:
     """
     Determines whether the game can be reinforced and
     at which reinforcement stage we are.
@@ -76,6 +82,7 @@ def getLooterReinforcementStatus(mine: Game) -> Literal[0,1,2]:
     else:
         return 0
 
+
 def looterCanReinforceForTheFirstTime(mine: Game) -> bool:
     """
     Return True if, in the given game, the looter (the attack) can
@@ -85,8 +92,9 @@ def looterCanReinforceForTheFirstTime(mine: Game) -> bool:
         not mineIsSettled(mine)
         and mineHasBeenAttacked(mine)
         and mineIsOpen(mine)
-        and mine['round'] == 1
+        and mine["round"] == 1
     )
+
 
 def looterCanReinforceForTheSecondTime(mine: Game) -> bool:
     """
@@ -97,15 +105,16 @@ def looterCanReinforceForTheSecondTime(mine: Game) -> bool:
         not mineIsSettled(mine)
         and mineHasBeenAttacked(mine)
         and mineIsOpen(mine)
-        and mine['round'] == 3
+        and mine["round"] == 3
     )
+
 
 def reinforcementIsTooExpensive(price: Wei, userAddress: Address) -> bool:
     """
     Return True if the given price is too much for lending a
     reinforcement crab.
-    
+
     The price must be given as it is returned by the listCrabsForLending
     endpoint, that is, in Wei, that is, in units of 1e-18 TUS."""
-    maxPrice = User(userAddress).config.get('maxPriceToReinforceInTusWei')
+    maxPrice = User(userAddress).config.get("maxPriceToReinforceInTusWei")
     return price > maxPrice

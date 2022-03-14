@@ -5,6 +5,7 @@ from src.common.exceptions import StrategyException, StrategyNotApplicable
 from src.libs.CrabadaWeb2Client.CrabadaWeb2Client import CrabadaWeb2Client
 from src.libs.CrabadaWeb2Client.types import Game
 
+
 class Strategy(ABC):
     """
     A generic strategy to be applied to a given game; extend this class
@@ -34,9 +35,9 @@ class Strategy(ABC):
     def isApplicable(self) -> Tuple[bool, str]:
         """
         Is the strategy appropriate for the provided game?
-        
+
         Returns a tuple where
         - the first element is either True or False
         - the second is the reason why the strategy is not applicable
         """
-        return (True, '')
+        return (True, "")

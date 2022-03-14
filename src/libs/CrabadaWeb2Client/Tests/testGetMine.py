@@ -11,5 +11,6 @@ mineId = secondOrNone(argv) or 269751
 def testGetMine() -> None:
     pprint(client.getMine(mineId))
 
+
 # EXECUTE
 testGetMine()

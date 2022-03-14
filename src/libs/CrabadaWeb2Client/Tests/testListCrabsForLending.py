@@ -9,9 +9,11 @@ def testListCrabsForLendingByPrice() -> None:
     params = {"limit": 3, "page": 1, "orderBy": "price", "order": "asc"}
     pprint(client.listCrabsForLending(params=params))
 
+
 def testListCrabsForLendingByMinePoints() -> None:
     params = {"limit": 3, "page": 1, "orderBy": "mine_point", "order": "desc"}
     pprint(client.listCrabsForLending(params=params))
+
 
 # EXECUTE
 print(">>> REINFORCEMENTS - CHEAPEST FIRST")

@@ -10,5 +10,6 @@ client = CrabadaWeb2Client()
 def testGetCheapestCrabForLending() -> None:
     pprint(client.getCheapestCrabForLending())
 
+
 # EXECUTE
 testGetCheapestCrabForLending()

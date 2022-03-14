@@ -9,12 +9,13 @@ body = "Join Earth's mightiest heroes. Like Kevin Bacon."
 # TEST FUNCTIONS
 def testSendSmsWithTwilio() -> None:
     output = sendSms(
-        body = body,
-        forceSend = True, # send SMS regardless of settings
+        body=body,
+        forceSend=True,  # send SMS regardless of settings
     )
     pprint(output)
     if output:
         pprint(vars(output))
+
 
 # EXECUTE
 testSendSmsWithTwilio()

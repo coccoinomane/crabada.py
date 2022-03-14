@@ -7,7 +7,13 @@ from sys import argv
 from eth_typing.encoding import HexStr
 
 # VARS
-txHash = cast(HexStr, (secondOrNone(argv) or "0xc333db84c2c5d114f8168d92b9114c6325ae541f2758a5ae539055539721d00c"))
+txHash = cast(
+    HexStr,
+    (
+        secondOrNone(argv)
+        or "0xc333db84c2c5d114f8168d92b9114c6325ae541f2758a5ae539055539721d00c"
+    ),
+)
 
 client = Web3Client().setNodeUri(nodeUri)
 txReceipt = client.getTransactionReceipt(txHash)
@@ -19,6 +25,7 @@ def testGetTransaction() -> None:
     pprintAttributeDict(txReceipt)
     print(">>> ACTUAL TX")
     pprintAttributeDict(tx)
+
 
 # EXECUTE
 testGetTransaction()

@@ -25,15 +25,15 @@ mineId = int(thirdOrNone(argv) or 0)
 
 # VALIDATE
 if not userAddress:
-    logger.error('Specify a user address')
+    logger.error("Specify a user address")
     exit(1)
 
 if not User.isRegistered(userAddress):
-    logger.error('The given user address is not registered')
+    logger.error("The given user address is not registered")
     exit(1)
 
 if not mineId:
-    logger.error('Specify a valid mine ID to attack')
+    logger.error("Specify a valid mine ID to attack")
     exit(1)
 
 # EXECUTE

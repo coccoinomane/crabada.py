@@ -15,10 +15,15 @@ from eth_typing.encoding import HexStr
 from pprint import pprint
 
 # VARS
-txHash = cast(HexStr, (secondOrNone(argv) or "0x41705baf18b1ebc8ec204926a8524d3530aada11bd3c249ca4a330ed047f005e"))
+txHash = cast(
+    HexStr,
+    (
+        secondOrNone(argv)
+        or "0x41705baf18b1ebc8ec204926a8524d3530aada11bd3c249ca4a330ed047f005e"
+    ),
+)
 
-client = cast(CrabadaWeb3Client, (CrabadaWeb3Client()
-    .setNodeUri(nodeUri)))
+client = cast(CrabadaWeb3Client, (CrabadaWeb3Client().setNodeUri(nodeUri)))
 
 tx = client.getTransaction(txHash)
 txReceipt = client.getTransactionReceipt(txHash)
@@ -31,6 +36,7 @@ def testContractEvents() -> None:
     print(">>> TX LOGS")
     for log in logs:
         pprintAttributeDict(log)
+
 
 # EXECUTE
 testContractEvents()

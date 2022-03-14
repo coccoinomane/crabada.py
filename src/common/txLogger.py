@@ -14,14 +14,16 @@ from src.common.logger import f_handler, c_handler
 
 # Create a custom logger
 txLogger = logging.getLogger(__name__)
-txLogger.setLevel('DEBUG')
+txLogger.setLevel("DEBUG")
 
 # Create handlers
-tx_handler = logging.handlers.TimedRotatingFileHandler('storage/logs/transactions/transactions.log', 'midnight')
-tx_handler.setLevel('DEBUG')
+tx_handler = logging.handlers.TimedRotatingFileHandler(
+    "storage/logs/transactions/transactions.log", "midnight"
+)
+tx_handler.setLevel("DEBUG")
 
 # Create formatters and add it to handlers
-tx_format = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+tx_format = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 tx_handler.setFormatter(tx_format)
 
 # Add handlers to the logger
@@ -29,9 +31,12 @@ txLogger.addHandler(tx_handler)
 txLogger.addHandler(f_handler)
 txLogger.addHandler(c_handler)
 
+
 def logTx(txReceipt: TxReceipt) -> None:
     """Given a tx receipt, print to screen the transaction details
     and its cost"""
     txLogger.debug(txReceipt)
-    ethSpent = Web3.fromWei(txReceipt['effectiveGasPrice']*txReceipt['gasUsed'], 'ether')
-    txLogger.debug('Spent ' + str(ethSpent) + ' ETH')
+    ethSpent = Web3.fromWei(
+        txReceipt["effectiveGasPrice"] * txReceipt["gasUsed"], "ether"
+    )
+    txLogger.debug("Spent " + str(ethSpent) + " ETH")

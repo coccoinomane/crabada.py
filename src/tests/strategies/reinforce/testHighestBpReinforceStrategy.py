@@ -1,7 +1,9 @@
 from typing import cast
 from src.common.types import Tus
 from src.helpers.general import secondOrNone, thirdOrNone
-from src.strategies.reinforce.HighestBpReinforceStrategy import HighestBpReinforceStrategy
+from src.strategies.reinforce.HighestBpReinforceStrategy import (
+    HighestBpReinforceStrategy,
+)
 from src.common.clients import crabadaWeb2Client
 from sys import argv
 
@@ -10,32 +12,37 @@ gameId = secondOrNone(argv)
 maxPrice = cast(Tus, int(thirdOrNone(argv) or 25))
 
 if not gameId:
-    print('Provide a game ID')
+    print("Provide a game ID")
     exit(1)
 
 game = crabadaWeb2Client.getMine(gameId)
-strategy: HighestBpReinforceStrategy = HighestBpReinforceStrategy(crabadaWeb2Client).setParams(game, maxPrice)
+strategy: HighestBpReinforceStrategy = HighestBpReinforceStrategy(
+    crabadaWeb2Client
+).setParams(game, maxPrice)
 
 # TEST FUNCTIONS
 def testHighestBpStrategy() -> None:
 
-    print('>>> CRAB REINFORCEMENT WITH AUTOMATIC SELECTION')
+    print(">>> CRAB REINFORCEMENT WITH AUTOMATIC SELECTION")
     try:
-        print(strategy.getCrab('MINING')) # Will print note if mine is not reinforceable
+        print(
+            strategy.getCrab("MINING")
+        )  # Will print note if mine is not reinforceable
     except Exception as e:
-        print('ERROR RAISED: ' + e.__class__.__name__ + ': ' + str(e))
+        print("ERROR RAISED: " + e.__class__.__name__ + ": " + str(e))
 
-    print('>>> FIRST CRAB REINFORCEMENT')
+    print(">>> FIRST CRAB REINFORCEMENT")
     try:
         print(strategy._getCrab1())
     except Exception as e:
-        print('ERROR RAISED: ' + e.__class__.__name__ + ': ' + str(e))
+        print("ERROR RAISED: " + e.__class__.__name__ + ": " + str(e))
 
-    print('>>> SECOND CRAB REINFORCEMENT')
+    print(">>> SECOND CRAB REINFORCEMENT")
     try:
         print(strategy._getCrab2())
     except Exception as e:
-        print('ERROR RAISED: ' + e.__class__.__name__ + ': ' + str(e))
+        print("ERROR RAISED: " + e.__class__.__name__ + ": " + str(e))
+
 
 # EXECUTE
 testHighestBpStrategy()

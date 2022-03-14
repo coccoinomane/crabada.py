@@ -7,9 +7,11 @@ from pprint import pprint
 contractAddress = CrabadaWeb3Client.contractAddress
 contractAbi = CrabadaWeb3Client.abi
 
-client = (Web3Client()
+client = (
+    Web3Client()
     .setNodeUri(nodeUri)
-    .setContract(address=contractAddress, abi=contractAbi))
+    .setContract(address=contractAddress, abi=contractAbi)
+)
 
 # TEST FUNCTIONS
 def testGetContract() -> None:
@@ -21,6 +23,7 @@ def testGetContract() -> None:
     pprint(vars(client.contract))
     print(">>> CONTRACT FUNCTIONS")
     pprint(vars(client.contract.functions))
+
 
 # EXECUTE
 testGetContract()

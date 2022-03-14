@@ -5,8 +5,9 @@ from src.common.config import users
 
 # TEST FUNCTIONS
 def testCloseMines() -> None:
-    nFinished = closeMines(users[0]['address'])
-    print(f'CLOSED {nFinished} LOOTING MINES')
+    nFinished = closeMines(users[0]["address"])
+    print(f"CLOSED {nFinished} LOOTING MINES")
+
 
 # EXECUTE
 testCloseMines()

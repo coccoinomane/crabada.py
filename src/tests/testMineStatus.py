@@ -11,16 +11,17 @@ mine = crabadaWeb2Client.getMine(mineId)
 # TEST FUNCTIONS
 def testMineStatus() -> None:
     output = {
-        'mineHasBeenAttacked': mines.mineHasBeenAttacked(mine),
-        'mineIsOpen': mines.mineIsOpen(mine),
-        'mineIsSettled': mines.mineIsSettled(mine),
-        'mineIsFinished': mines.mineIsFinished(mine),
-        'mineIsClosed': mines.mineIsClosed(mine),
-        'getRemainingTime': mines.getRemainingTime(mine),
-        'getRemainingTimeFormatted': mines.getRemainingTimeFormatted(mine),
-        'getNextMineToFinish': mines.getNextMineToFinish([mine]),
+        "mineHasBeenAttacked": mines.mineHasBeenAttacked(mine),
+        "mineIsOpen": mines.mineIsOpen(mine),
+        "mineIsSettled": mines.mineIsSettled(mine),
+        "mineIsFinished": mines.mineIsFinished(mine),
+        "mineIsClosed": mines.mineIsClosed(mine),
+        "getRemainingTime": mines.getRemainingTime(mine),
+        "getRemainingTimeFormatted": mines.getRemainingTimeFormatted(mine),
+        "getNextMineToFinish": mines.getNextMineToFinish([mine]),
     }
     pprint(output)
+
 
 # EXECUTE
 testMineStatus()

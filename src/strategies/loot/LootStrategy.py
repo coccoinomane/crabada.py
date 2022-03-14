@@ -5,6 +5,7 @@ from src.helpers.teams import teamCanLoot
 from src.strategies.Strategy import Strategy
 from src.libs.CrabadaWeb2Client.types import Game, Team
 
+
 class LootStrategy(Strategy):
     """
     Generic looting strategy, consisting in finding the perfect
@@ -14,7 +15,7 @@ class LootStrategy(Strategy):
     def setParams(self, team: Team, minesToFetch: int = 5) -> Strategy:
         """
         Parameters for a generic looting strategy
-        
+
         :param Team team: The team to send looting
         :param int minesToFetch: number of mines to consider for looting,
         the lowest the fastest
@@ -30,7 +31,9 @@ class LootStrategy(Strategy):
         isApplicable = teamCanLoot(self.team)
         return (
             isApplicable,
-            '' if isApplicable else f"Team cannot loot {self.team['team_id']} (status = {self.team['status']})"
+            ""
+            if isApplicable
+            else f"Team cannot loot {self.team['team_id']} (status = {self.team['status']})",
         )
 
     @abstractmethod
