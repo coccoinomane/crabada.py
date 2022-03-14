@@ -12,6 +12,8 @@ from src.common.clients import crabadaWeb2Client, crabadaWeb3Client
 from eth_typing import Address
 from src.models.User import User
 from src.strategies.StrategyFactory import getBestReinforcement
+from time import sleep
+from src.common.config import reinforceDelayInSeconds
 
 
 def reinforceDefense(userAddress: Address) -> int:
@@ -68,5 +70,9 @@ def reinforceDefense(userAddress: Address) -> int:
         else:
             nBorrowedReinforments += 1
             logger.info(f"Mine {mineId} reinforced correctly")
+
+        # Wait some time to avoid renting the same crab for different teams
+        if len(reinforceableMines) > 1:
+            sleep(reinforceDelayInSeconds)
 
     return nBorrowedReinforments

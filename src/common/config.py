@@ -9,7 +9,6 @@ from src.common.types import (
     ReinforceStrategyName,
 )
 from .dotenv import getenv, parseFloat, parseInt
-import os
 from typing import List, cast
 from src.common.exceptions import InvalidConfig, MissingConfig
 from eth_typing import Address
@@ -17,6 +16,9 @@ from eth_typing import Address
 #################
 # Parse
 #################
+
+# General options
+reinforceDelayInSeconds = parseInt("REINFORCE_DELAY_IN_SECONDS", 30)
 
 # Teams
 teams: List[ConfigTeam] = []
