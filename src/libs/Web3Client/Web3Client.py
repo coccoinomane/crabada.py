@@ -66,8 +66,6 @@ class Web3Client:
             'chainId': self.chainId,
             'gas': self.gasLimit,  # type: ignore
             'gasPrice':  25000000000,
-            # 'baseFeePerGas': Web3.toWei(self.estimateMaxFeePerGasInGwei(), 'gwei'),
-            # 'maxPriorityFeePerGas': Web3.toWei(self.maxPriorityFeePerGasInGwei, 'gwei'),
             'nonce': self.getNonce(),
         }
         return tx
