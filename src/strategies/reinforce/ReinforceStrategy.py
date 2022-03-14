@@ -17,8 +17,22 @@ from src.libs.CrabadaWeb2Client.types import CrabForLending, Game, TeamStatus
 
 class ReinforceStrategy(Strategy):
     """
-    Generic mining strategy, assuming the game has already
-    started
+    Generic strategy to fetch the best possible crab to reinforce
+    the given mine.
+
+    Extend this class and override the query(), crab() and,
+    optionally, crab2() methods in order to define a complete
+    strategy.
+
+    The strategy can be used by calling the crab() method to
+    fetch the first reinforcement, and the crab2() method to
+    fetch the second one.
+
+    Attributes
+    ----------
+    game: Game
+    maxPrice: Tus
+    maxPrice2: Tus
     """
 
     def setParams(
