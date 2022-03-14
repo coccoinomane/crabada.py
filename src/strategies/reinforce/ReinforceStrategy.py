@@ -15,17 +15,18 @@ class ReinforceStrategy(Strategy):
     started
     """
 
-    game: Game = None # game to apply the strategy to
-    maxPrice1: Tus = None # max price to spend for the first reinforcement, in Tus
-    maxPrice2: Tus = None # max price to spend for the second reinforcement, in Tus
-    
     def setParams(self, game: Game, maxPrice: Tus = cast(Tus, 50), maxPrice2: Tus = None) -> Strategy:
-        self.game = game
-        self.maxPrice1 = maxPrice
-        if not maxPrice2:
-            self.maxPrice2 = self.maxPrice1
-        else:
-            self.maxPrice2 = maxPrice2
+        """
+        Parameters for a generic reinforce strategy
+        
+        :param Game game: The game to apply the strategy to
+        :param Tus maxPrice: Max price to spend for the first reinforcement, in Tus
+        :param Tus maxPrice2: Max price to spend for the second reinforcement, in Tus;
+        leave it blank to use the same value as maxPrice1
+        """
+        self.game: Game = game
+        self.maxPrice1: Tus = maxPrice
+        self.maxPrice2: Tus = maxPrice2 if maxPrice2 else self.maxPrice1
         return self
 
     def isApplicable(self) -> Tuple[bool, str]:

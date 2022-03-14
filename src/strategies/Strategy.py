@@ -11,16 +11,14 @@ class Strategy(ABC):
     to make your own strategies.
     """
 
-    web2Client: CrabadaWeb2Client = None
-
     def __init__(self, web2Client: CrabadaWeb2Client) -> None:
-        self.web2Client = web2Client
+        self.web2Client: CrabadaWeb2Client = web2Client
 
     def setParams(self, *args: Any, **kwargs: Any) -> Strategy:
         """
         Set here the parameters of the strategy as class attributes. For example,
-        if the strategy needs a maxPrice parameter, the will just to set the
-        maxPrice attribute: self.maxPrice = maxPrice
+        if the strategy needs a maxPrice parameter, the function will need to
+        set the maxPrice attribute: self.maxPrice = maxPrice
         """
         return self
 

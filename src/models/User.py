@@ -15,10 +15,8 @@ class User(Model):
     its wallet address
     """
 
-    config: ConfigUser = None
-
     def __init__(self, userAddress: Address):
-        self.config = User.getUserConfig(userAddress)
+        self.config: ConfigUser = User.getUserConfig(userAddress)
         if not self.config:
             raise UserException("User address not registered: {userAddress}")
 

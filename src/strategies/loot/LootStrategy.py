@@ -11,13 +11,16 @@ class LootStrategy(Strategy):
     mine to loot, given a looter team.
     """
 
-    team: Team = None # team to send looting
-    minesToFetch: int = None # number of mines to consider, the lowest the fastest
-    lootableMines: List[Game] = []
-
     def setParams(self, team: Team, minesToFetch: int = 5) -> Strategy:
-        self.team = team
-        self.minesToFetch = minesToFetch
+        """
+        Parameters for a generic looting strategy
+        
+        :param Team team: The team to send looting
+        :param int minesToFetch: number of mines to consider for looting,
+        the lowest the fastest
+        """
+        self.team: Team = team
+        self.minesToFetch: int = minesToFetch
         return self
 
     def isApplicable(self) -> Tuple[bool, str]:
@@ -49,5 +52,5 @@ class LootStrategy(Strategy):
         Fetch and return a mine to loot, using the strategy.
         If no mine can be found, return None.
         """
-        self.lootableMines = self.web2Client.listMines(self.query(self.team))
-        return self.mine(self.team, self.lootableMines)
+        lootableMines = self.web2Client.listMines(self.query(self.team))
+        return self.mine(self.team, lootableMines)
