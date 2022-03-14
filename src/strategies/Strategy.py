@@ -1,9 +1,8 @@
 from __future__ import annotations
-from abc import ABC, abstractmethod, abstractstaticmethod
+from abc import ABC, abstractmethod
 from typing import Any, Tuple
-from src.common.exceptions import StrategyException, StrategyNotApplicable
+from src.common.exceptions import StrategyNotApplicable
 from src.libs.CrabadaWeb2Client.CrabadaWeb2Client import CrabadaWeb2Client
-from src.libs.CrabadaWeb2Client.types import Game
 
 
 class Strategy(ABC):
