@@ -3,12 +3,12 @@ import json
 from eth_typing import Address
 from web3.types import TxParams, Wei
 from src.libs.Web3Client.Web3Client import Web3Client
-from src.libs.Web3Client.AvalancheCWeb3Client import AvalancheCWeb3Client
+from src.libs.Web3Client.SwimmerNetworkWeb3Client import SwimmerNetworkWeb3Client
 from eth_typing.encoding import HexStr
 import os
 
 
-class CrabadaWeb3Client(AvalancheCWeb3Client):
+class CrabadaWeb3Client(SwimmerNetworkWeb3Client):
     """
     Interact with a smart contract of the game Crabada
 
