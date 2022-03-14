@@ -5,23 +5,25 @@ from src.helpers.general import firstOrNone, secondOrNone
 
 from src.libs.CrabadaWeb2Client.types import CrabForLending, Game, Team
 
+
 class CrabadaWeb2Client:
     """
     Access the HTTP endpoints of the Crabada P2E game.
-    
+
     All endpoints have a 'raw' parameter that you can set to true
     in order to get the full JSON response. By default it is false,
     which means you only get the data contained in the response (a
     list for list endpoints, a dict for specific endpoints)
     """
 
-    baseUri = 'https://idle-api.crabada.com/public/idle'
+    # baseUri = 'https://idle-api.crabada.com/public/idle'
+    baseUri = 'https://idle-game-subnet-test-api.crabada.com/public/idle'
 
     def getMine(self, mineId: int, params: dict[str, Any] = {}) -> Game:
         """Get information from the given mine"""
         res = self.getMine_Raw(mineId, params)
         return res['result']
-    
+
     def getMine_Raw(self, mineId: int, params: dict[str, Any] = {}) -> Any:
         url = self.baseUri + '/mine/' + str(mineId)
         return requests.request("GET", url, params=params).json()
@@ -29,7 +31,7 @@ class CrabadaWeb2Client:
     def listMines(self, params: dict[str, Any] = {}) -> List[Game]:
         """
         Get all mines.
-        
+
         If you want only the open mines, pass status=open in the params.
         If you want only a certain user's mines, use the user_address param.
         """
@@ -38,7 +40,7 @@ class CrabadaWeb2Client:
             return res['result']['data'] or []
         except:
             return []
-    
+
     def listMyOpenMines(self, userAddress: Address, params: dict[str, Any] = {}) -> List[Game]:
         """
         Get all mines that belong to the given user address
@@ -73,7 +75,7 @@ class CrabadaWeb2Client:
     def listTeams(self, userAddress: Address, params: dict[str, Any] = {}) -> List[Team]:
         """
         Get all teams of a given user address.
-        
+
         If you want only the available teams, pass is_team_available=1
         in the params.
         It is currently not possible to list all users' teams, you can
@@ -107,7 +109,7 @@ class CrabadaWeb2Client:
         Get all crabs available for lending as reinforcements; you can use
         sortBy and sort parameters, default is orderBy": 'price' and
         "order": 'asc'
-        
+
         IMPORTANT: The price is expressed as the TUS price multiplied by
         10^18 (like with Weis), which means that price=100000000000000000
         (18 zeros) is just 1 TUS
@@ -147,4 +149,5 @@ class CrabadaWeb2Client:
             "order": 'asc',
         }
         actualParams = defaultParams | params
-        return requests.request("GET", url, params=actualParams).json() # type: ignore
+        # type: ignore
+        return requests.request("GET", url, params=actualParams).json()
