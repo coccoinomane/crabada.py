@@ -1,16 +1,24 @@
+from pprint import pprint
 from typing import cast
 from src.common.types import Tus
-from src.helpers.general import secondOrNone, thirdOrNone
-from src.strategies.StrategyFactory import getBestReinforcement, makeReinforceStrategy
+from src.helpers.general import secondOrNone
+from src.helpers.reinforce import minerCanReinforce
+from src.strategies.StrategyFactory import makeReinforceStrategy
 from src.common.clients import crabadaWeb2Client
 from src.common.config import users
 from sys import argv
 
 # VARS
-gameId = int(secondOrNone(argv)) or 2421165
-maxPrice = cast(Tus, int(thirdOrNone(argv) or 25))
+maxPrice = cast(Tus, int(secondOrNone(argv) or 25))
 
-game = crabadaWeb2Client.getMine(gameId)
+# Get the first mine that can be reinforced
+openMines = crabadaWeb2Client.listOpenMines({"limit": 100})
+reinforceableMines = [m for m in openMines if minerCanReinforce(m)]
+game = secondOrNone(reinforceableMines)
+
+if not game:
+    print("Could not find a reinforceable mine, try after a few seconds")
+    exit(1)
 
 userAddress = users[0]["address"]
 teamConfig = users[0]["teams"][0]
