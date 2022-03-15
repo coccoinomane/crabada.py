@@ -8,5 +8,6 @@ def testConfig() -> None:
     pprint(">>> USERS & TEAMS")
     pprint(users)
 
+
 # EXECUTE
 testConfig()

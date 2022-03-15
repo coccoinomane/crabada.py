@@ -14,14 +14,16 @@ from sys import argv
 from web3 import Web3
 
 # VARS
-contractAddress = Web3.toChecksumAddress(secondOrNone(argv) or CrabadaWeb3Client.contractAddress)
-pollInterval = float(thirdOrNone(argv) or 2) # seconds
+contractAddress = Web3.toChecksumAddress(
+    secondOrNone(argv) or CrabadaWeb3Client.contractAddress
+)
+pollInterval = float(thirdOrNone(argv) or 2)  # seconds
 
 client = Web3Client().setNodeUri(nodeUri)
 
 filterParams: FilterParams = {
-    'fromBlock': 'latest',
-    'address': contractAddress,
+    "fromBlock": "latest",
+    "address": contractAddress,
 }
 
 doAsync = True
@@ -31,8 +33,9 @@ handler = lambda log: print(log)
 def testWatchContractLogs() -> None:
     watcher = Watcher(client, doAsync).setFilterParams(filterParams)
     watcher.addHandler(lambda log: pprintAttributeDict(log))
-    watcher.addNotFoundHandler(lambda: print('No event found'))
+    watcher.addNotFoundHandler(lambda: print("No event found"))
     watcher.run(pollInterval)
+
 
 # EXECUTE
 testWatchContractLogs()

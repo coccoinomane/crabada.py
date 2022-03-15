@@ -29,7 +29,8 @@ class CrabadaWeb3Client(SwimmerNetworkWeb3Client):
         Send crabs to mine
         """
         tx: TxParams = self.buildContractTransaction(
-            self.contract.functions.startGame(teamId))
+            self.contract.functions.startGame(teamId)
+        )
         return self.signAndSendTransaction(tx)
 
     def attack(self, gameId: int, teamId: int) -> HexStr:
@@ -37,7 +38,8 @@ class CrabadaWeb3Client(SwimmerNetworkWeb3Client):
         Attack an open mine
         """
         tx: TxParams = self.buildContractTransaction(
-            self.contract.functions.attack(gameId, teamId))
+            self.contract.functions.attack(gameId, teamId)
+        )
         return self.signAndSendTransaction(tx)
 
     def closeGame(self, gameId: int) -> HexStr:
@@ -45,7 +47,8 @@ class CrabadaWeb3Client(SwimmerNetworkWeb3Client):
         Close mining game, claim reward & send crabs back home
         """
         tx: TxParams = self.buildContractTransaction(
-            self.contract.functions.closeGame(gameId))
+            self.contract.functions.closeGame(gameId)
+        )
         return self.signAndSendTransaction(tx)
 
     def settleGame(self, gameId: int) -> HexStr:
@@ -53,7 +56,8 @@ class CrabadaWeb3Client(SwimmerNetworkWeb3Client):
         Close looting game, claim reward & send crabs back home
         """
         tx: TxParams = self.buildContractTransaction(
-            self.contract.functions.settleGame(gameId))
+            self.contract.functions.settleGame(gameId)
+        )
         return self.signAndSendTransaction(tx)
 
     def reinforceDefense(self, gameId: int, crabadaId: int, borrowPrice: Wei) -> HexStr:
@@ -62,7 +66,9 @@ class CrabadaWeb3Client(SwimmerNetworkWeb3Client):
         price must be expressed in Wei (1 TUS = 10^18 Wei)
         """
         tx: TxParams = self.buildContractTransaction(
-            self.contract.functions.reinforceDefense(gameId, crabadaId, borrowPrice))
+            self.contract.functions.reinforceDefense(
+                gameId, crabadaId, borrowPrice)
+        )
         return self.signAndSendTransaction(tx)
 
     def reinforceAttack(self, gameId: int, crabadaId: int, borrowPrice: Wei) -> HexStr:
@@ -71,5 +77,7 @@ class CrabadaWeb3Client(SwimmerNetworkWeb3Client):
         the price must be expressed in Wei (1 TUS = 10^18 Wei)
         """
         tx: TxParams = self.buildContractTransaction(
-            self.contract.functions.reinforceAttack(gameId, crabadaId, borrowPrice))
+            self.contract.functions.reinforceAttack(
+                gameId, crabadaId, borrowPrice)
+        )
         return self.signAndSendTransaction(tx)

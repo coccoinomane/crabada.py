@@ -9,16 +9,15 @@ from src.helpers.general import findInList, firstOrNone
 from src.libs.CrabadaWeb2Client.types import Game, Team, TeamStatus
 from src.models.Model import Model
 
+
 class User(Model):
     """
     A user with his/her configuration, uniquely identified by
     its wallet address
     """
 
-    config: ConfigUser = None
-
     def __init__(self, userAddress: Address):
-        self.config = User.getUserConfig(userAddress)
+        self.config: ConfigUser = User.getUserConfig(userAddress)
         if not self.config:
             raise UserException("User address not registered: {userAddress}")
 
@@ -27,13 +26,13 @@ class User(Model):
         Return the configuration of the team with the given team ID;
         if the team does not belong to the current user, return None.
         """
-        return findInList(self.config['teams'], 'id', teamId)  # type: ignore
+        return findInList(self.config["teams"], "id", teamId)  # type: ignore
 
     def getTeams(self) -> List[ConfigTeam]:
         """
         Return the user teams as specified in the configuration
         """
-        return self.config['teams']
+        return self.config["teams"]
 
     def getTeamConfigFromMine(self, mine: Game) -> Tuple[ConfigTeam, TeamStatus]:
         """
@@ -47,29 +46,29 @@ class User(Model):
         game. Verify this is ok.
         """
 
-        miningTeamId = mine['team_id']
+        miningTeamId = mine["team_id"]
         miningTeamConfig = self.getTeamConfig(miningTeamId)
         if miningTeamConfig:
-            return (miningTeamConfig, 'MINING')
+            return (miningTeamConfig, "MINING")
 
-        lootingTeamId = mine['attack_team_id']
+        lootingTeamId = mine["attack_team_id"]
         lootingTeamConfig = self.getTeamConfig(lootingTeamId)
         if lootingTeamConfig:
-            return (lootingTeamConfig, 'LOOTING')
-        
+            return (lootingTeamConfig, "LOOTING")
+
         return (None, None)
 
     def isTooExpensiveToBorrowTus(self, price: Tus) -> bool:
         """
         Return whether a crab costs too much to borrow for the user
         """
-        return price > self.config['maxPriceToReinforceInTus']
+        return price > self.config["maxPriceToReinforceInTus"]
 
     def isTooExpensiveToBorrowTusWei(self, price: Wei) -> bool:
         """
         Return whether a crab costs too much to borrow for the user
         """
-        return price > self.config['maxPriceToReinforceInTusWei']
+        return price > self.config["maxPriceToReinforceInTusWei"]
 
     @staticmethod
     def isRegistered(userAddress: Address) -> bool:
@@ -81,7 +80,7 @@ class User(Model):
     def getUserConfig(userAddress: Address) -> ConfigUser:
         """Return a user configuration given its address;
         returns None if no user with that address is found"""
-        return firstOrNone([ u for u in users if u['address'] == userAddress ])
+        return firstOrNone([u for u in users if u["address"] == userAddress])
 
     @staticmethod
     def create(userAddress: Address) -> User:
