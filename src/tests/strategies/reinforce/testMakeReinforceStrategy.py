@@ -10,10 +10,6 @@ from sys import argv
 gameId = int(secondOrNone(argv)) or 2421165
 maxPrice = cast(Tus, int(thirdOrNone(argv) or 25))
 
-if not gameId:
-    print("Provide a game ID")
-    exit(1)
-
 game = crabadaWeb2Client.getMine(gameId)
 
 userAddress = users[0]["address"]
