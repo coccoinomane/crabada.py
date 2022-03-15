@@ -8,9 +8,11 @@ from src.libs.CrabadaWeb2Client.types import Game
 
 
 def minerCanReinforce(mine: Game) -> bool:
-    """Return True if, in the given game, the miner (the defense) can
+    """
+    Return True if, in the given game, the miner (the defense) can
     reinforce at this moment, regardless of whether its the first or the
-    second time"""
+    second time
+    """
     return getMinerReinforcementStatus(mine) != 0
 
 
@@ -59,9 +61,11 @@ def minerCanReinforceForTheSecondTime(mine: Game) -> bool:
 
 
 def looterCanReinforce(mine: Game) -> bool:
-    """Return True if, in the given game, the looter (the attack) can
+    """
+    Return True if, in the given game, the looter (the attack) can
     reinforce at this moment, regardless of whether its the first or the
-    second time"""
+    second time
+    """
     return getLooterReinforcementStatus(mine) != 0
 
 
