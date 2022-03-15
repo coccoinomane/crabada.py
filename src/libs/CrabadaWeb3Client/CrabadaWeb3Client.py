@@ -19,10 +19,9 @@ class CrabadaWeb3Client(SwimmerNetworkWeb3Client):
     """
 
     # contractAddress = cast(Address, '0x82a85407bd612f52577909f4a58bfc6873f14da8')
-    contractAddress = cast(
-        Address, "0x801b5bb19e9052db964b94ed5b4d6730d8fcca25")
-    abiDir = os.path.dirname(os.path.realpath(__file__)) + '/abi'
-    abi = Web3Client.getContractAbiFromFile(abiDir + '/abi-crabada.json')
+    contractAddress = cast(Address, "0x801b5bb19e9052db964b94ed5b4d6730d8fcca25")
+    abiDir = os.path.dirname(os.path.realpath(__file__)) + "/abi"
+    abi = Web3Client.getContractAbiFromFile(abiDir + "/abi-crabada.json")
 
     def startGame(self, teamId: int) -> HexStr:
         """
@@ -66,8 +65,7 @@ class CrabadaWeb3Client(SwimmerNetworkWeb3Client):
         price must be expressed in Wei (1 TUS = 10^18 Wei)
         """
         tx: TxParams = self.buildContractTransaction(
-            self.contract.functions.reinforceDefense(
-                gameId, crabadaId, borrowPrice)
+            self.contract.functions.reinforceDefense(gameId, crabadaId, borrowPrice)
         )
         return self.signAndSendTransaction(tx)
 
@@ -77,7 +75,6 @@ class CrabadaWeb3Client(SwimmerNetworkWeb3Client):
         the price must be expressed in Wei (1 TUS = 10^18 Wei)
         """
         tx: TxParams = self.buildContractTransaction(
-            self.contract.functions.reinforceAttack(
-                gameId, crabadaId, borrowPrice)
+            self.contract.functions.reinforceAttack(gameId, crabadaId, borrowPrice)
         )
         return self.signAndSendTransaction(tx)

@@ -17,12 +17,12 @@ class CrabadaWeb2Client:
     """
 
     # baseUri = 'https://idle-api.crabada.com/public/idle'
-    baseUri = 'https://idle-game-subnet-test-api.crabada.com/public/idle'
+    baseUri = "https://idle-game-subnet-test-api.crabada.com/public/idle"
 
     def getMine(self, mineId: int, params: dict[str, Any] = {}) -> Game:
         """Get information from the given mine"""
         res = self.getMine_Raw(mineId, params)
-        return res['result']
+        return res["result"]
 
     def getMine_Raw(self, mineId: int, params: dict[str, Any] = {}) -> Any:
         url = self.baseUri + "/mine/" + str(mineId)
@@ -41,7 +41,9 @@ class CrabadaWeb2Client:
         except:
             return []
 
-    def listMyOpenMines(self, userAddress: Address, params: dict[str, Any] = {}) -> List[Game]:
+    def listMyOpenMines(
+        self, userAddress: Address, params: dict[str, Any] = {}
+    ) -> List[Game]:
         """
         Get all mines that belong to the given user address
         and that are open

@@ -51,22 +51,22 @@ class Web3Client:
         maxMaxFeePerGas = 2 * baseFee + maxPriorityFeePerGas.
         """
         tx: TxParams = {
-            'type': 0x2,
-            'chainId': self.chainId,
-            'gas': self.gasLimit,  # type: ignore
-            'maxFeePerGas': Web3.toWei(self.estimateMaxFeePerGasInGwei(), 'gwei'),
-            'maxPriorityFeePerGas': Web3.toWei(self.maxPriorityFeePerGasInGwei, 'gwei'),
-            'nonce': self.getNonce(),
+            "type": 0x2,
+            "chainId": self.chainId,
+            "gas": self.gasLimit,  # type: ignore
+            "maxFeePerGas": Web3.toWei(self.estimateMaxFeePerGasInGwei(), "gwei"),
+            "maxPriorityFeePerGas": Web3.toWei(self.maxPriorityFeePerGasInGwei, "gwei"),
+            "nonce": self.getNonce(),
         }
         return tx
 
     def buildBaseTransactionNonEIP1559(self) -> TxParams:
         tx: TxParams = {
-            'type': 0x1,
-            'chainId': self.chainId,
-            'gas': self.gasLimit,  # type: ignore
-            'gasPrice':  25000000000,
-            'nonce': self.getNonce(),
+            "type": 0x1,
+            "chainId": self.chainId,
+            "gas": self.gasLimit,  # type: ignore
+            "gasPrice": 25000000000,
+            "nonce": self.getNonce(),
         }
         return tx
 
@@ -76,8 +76,7 @@ class Web3Client:
         where the value is expressed in the blockchain token (e.g. ETH or AVAX).
         """
         tx = self.buildBaseTransaction()
-        txValue: TxParams = {
-            "to": to, "value": self.w3.toWei(valueInEth, "ether")}
+        txValue: TxParams = {"to": to, "value": self.w3.toWei(valueInEth, "ether")}
         return tx | txValue
 
     def buildContractTransaction(self, contractFunction: ContractFunction) -> TxParams:
