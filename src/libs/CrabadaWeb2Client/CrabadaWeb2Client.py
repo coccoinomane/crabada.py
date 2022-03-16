@@ -41,6 +41,25 @@ class CrabadaWeb2Client:
         except:
             return []
 
+    def listOpenMines(self, params: dict[str, Any] = {}) -> List[Game]:
+        """
+        Get open mines
+        """
+        params["status"] = "open"
+        return self.listMines(params)
+
+    def listLootableMines(
+        self, looterAddress: Address, params: dict[str, Any] = {}
+    ) -> List[Game]:
+        """
+        Get mines that are lootable; it is required to provide a user
+        address.
+        """
+        params["can_loot"] = 1
+        params["looter_address"] = looterAddress
+        params["status"] = "open"
+        return self.listMines(params)
+
     def listMyOpenMines(
         self, userAddress: Address, params: dict[str, Any] = {}
     ) -> List[Game]:
