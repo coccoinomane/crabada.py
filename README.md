@@ -3,18 +3,17 @@ Scripts & bots to interact with [Crabada](play.crabada.com)'s smart contracts.
 # Features
 
 - Automatically send crabs mining.
-- Automatically claim rewards.
+- Automatically reinforce mines & loots.
+- Automatically claim rewards for mines & loots.
 - Choose between several reinforcement strategies.
 - Run the bot without human supervision.
-- Send multiple teams mining (experimental)
+- Manage multiple teams at the same time (experimental).
 
 # Looting
 
-Building a looting bot is more difficult than a mining one, because there is more competition and you need to be faster than the other bots.
+The bot can help looters with automatic reinforcement & settling.
 
-I am currently working towards this end, and so far the results have been satisfying.
-
-Contact me if you are interested in the looting bot, but please be aware that it will not be free to use 🙂
+I currently have no plans to implement automatic looting/attacking, [for the reasons I outlined here](https://github.com/coccoinomane/crabada.py/issues/3#issuecomment-1073066318).
 
 # Quick start
 
@@ -133,6 +132,8 @@ The idle game contract can be found at the following link:
 
 # Might do
 
+* Fix `closeLoots`
+* Avoid losing gas on failed reinforce
 * Use cron library to schedule scripts
 * Gas control: Stop if wallet has less than X ETH + set daily gas limit
 * Better gas estimation ([eth_baseFee and eth_maxPriorityFeePerGas](https://docs.avax.network/learn/platform-overview/transaction-fees/))
