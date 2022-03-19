@@ -2,7 +2,6 @@
 Helper functions to reinforce all loots of a given user
 """
 
-from time import sleep
 from web3.main import Web3
 from src.common.exceptions import CrabBorrowPriceTooHigh
 from src.common.logger import logger
