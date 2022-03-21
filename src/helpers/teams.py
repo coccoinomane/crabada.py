@@ -5,18 +5,24 @@ from src.models.User import User
 from src.common.clients import crabadaWeb2Client
 
 
-def fetchAvailableTeamsForTask(user: User, task: TeamTask) -> List[Team]:
+def fetchAvailableTeamsForTask(
+    user: User, task: TeamTask, limit: int = 200
+) -> List[Team]:
     """
     Fetch available teams from Crabada, and return only those
     that are supposed to perform the given task
     """
 
-    # List of available teams
+    # Teams that are supposed to perform the given task
+    ids = [t["id"] for t in user.getTeamsByTask(task)]
+
+    if not ids:
+        return []
+
+    # Fetch list of available teams
     availableTeams = crabadaWeb2Client.listTeams(
-        user.address, {"is_team_available": 1, "limit": 200, "page": 1}
+        user.address, {"is_team_available": 1, "limit": limit, "page": 1}
     )
 
-    # User's teams that are supposed to perform the given task
-    ids = [t["id"] for t in user.getTeamsByTask("mine")]
-
+    # Intersect teams with the task with available teams
     return [t for t in availableTeams if t["team_id"] in ids]
