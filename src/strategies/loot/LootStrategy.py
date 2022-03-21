@@ -10,6 +10,8 @@ class LootStrategy(Strategy):
     """
     Generic looting strategy, consisting in finding the perfect
     mine to loot, given a looter team.
+
+    TODO: Implement factional advantage.
     """
 
     def setParams(self, team: Team, minesToFetch: int = 5) -> Strategy:
