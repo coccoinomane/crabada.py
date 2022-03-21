@@ -17,9 +17,10 @@ class User(Model):
     """
 
     def __init__(self, userAddress: Address):
+        self.address = userAddress
         self.config: ConfigUser = User.getUserConfig(userAddress)
         if not self.config:
-            raise UserException("User address not registered: {userAddress}")
+            raise UserException(f"User address not registered: {str(userAddress)}")
 
     def getTeamConfig(self, teamId: int) -> ConfigTeam:
         """

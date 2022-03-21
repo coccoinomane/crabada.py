@@ -13,10 +13,10 @@ from src.helpers.mines import (
     getRemainingTimeFormatted,
     mineIsFinished,
 )
-from src.libs.CrabadaWeb2Client.types import Game
+from src.models.User import User
 
 
-def closeMines(userAddress: Address) -> int:
+def closeMines(user: User) -> int:
     """
     Close all open mining games whose end time is due; return
     the number of closed games.
@@ -25,7 +25,7 @@ def closeMines(userAddress: Address) -> int:
     """
 
     openGames = crabadaWeb2Client.listMines(
-        {"limit": 200, "status": "open", "user_address": userAddress}
+        {"limit": 200, "status": "open", "user_address": user.address}
     )
 
     # Games with a reward to claim
@@ -33,7 +33,7 @@ def closeMines(userAddress: Address) -> int:
 
     # Print a useful message in case there aren't finished games
     if not finishedGames:
-        message = f"No mines to close for user {str(userAddress)}"
+        message = f"No mines to close for user {str(user.address)}"
         nextGameToFinish = getNextMineToFinish(openGames)
         if nextGameToFinish:
             message += f" (next in {getRemainingTimeFormatted(nextGameToFinish)})"

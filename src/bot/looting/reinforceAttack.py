@@ -16,7 +16,7 @@ from time import sleep
 from src.common.config import reinforceDelayInSeconds
 
 
-def reinforceAttack(looterAddress: Address) -> int:
+def reinforceAttack(user: User) -> int:
     """
     Check if any of the teams of the user that are looting can be
     reinforced, and do so if this is the case; return the
@@ -25,11 +25,10 @@ def reinforceAttack(looterAddress: Address) -> int:
     TODO: implement paging
     """
 
-    user = User(looterAddress)
-    openLoots = crabadaWeb2Client.listMyOpenLoots(looterAddress)
+    openLoots = crabadaWeb2Client.listMyOpenLoots(user.address)
     reinforceableMines = [m for m in openLoots if looterCanReinforce(m)]
     if not reinforceableMines:
-        logger.info("No loots to reinforce for user " + str(looterAddress))
+        logger.info("No loots to reinforce for user " + str(user.address))
         return 0
 
     # Reinforce the mines
@@ -43,7 +42,7 @@ def reinforceAttack(looterAddress: Address) -> int:
             "reinforceStrategyName"
         )
         try:
-            crab = getBestReinforcement(looterAddress, mine, maxPrice)
+            crab = getBestReinforcement(user.address, mine, maxPrice)
         except CrabBorrowPriceTooHigh:
             logger.warning(
                 f"Price of crab is {Web3.fromWei(crab['price'], 'ether')} TUS which exceeds the user limit of {maxPrice} [strategyName={strategyName}]"

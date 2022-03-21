@@ -6,10 +6,10 @@ from src.common.logger import logger
 from src.common.txLogger import txLogger, logTx
 from src.helpers.sms import sendSms
 from src.common.clients import crabadaWeb2Client, crabadaWeb3Client
-from eth_typing import Address
+from src.models.User import User
 
 
-def sendTeamsMining(userAddress: Address) -> int:
+def sendTeamsMining(user: User) -> int:
     """
     Send all available teams of crabs to mine.
 
@@ -18,12 +18,13 @@ def sendTeamsMining(userAddress: Address) -> int:
 
     TODO: implement paging
     """
+
     availableTeams = crabadaWeb2Client.listTeams(
-        userAddress, {"is_team_available": 1, "limit": 200, "page": 1}
+        user.address, {"is_team_available": 1, "limit": 200, "page": 1}
     )
 
     if not availableTeams:
-        logger.info("No available teams to send mining for user " + str(userAddress))
+        logger.info("No available teams to send mining for user " + str(user.address))
         return 0
 
     # Send the teams
