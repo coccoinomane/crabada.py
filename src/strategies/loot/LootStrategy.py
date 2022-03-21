@@ -35,7 +35,7 @@ class LootStrategy(Strategy):
             isApplicable,
             ""
             if isApplicable
-            else f"Team cannot loot {self.team['team_id']} (status = {self.team['status']})",
+            else f"Team '{self.team['team_id']}' cannot loot (status = {self.team['status']})",
         )
 
     @abstractmethod

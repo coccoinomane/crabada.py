@@ -61,7 +61,7 @@ class ReinforceStrategy(Strategy):
             isApplicable,
             ""
             if isApplicable
-            else f"Game cannot be reinforced {self.game['game_id']} (round = {self.game['round']}, winner_team_id = {self.game['winner_team_id']})",
+            else f"Game cannot be reinforced (mine_id = {self.game['game_id']}, round = {self.game['round']}, winner_team_id = {self.game['winner_team_id']})",
         )
 
     @abstractmethod
