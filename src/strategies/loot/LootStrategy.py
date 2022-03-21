@@ -1,7 +1,6 @@
 from abc import abstractmethod
 from typing import List, Tuple
 from src.helpers.general import firstOrNone
-from src.helpers.teams import teamCanLoot
 from src.strategies.Strategy import Strategy
 from src.libs.CrabadaWeb2Client.types import Game, Team
 
@@ -30,7 +29,7 @@ class LootStrategy(Strategy):
         """
         The strategy can be applied only if the team is busy
         """
-        isApplicable = teamCanLoot(self.team)
+        isApplicable = self.team["status"] == "AVAILABLE"
         return (
             isApplicable,
             ""
