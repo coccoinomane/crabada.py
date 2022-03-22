@@ -33,6 +33,7 @@ def parseTeamConfig(teamNumber: int, userNumber: int) -> ConfigTeam:
         "reinforceStrategyName": getenv(
             f"{teamPrefix}_REINFORCE_STRATEGY", "HighestBp"
         ),
+        "reinforcementToPick": parseInt(f"{teamPrefix}_REINFORCEMENT_TO_PICK") or 1,
     }
 
     validateTeamConfig(teamConfig, teamNumber, userNumber)
@@ -63,7 +64,6 @@ def parseUserConfig(userNumber: int, teams: List[ConfigTeam]) -> ConfigUser:
         "reinforcementMaxPriceInTusWei": Web3.toWei(
             reinforcementMaxPriceInTus, "ether"
         ),
-        "reinforcementToPick": parseInt(f"{userPrefix}_REINFORCEMENT_TO_PICK") or 1,
         "teams": [t for t in teams if t["userAddress"] == address],
     }
 

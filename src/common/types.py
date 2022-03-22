@@ -17,6 +17,7 @@ class ConfigTeam(TypedDict):
     task: TeamTask
     lootStrategyName: str
     reinforceStrategyName: str
+    reinforcementToPick: int
 
 
 class ConfigUser(TypedDict):
@@ -24,7 +25,6 @@ class ConfigUser(TypedDict):
     privateKey: str
     reinforcementMaxPriceInTus: Tus
     reinforcementMaxPriceInTusWei: Wei
-    reinforcementToPick: int
     teams: List[ConfigTeam]
 
 
