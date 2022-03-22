@@ -1,7 +1,11 @@
 from __future__ import annotations
 from abc import abstractmethod
 from typing import List, Tuple, cast
-from src.common.exceptions import CrabBorrowPriceTooHigh, StrategyException
+from src.common.exceptions import (
+    ReinforcementTooExpensive,
+    NoSuitableReinforcementFound,
+    StrategyException,
+)
 from src.common.types import Tus
 from src.helpers.general import firstOrNone
 from src.helpers.price import tusToWei, weiToTus
@@ -80,14 +84,16 @@ class ReinforceStrategy(Strategy):
 
     def crab(self, game: Game, list: List[CrabForLending]) -> CrabForLending:
         """
-        Strategy to pick the first reinforcement crab from the list of
-        available crabs; by default simply pick the first of the list.
+        Select the first reinforcement crab from the list of
+        available crabs to borrow; by default simply pick the
+        first of the list.
         """
         return firstOrNone(list)
 
     def crab2(self, game: Game, list: List[CrabForLending]) -> CrabForLending:
         """
-        Optionally specify a separate strategy for the second crab
+        Optionally specify a separate selection criterium for the
+        second crab
         """
         return self.crab(game, list)
 
@@ -118,25 +124,47 @@ class ReinforceStrategy(Strategy):
         elif status == 2:  # second reinforcement
             return self._getCrab2()
 
-    def raiseIfPriceTooHigh(self, crab: CrabForLending, maxPrice: Tus) -> None:
+    def handleNoSuitableCrabFound(self, crab: CrabForLending) -> None:
         """
-        Raise an exception if the price of the given crab is higher
-        than the given max price; the latter should be give in TUS,
-        not wei
+        By default, raise an exception if the strategy is unable to find
+        a suitable crab
         """
-        if crab["price"] > tusToWei(maxPrice):
-            raise CrabBorrowPriceTooHigh(
-                f"Crab's price {weiToTus(crab['price'])} higher than max {maxPrice}"
-            )
+        raise NoSuitableReinforcementFound(
+            f"Could not find a suitable reinforcement [strategy={self.__class__.__name__}]"
+        )
+
+    def handlePriceTooHigh(self, crab: CrabForLending, maxPrice: Tus) -> None:
+        """
+        By default, raise an exception if the price of the given crab is
+        higher than the strategy's max price
+        """
+        raise ReinforcementTooExpensive(
+            f"Crab's price is higher than max {maxPrice} TUS [price={weiToTus(crab['price'])}, strategy={self.__class__.__name__}]"
+        )
 
     def _getCrab1(self) -> CrabForLending:
         """
         Fetch and return a reinforcement crab using the strategy set in
-        query1() and crab1(). If no crab can be found, return None.
+        query() and crab(). If no crab can be found, return None.
         """
-        crabsForLending = self.web2Client.listCrabsForLending(self.query(self.game))
+        query = self.query(self.game)
+
+        # If a None query is given, we assume the reinforcement is not needed
+        if query is None:
+            return None
+
+        # Get the borrowable reinforcements from Crabada
+        crabsForLending = self.web2Client.listCrabsForLending(query)
+
+        # Select the crab based on the strategy
         crab = self.crab(self.game, crabsForLending)
-        self.raiseIfPriceTooHigh(crab, self.maxPrice1)
+
+        # Handle special cases
+        if not crab:
+            self.handleNoSuitableCrabFound(crab)
+        elif crab["price"] > tusToWei(self.maxPrice1):
+            self.handlePriceTooHigh(crab, self.maxPrice1)
+
         return crab
 
     def _getCrab2(self) -> CrabForLending:
@@ -144,7 +172,22 @@ class ReinforceStrategy(Strategy):
         Fetch and return a reinforcement crab using the strategy set in
         query2() and crab2(). If no crab can be found, return None.
         """
-        crabsForLending = self.web2Client.listCrabsForLending(self.query2(self.game))
+        query = self.query2(self.game)
+
+        # If a None query is given, we assume the reinforcement is not needed
+        if query is None:
+            return None
+
+        # Get the borrowable reinforcements from Crabada
+        crabsForLending = self.web2Client.listCrabsForLending(query)
+
+        # Select the crab based on the strategy
         crab = self.crab2(self.game, crabsForLending)
-        self.raiseIfPriceTooHigh(crab, self.maxPrice2)
+
+        # Handle special cases
+        if not crab:
+            self.handleNoSuitableCrabFound(crab)
+        elif crab["price"] > tusToWei(self.maxPrice2):
+            self.handlePriceTooHigh(crab, self.maxPrice2)
+
         return crab

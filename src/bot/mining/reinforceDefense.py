@@ -3,7 +3,10 @@ Helper functions to reinforce all mines of a given user
 """
 
 from web3.main import Web3
-from src.common.exceptions import CrabBorrowPriceTooHigh
+from src.common.exceptions import (
+    ReinforcementTooExpensive,
+    NoSuitableReinforcementFound,
+)
 from src.common.logger import logger
 from src.common.txLogger import txLogger, logTx
 from src.helpers.mines import fetchOpenMines
@@ -39,15 +42,12 @@ def reinforceDefense(user: User) -> int:
         strategyName = user.getTeamConfig(mine["team_id"]).get("reinforceStrategyName")
         try:
             crab = getBestReinforcement(user.address, mine, maxPrice)
-        except CrabBorrowPriceTooHigh:
-            logger.warning(
-                f"Price of crab is {Web3.fromWei(crab['price'], 'ether')} TUS which exceeds the user limit of {maxPrice} [strategyName={strategyName}]"
-            )
+        except (ReinforcementTooExpensive, NoSuitableReinforcementFound) as e:
+            logger.warning(e.__class__.__name__ + ": " + str(e))
             continue
+
+        # Some strategies might return no reinforcement
         if not crab:
-            logger.warning(
-                f"Could not find a crab to lend for mine {mineId} [strategyName={strategyName}]"
-            )
             continue
 
         crabId = crab["crabada_id"]
