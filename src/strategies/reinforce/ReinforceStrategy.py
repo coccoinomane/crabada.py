@@ -81,22 +81,24 @@ class ReinforceStrategy(Strategy):
 
     def process(self, game: Game, crabs: List[CrabForLending]) -> List[CrabForLending]:
         """
-        Process the list of available reinforcements, e.g. sort
-        it by price or stats, or filter it according to some
-        criterion.
+        Process the list of available reinforcements fetched with
+        the query() method.
+
+        A typical processing is to sort the list by price or stats,
+        or filter it according to some criterion.
 
         By default, return the list unchanged.
         """
         return crabs
 
-    def pick(self, game: Game, processedCrabs: List[CrabForLending]) -> CrabForLending:
+    def pick(self, game: Game, crabs: List[CrabForLending]) -> CrabForLending:
         """
-        Select the reinforcement crab from the list of
-        available crabs to borrow.
+        Pick the reinforcement crab from the processed list of available
+        crabs.
 
-        By default simply pick the first crab in the list.
+        By default, pick the first crab in the list.
         """
-        return firstOrNone(processedCrabs)
+        return firstOrNone(crabs)
 
     def query2(self, game: Game) -> List[CrabForLending]:
         """

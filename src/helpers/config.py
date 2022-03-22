@@ -81,6 +81,10 @@ def validateTeamConfig(team: ConfigTeam, teamNumber: int, userNumber: int) -> No
         raise InvalidConfig(
             f"TASK parameter of team {teamNumber} of user {userNumber} must be one of {str(typing.get_args(TeamTask))}, but '{team['task']}' was given"
         )
+    if team["reinforcementToPick"] <= 0 or team["reinforcementToPick"] > 100:
+        raise InvalidConfig(
+            f"REINFORCEMENT_TO_PICK parameter of team {teamNumber} of user {userNumber} must be an integer between 1 a and 100"
+        )
 
 
 def validateUserConfig(user: ConfigUser, userNumber: int) -> None:

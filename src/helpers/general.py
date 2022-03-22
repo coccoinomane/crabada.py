@@ -39,6 +39,16 @@ def nthOrNone(list: List[Any], n: int) -> Any:
         return None
 
 
+def nthOrLastOrNone(list: List[Any], n: int) -> Any:
+    """
+    Return the n-th element of a list; if it is not set, return
+    the last element of the list; if it is not set, return none.
+    """
+    if not list:
+        return None
+    return list[n] if len(list) > n else list[-1]
+
+
 def findInList(l: List[dict[str, Any]], key: str, value: Any) -> Any:
     """
     Search a list of dictionaries for a specific one
