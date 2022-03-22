@@ -63,13 +63,13 @@ class User(Model):
         """
         Return whether a crab costs too much to borrow for the user
         """
-        return price > self.config["maxPriceToReinforceInTus"]
+        return price > self.config["reinforcementMaxPriceInTus"]
 
     def isTooExpensiveToBorrowTusWei(self, price: Wei) -> bool:
         """
         Return whether a crab costs too much to borrow for the user
         """
-        return price > self.config["maxPriceToReinforceInTusWei"]
+        return price > self.config["reinforcementMaxPriceInTusWei"]
 
     def getTeamsByTask(self, task: TeamTask) -> List[ConfigTeam]:
         """

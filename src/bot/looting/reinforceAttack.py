@@ -39,7 +39,7 @@ def reinforceAttack(user: User) -> int:
 
         # Find best reinforcement crab to borrow
         mineId = mine["game_id"]
-        maxPrice = user.config["maxPriceToReinforceInTus"]
+        maxPrice = user.config["reinforcementMaxPriceInTus"]
         strategyName = user.getTeamConfig(mine["attack_team_id"]).get(
             "reinforceStrategyName"
         )

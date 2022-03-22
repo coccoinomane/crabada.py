@@ -22,8 +22,9 @@ class ConfigTeam(TypedDict):
 class ConfigUser(TypedDict):
     address: Address
     privateKey: str
-    maxPriceToReinforceInTus: Tus
-    maxPriceToReinforceInTusWei: Wei
+    reinforcementMaxPriceInTus: Tus
+    reinforcementMaxPriceInTusWei: Wei
+    reinforcementToPick: int
     teams: List[ConfigTeam]
 
 
