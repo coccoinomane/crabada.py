@@ -3,7 +3,7 @@
 Crabada script to reinforce all looting teams of the given user
 
 Usage:
-    python3 -m bin.mining.reinforceAttack <userAddress>
+    python3 -m bin.looting.reinforceAttack <userAddress>
 
 Author:
     @coccoinomane (Twitter)

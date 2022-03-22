@@ -6,8 +6,7 @@ of a given user
 from src.common.logger import logger
 from src.common.txLogger import txLogger, logTx
 from src.helpers.sms import sendSms
-from src.common.clients import crabadaWeb2Client, crabadaWeb3Client
-from eth_typing import Address
+from src.common.clients import crabadaWeb3Client
 from src.helpers.mines import (
     fetchOpenMines,
     getNextMineToFinish,

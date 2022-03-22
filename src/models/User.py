@@ -63,19 +63,22 @@ class User(Model):
         """
         Return whether a crab costs too much to borrow for the user
         """
-        return price > self.config["maxPriceToReinforceInTus"]
+        return price > self.config["reinforcementMaxPriceInTus"]
 
     def isTooExpensiveToBorrowTusWei(self, price: Wei) -> bool:
         """
         Return whether a crab costs too much to borrow for the user
         """
-        return price > self.config["maxPriceToReinforceInTusWei"]
+        return price > self.config["reinforcementMaxPriceInTusWei"]
 
     def getTeamsByTask(self, task: TeamTask) -> List[ConfigTeam]:
         """
         Get user's teams tasked with the given task
         """
         return [t for t in self.getTeams() if t["task"] == task]
+
+    def __str__(self) -> str:
+        return str(self.address)
 
     @staticmethod
     def isRegistered(userAddress: Address) -> bool:

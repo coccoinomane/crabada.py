@@ -31,7 +31,7 @@ if not cheapestCrab:
 price = cheapestCrab["price"]
 if User(userAddress).isTooExpensiveToBorrowTusWei(price):
     print(
-        f"Price of crab is {Web3.fromWei(price, 'ether')} TUS which exceeds the user limit of {Web3.fromWei(users[0]['maxPriceToReinforceInTusWei'], 'ether')}"
+        f"Price of crab is {Web3.fromWei(price, 'ether')} TUS which exceeds the user limit of {Web3.fromWei(users[0]['reinforcementMaxPriceInTusWei'], 'ether')}"
     )
     exit(1)
 

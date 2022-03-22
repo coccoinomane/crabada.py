@@ -120,5 +120,5 @@ def reinforcementIsTooExpensive(price: Wei, userAddress: Address) -> bool:
 
     The price must be given as it is returned by the listCrabsForLending
     endpoint, that is, in Wei, that is, in units of 1e-18 TUS."""
-    maxPrice = User(userAddress).config.get("maxPriceToReinforceInTusWei")
+    maxPrice = User(userAddress).config.get("reinforcementMaxPriceInTusWei")
     return price > maxPrice
