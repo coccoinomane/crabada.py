@@ -2,37 +2,39 @@ from typing import Any, List
 
 
 def firstOrNone(list: List[Any]) -> Any:
-    """Return the first element of a list or None
-    if 1) it is not set or 2) it is falsey"""
-    try:
-        return list[0]
-    except:
-        return None
+    """
+    Return the first element of a list or None if it is not set
+    """
+    return nthOrNone(list, 0)
 
 
 def secondOrNone(list: List[Any]) -> Any:
-    """Return the second element of a list or None
-    if 1) it is not set or 2) it is falsey"""
-    try:
-        return list[1]
-    except:
-        return None
+    """
+    Return the second element of a list or None if it is not set
+    """
+    return nthOrNone(list, 1)
 
 
 def thirdOrNone(list: List[Any]) -> Any:
-    """Return the third element of a list or None
-    if 1) it is not set or 2) it is falsey"""
-    try:
-        return list[2]
-    except:
-        return None
+    """
+    Return the third element of a list or None if it is not set
+    """
+    return nthOrNone(list, 2)
 
 
 def fourthOrNone(list: List[Any]) -> Any:
-    """Return the fourth element of a list or None
-    if 1) it is not set or 2) it is falsey"""
+    """
+    Return the fourth element of a list or None if it is not set
+    """
+    return nthOrNone(list, 3)
+
+
+def nthOrNone(list: List[Any], n: int) -> Any:
+    """
+    Return the n-th element of a list or None if it is not set
+    """
     try:
-        return list[3]
+        return list[n]
     except:
         return None
 

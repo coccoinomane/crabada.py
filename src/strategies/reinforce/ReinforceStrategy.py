@@ -24,13 +24,18 @@ class ReinforceStrategy(Strategy):
     Generic strategy to fetch the best possible crab to reinforce
     the given mine.
 
-    Extend this class and override the query(), crab() and,
-    optionally, crab2() methods in order to define a complete
-    strategy.
+    To define a complete strategy, extend this class and override
+    the query(), filter() and pick() methods.
 
-    The strategy can be used by calling the crab() method to
-    fetch the first reinforcement, and the crab2() method to
-    fetch the second one.
+    If you need a different criterion for the 2nd reinforcement, you
+    can optionally, override any of query2(), process2() or pick2().
+
+    The preferred way to use the strategy is to call getCrab(), which
+    returns the needed reinforcement crab based on the status of the
+    mine, or None if the mining/looting team cannot be reinforced.
+
+    If needed, you can also call getCrab1() and getCrab2() which will
+    always return a crab regardless of the status of the mine.
 
     Attributes
     ----------
@@ -39,9 +44,7 @@ class ReinforceStrategy(Strategy):
     maxPrice2: Tus
     """
 
-    def setParams(
-        self, game: Game, maxPrice: Tus = cast(Tus, 50), maxPrice2: Tus = None
-    ) -> Strategy:
+    def setParams(self, game: Game, maxPrice: Tus, maxPrice2: Tus = None) -> Strategy:
         """
         Parameters for a generic reinforce strategy
 
@@ -71,10 +74,29 @@ class ReinforceStrategy(Strategy):
     @abstractmethod
     def query(self, game: Game) -> List[CrabForLending]:
         """
-        Query to get the list of the available crabs for lending,
-        from which we will choose the reinforcement.
+        Query for the Crabada endpoint that will fetch the available
+        crabs for lending, from which we will pick our reinforcement.
         """
         return []
+
+    def process(self, game: Game, crabs: List[CrabForLending]) -> List[CrabForLending]:
+        """
+        Process the list of available reinforcements, e.g. sort
+        it by price or stats, or filter it according to some
+        criterion.
+
+        By default, return the list unchanged.
+        """
+        return crabs
+
+    def pick(self, game: Game, processedCrabs: List[CrabForLending]) -> CrabForLending:
+        """
+        Select the reinforcement crab from the list of
+        available crabs to borrow.
+
+        By default simply pick the first crab in the list.
+        """
+        return firstOrNone(processedCrabs)
 
     def query2(self, game: Game) -> List[CrabForLending]:
         """
@@ -82,30 +104,27 @@ class ReinforceStrategy(Strategy):
         """
         return self.query(game)
 
-    def crab(self, game: Game, list: List[CrabForLending]) -> CrabForLending:
+    def process2(self, game: Game, list: List[CrabForLending]) -> List[CrabForLending]:
         """
-        Select the first reinforcement crab from the list of
-        available crabs to borrow; by default simply pick the
-        first of the list.
+        Optionally specify a separate process for the second reinforcement
         """
-        return firstOrNone(list)
+        return self.process(game, list)
 
-    def crab2(self, game: Game, list: List[CrabForLending]) -> CrabForLending:
+    def pick2(self, game: Game, list: List[CrabForLending]) -> CrabForLending:
         """
-        Optionally specify a separate selection criterium for the
-        second crab
+        Optionally specify a separate selection criterion for the
+        second reinforcement
         """
-        return self.crab(game, list)
+        return self.pick(game, list)
 
     def getCrab(self, lootingOrMining: TeamStatus) -> CrabForLending:
         """
         Fetch and return a reinforcement crab, using the strategy;
         if no crab can be found, return None.
 
-        Contrary to getCrab1 and getCrab2, this function automatically decides
+        Contrary to getCrab1() and getCrab2(), this method automatically decides
         which reinforcement (first vs second) is needed based on the game's
-        status. This is why it needs to know whether your team is mining or
-        looting.
+        status, and it returns None if the game cannot be reinforced.
         """
 
         if lootingOrMining == "LOOTING":
@@ -120,9 +139,9 @@ class ReinforceStrategy(Strategy):
         if status == 0:  # mine cannot be reinforced
             return None
         elif status == 1:  # first reinforcement
-            return self._getCrab1()
+            return self.getCrab1()
         elif status == 2:  # second reinforcement
-            return self._getCrab2()
+            return self.getCrab2()
 
     def handleNoSuitableCrabFound(self, crab: CrabForLending) -> None:
         """
@@ -142,10 +161,10 @@ class ReinforceStrategy(Strategy):
             f"Crab's price is higher than max {maxPrice} TUS [price={weiToTus(crab['price'])}, strategy={self.__class__.__name__}]"
         )
 
-    def _getCrab1(self) -> CrabForLending:
+    def getCrab1(self) -> CrabForLending:
         """
         Fetch and return a reinforcement crab using the strategy set in
-        query() and crab(). If no crab can be found, return None.
+        query(), process() and pick(). If no crab can be found, return None.
         """
         query = self.query(self.game)
 
@@ -153,11 +172,12 @@ class ReinforceStrategy(Strategy):
         if query is None:
             return None
 
-        # Get the borrowable reinforcements from Crabada
-        crabsForLending = self.web2Client.listCrabsForLending(query)
+        # Get & process the borrowable reinforcements from Crabada
+        crabs = self.web2Client.listCrabsForLending(query)
+        processedCrabs = self.process(self.game, crabs)
 
         # Select the crab based on the strategy
-        crab = self.crab(self.game, crabsForLending)
+        crab = self.pick(self.game, processedCrabs)
 
         # Handle special cases
         if not crab:
@@ -167,10 +187,10 @@ class ReinforceStrategy(Strategy):
 
         return crab
 
-    def _getCrab2(self) -> CrabForLending:
+    def getCrab2(self) -> CrabForLending:
         """
         Fetch and return a reinforcement crab using the strategy set in
-        query2() and crab2(). If no crab can be found, return None.
+        query2(), process2() and pick2(). If no crab can be found, return None.
         """
         query = self.query2(self.game)
 
@@ -178,11 +198,12 @@ class ReinforceStrategy(Strategy):
         if query is None:
             return None
 
-        # Get the borrowable reinforcements from Crabada
-        crabsForLending = self.web2Client.listCrabsForLending(query)
+        # Get & process the borrowable reinforcements from Crabada
+        crabs = self.web2Client.listCrabsForLending(query)
+        processedCrabs = self.process2(self.game, crabs)
 
         # Select the crab based on the strategy
-        crab = self.crab2(self.game, crabsForLending)
+        crab = self.pick2(self.game, processedCrabs)
 
         # Handle special cases
         if not crab:

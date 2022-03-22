@@ -6,7 +6,7 @@ from src.common.types import (
     Tus,
     TeamTask,
 )
-from .dotenv import getenv, parseFloat, parseInt
+from src.common.dotenv import getenv, parseFloat, parseInt
 from typing import List, cast
 from src.common.exceptions import InvalidConfig, MissingConfig
 from eth_typing import Address

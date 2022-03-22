@@ -18,11 +18,11 @@ class HighestMpReinforceStrategy(ReinforceStrategy):
             "order": "asc",
         }
 
-    def crab(self, game: Game, list: List[CrabForLending]) -> CrabForLending:
+    def process(self, game: Game, list: List[CrabForLending]) -> List[CrabForLending]:
         affordableCrabs = [c for c in list if weiToTus(c["price"]) < self.maxPrice1]
         if len(affordableCrabs) == 0:
             return None
-        sortedAffordableCrabs = sorted(
-            affordableCrabs, key=lambda c: (-c["mine_point"], c["price"])
-        )
-        return firstOrNone(sortedAffordableCrabs)
+        return sorted(affordableCrabs, key=lambda c: (-c["mine_point"], c["price"]))
+
+    def pick(self, game: Game, list: List[CrabForLending]) -> CrabForLending:
+        return firstOrNone(list)
