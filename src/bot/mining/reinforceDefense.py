@@ -6,6 +6,7 @@ from web3.main import Web3
 from src.common.exceptions import CrabBorrowPriceTooHigh
 from src.common.logger import logger
 from src.common.txLogger import txLogger, logTx
+from src.helpers.mines import fetchOpenMines
 from src.helpers.reinforce import minerCanReinforce
 from src.helpers.sms import sendSms
 from src.common.clients import crabadaWeb2Client, crabadaWeb3Client
@@ -20,12 +21,10 @@ def reinforceDefense(user: User) -> int:
     Check if any of the teams of the user that are mining can be
     reinforced, and do so if this is the case; return the
     number of borrowed reinforcements.
-
-    TODO: implement paging
     """
 
-    openMines = crabadaWeb2Client.listMyOpenMines(user.address)
-    reinforceableMines = [m for m in openMines if minerCanReinforce(m)]
+    reinforceableMines = [m for m in fetchOpenMines(user) if minerCanReinforce(m)]
+
     if not reinforceableMines:
         logger.info("No mines to reinforce for user " + str(user.address))
         return 0

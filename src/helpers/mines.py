@@ -1,5 +1,5 @@
 """
-Helper functions to handle Crabada mines / gamess
+Helper functions to handle Crabada mines / games
 """
 
 from typing import List
@@ -8,6 +8,7 @@ from time import time
 from src.common.clients import crabadaWeb2Client
 from src.helpers.general import firstOrNone
 from src.libs.CrabadaWeb2Client.types import Game
+from src.models.User import User
 
 
 def mineHasBeenAttacked(mine: Game) -> bool:
@@ -67,11 +68,48 @@ def getRemainingTimeFormatted(game: Game) -> str:
 
 
 def getNextMineToFinish(games: List[Game]) -> Game:
-    """Given a list of games, return the mine that is open and
-    next to finish; returns None if there are no unfinished games
-    (finished=past the 4th our, regardless of whether the reward
-    has been claimed)
+    """
+    Given a list of games, return the mine that is open and
+    next to finish; returns None if there are no unfinished games.
 
-    If a game is already finished, it won't be considered"""
+    By finished we mean past the 4th hour, regardless of whether
+    the reward has been claimed.
+    """
     unfinishedGames = [g for g in games if not mineIsFinished(g)]
     return firstOrNone(sorted(unfinishedGames, key=lambda g: g["end_time"]))
+
+
+def fetchOpenMines(user: User) -> List[Game]:
+    """
+    Fetch all open mines that were opened by teams
+    belonging to the given user
+    """
+
+    teamIds = [t["id"] for t in user.getTeams()]
+
+    if not teamIds:
+        return []
+
+    openGames = crabadaWeb2Client.listMines(
+        {"limit": len(teamIds) * 2, "status": "open", "user_address": user.address}
+    )
+
+    return [g for g in openGames if g["team_id"] in teamIds]
+
+
+def fetchOpenLoots(user: User) -> List[Game]:
+    """
+    Fetch all mines that are being looted by teams
+    belonging to the given user
+    """
+
+    teamIds = [t["id"] for t in user.getTeams()]
+
+    if not teamIds:
+        return []
+
+    openLoots = crabadaWeb2Client.listMines(
+        {"limit": len(teamIds) * 2, "status": "open", "looter_address": user.address}
+    )
+
+    return [g for g in openLoots if g["team_id"] in teamIds]
