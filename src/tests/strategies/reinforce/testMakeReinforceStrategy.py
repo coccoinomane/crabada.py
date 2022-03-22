@@ -4,7 +4,7 @@ from src.common.types import Tus
 from src.helpers.general import secondOrNone
 from src.helpers.reinforce import minerCanReinforce
 from src.models.User import User
-from src.strategies.StrategyFactory import makeReinforceStrategy
+from src.strategies.reinforce.ReinforceStrategyFactory import makeReinforceStrategy
 from src.common.clients import crabadaWeb2Client
 from src.common.config import users
 from sys import argv

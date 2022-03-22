@@ -14,7 +14,7 @@ from src.helpers.reinforce import minerCanReinforce
 from src.helpers.sms import sendSms
 from src.common.clients import crabadaWeb3Client
 from src.models.User import User
-from src.strategies.StrategyFactory import getBestReinforcement
+from src.strategies.reinforce.ReinforceStrategyFactory import getBestReinforcement
 from time import sleep
 from src.common.config import reinforceDelayInSeconds
 
