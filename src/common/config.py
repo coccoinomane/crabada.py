@@ -27,9 +27,7 @@ while getenv(f"USER_1_TEAM_{teamNumber}"):
             "id": parseInt(f"USER_1_TEAM_{teamNumber}"),
             "userAddress": cast(Address, getenv("USER_1_ADDRESS")),
             "battlePoints": parseInt(f"USER_1_TEAM_{teamNumber}_BATTLE_POINTS"),
-            "task": cast(
-                TeamTask, getenv(f"USER_1_TEAM_{teamNumber}_TASK", "mine")
-            ),  # not implemented yet
+            "task": cast(TeamTask, getenv(f"USER_1_TEAM_{teamNumber}_TASK", "mine")),
             "lootStrategyName": getenv(
                 f"USER_1_TEAM_{teamNumber}_LOOT_STRATEGY", "LowestBp"
             ),

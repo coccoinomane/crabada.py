@@ -4,9 +4,9 @@ from eth_typing import Address
 from web3.types import Wei
 from src.common.config import users
 from src.common.exceptions import UserException
-from src.common.types import ConfigTeam, ConfigUser, Tus
+from src.common.types import ConfigTeam, ConfigUser, Tus, TeamTask
 from src.helpers.general import findInList, firstOrNone
-from src.libs.CrabadaWeb2Client.types import Game, Team, TeamStatus
+from src.libs.CrabadaWeb2Client.types import Game, TeamStatus
 from src.models.Model import Model
 
 
@@ -70,6 +70,12 @@ class User(Model):
         Return whether a crab costs too much to borrow for the user
         """
         return price > self.config["maxPriceToReinforceInTusWei"]
+
+    def getTeamsByTask(self, task: TeamTask) -> List[ConfigTeam]:
+        """
+        Get user's teams tasked with the given task
+        """
+        return [t for t in self.getTeams() if t["task"] == task]
 
     @staticmethod
     def isRegistered(userAddress: Address) -> bool:
