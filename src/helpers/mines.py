@@ -1,5 +1,5 @@
 """
-Helper functions to handle Crabada mines / gamess
+Helper functions to handle Crabada mines / games
 """
 
 from typing import List
@@ -95,3 +95,21 @@ def fetchOpenMines(user: User) -> List[Game]:
     )
 
     return [g for g in openGames if g["team_id"] in teamIds]
+
+
+def fetchOpenLoots(user: User) -> List[Game]:
+    """
+    Fetch all mines that are being looted by teams
+    belonging to the given user
+    """
+
+    teamIds = [t["id"] for t in user.getTeams()]
+
+    if not teamIds:
+        return []
+
+    openLoots = crabadaWeb2Client.listMines(
+        {"limit": len(teamIds) * 2, "status": "open", "looter_address": user.address}
+    )
+
+    return [g for g in openLoots if g["team_id"] in teamIds]

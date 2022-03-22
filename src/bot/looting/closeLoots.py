@@ -7,6 +7,7 @@ from src.common.txLogger import txLogger, logTx
 from src.helpers.sms import sendSms
 from src.common.clients import crabadaWeb2Client, crabadaWeb3Client
 from src.helpers.mines import (
+    fetchOpenLoots,
     mineIsSettled,
 )
 from src.models.User import User
@@ -16,18 +17,10 @@ def closeLoots(user: User) -> int:
     """
     Settle all open loot games that can be settled; return
     the number of closed loots.
-
-    TODO: implement paging
     """
 
-    openLoots = crabadaWeb2Client.listMines(
-        {"limit": 200, "status": "open", "looter_address": user.address}
-    )
+    settledGames = [g for g in fetchOpenLoots(user) if mineIsSettled(g)]
 
-    # Games with a reward to claim
-    settledGames = [g for g in openLoots if mineIsSettled(g)]
-
-    # Print a useful message in case there aren't finished games
     if not settledGames:
         logger.info(f"No loots to close for user {str(user.address)}")
         return 0
