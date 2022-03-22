@@ -77,6 +77,9 @@ class User(Model):
         """
         return [t for t in self.getTeams() if t["task"] == task]
 
+    def __str__(self) -> str:
+        return str(self.address)
+
     @staticmethod
     def isRegistered(userAddress: Address) -> bool:
         """Return true if the given user is in the list

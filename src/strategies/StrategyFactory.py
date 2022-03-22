@@ -10,7 +10,7 @@ from typing import Any
 from eth_typing.evm import Address
 from src.common.exceptions import StrategyException, StrategyNotFound, StrategyNotSet
 from src.common.clients import crabadaWeb2Client
-from src.common.types import Tus
+from src.common.types import ConfigTeam, ConfigUser, Tus
 from src.libs.CrabadaWeb2Client.types import CrabForLending, Game, Team
 from src.strategies.loot.LootStrategy import LootStrategy
 from src.strategies.loot.LowestBpLootStrategy import LowestBpLootStrategy
@@ -39,9 +39,7 @@ reinforceStrategies = {
 }
 
 
-def getBestMineToLoot(
-    userAddress: Address, team: Team, *args: Any, **kwargs: Any
-) -> Game:
+def getBestMineToLoot(userAddress: Address, team: Team) -> Game:
     """
     Find best mine to loot for the given team, using the Loot strategy
     provided in the user settings
@@ -57,41 +55,35 @@ def getBestMineToLoot(
         )
 
     # Create the strategy object and use it to get the mine
-    strategy: LootStrategy = makeLootStrategy(strategyName, team, *args, **kwargs)
+    strategy: LootStrategy = makeLootStrategy(strategyName, team)
     return strategy.getMine()
 
 
-def getBestReinforcement(
-    userAddress: Address, mine: Game, maxPrice: Tus, *args: Any, **kwargs: Any
-) -> CrabForLending:
+def getBestReinforcement(user: User, mine: Game, maxPrice: Tus) -> CrabForLending:
     """
     Find best crab to borrow for the given mine and at the given max price,
     using the Reinforce strategy provided in the user settings
     """
 
     # Fetch the team involved in the given mine
-    user = User(userAddress)
     (teamConfig, lootingOrMining) = user.getTeamConfigFromMine(mine)
     if not teamConfig:
-        raise StrategyException(
-            f"Current user {str(userAddress)} has no teams involved in mine {mine['game_id']}"
-        )
+        raise StrategyException(f"User {user} has no teams in mine {mine['game_id']}")
 
     # Fetch the strategy name from the user settings
     strategyName = teamConfig.get("reinforceStrategyName")
     if not strategyName:
-        raise StrategyNotSet(
-            f"Could not find the reinforceStrategyName setting for team {teamConfig['id']}"
-        )
+        raise StrategyNotSet(f"Team {teamConfig['id']} has no reinforce strategy set")
 
     # Create the strategy object and use it to get the crab to borrow
-    strategy: ReinforceStrategy = makeReinforceStrategy(strategyName, mine, maxPrice)
+    strategy: ReinforceStrategy = makeReinforceStrategy(
+        strategyName, user, teamConfig, mine, maxPrice
+    )
+
     return strategy.getCrab(lootingOrMining)
 
 
-def makeLootStrategy(
-    strategyName: str, team: Team, *params: Any, **paramsKw: Any
-) -> LootStrategy:
+def makeLootStrategy(strategyName: str, team: Team) -> LootStrategy:
     """
     Instantiate and return the Loot Strategy with the given name
     and the given parameters
@@ -101,11 +93,11 @@ def makeLootStrategy(
         raise StrategyNotFound(f"Cound not find a lootStrategy named {strategyName}")
     if not issubclass(strategyClass, (LootStrategy)):
         raise StrategyException(f"Error fetching loot strategy {strategyName}")
-    return strategyClass(crabadaWeb2Client).setParams(team, *params, **paramsKw)
+    return strategyClass(crabadaWeb2Client).setParams(team)
 
 
 def makeReinforceStrategy(
-    strategyName: str, mine: Game, maxPrice: Tus, *params: Any, **paramsKw: Any
+    strategyName: str, user: User, teamConfig: ConfigTeam, mine: Game, maxPrice: Tus
 ) -> ReinforceStrategy:
     """
     Instantiate and return the Reinforce Strategy with the given name
@@ -118,6 +110,5 @@ def makeReinforceStrategy(
         )
     if not issubclass(strategyClass, (ReinforceStrategy)):
         raise StrategyException(f"Error fetching reinforce strategy {strategyName}")
-    return strategyClass(crabadaWeb2Client).setParams(
-        mine, maxPrice, *params, **paramsKw
-    )
+
+    return strategyClass(user, teamConfig, crabadaWeb2Client).setParams(mine, maxPrice)

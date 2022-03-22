@@ -12,8 +12,7 @@ from src.common.txLogger import txLogger, logTx
 from src.helpers.mines import fetchOpenLoots
 from src.helpers.reinforce import looterCanReinforce
 from src.helpers.sms import sendSms
-from src.common.clients import crabadaWeb2Client, crabadaWeb3Client
-from eth_typing import Address
+from src.common.clients import crabadaWeb3Client
 from src.models.User import User
 from src.strategies.StrategyFactory import getBestReinforcement
 from time import sleep
@@ -44,7 +43,7 @@ def reinforceAttack(user: User) -> int:
             "reinforceStrategyName"
         )
         try:
-            crab = getBestReinforcement(user.address, mine, maxPrice)
+            crab = getBestReinforcement(user, mine, maxPrice)
         except (ReinforcementTooExpensive, NoSuitableReinforcementFound) as e:
             logger.warning(str(e))
             continue

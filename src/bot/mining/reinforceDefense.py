@@ -12,7 +12,7 @@ from src.common.txLogger import txLogger, logTx
 from src.helpers.mines import fetchOpenMines
 from src.helpers.reinforce import minerCanReinforce
 from src.helpers.sms import sendSms
-from src.common.clients import crabadaWeb2Client, crabadaWeb3Client
+from src.common.clients import crabadaWeb3Client
 from src.models.User import User
 from src.strategies.StrategyFactory import getBestReinforcement
 from time import sleep
@@ -41,7 +41,7 @@ def reinforceDefense(user: User) -> int:
         maxPrice = user.config["reinforcementMaxPriceInTus"]
         strategyName = user.getTeamConfig(mine["team_id"]).get("reinforceStrategyName")
         try:
-            crab = getBestReinforcement(user.address, mine, maxPrice)
+            crab = getBestReinforcement(user, mine, maxPrice)
         except (ReinforcementTooExpensive, NoSuitableReinforcementFound) as e:
             logger.warning(e.__class__.__name__ + ": " + str(e))
             continue
