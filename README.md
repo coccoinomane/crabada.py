@@ -30,9 +30,9 @@ Scripts to interact with [Crabada](play.crabada.com)'s smart contracts 🦀
 
 ### What about attacking? 🤔
 
-The bot can help looters with automatic reinforcement & settling.
+The bot can only help looters with automatic reinforcement & settling.
 
-I currently have no plans to implement automatic looting/attacking, [for the reasons I outlined here](https://github.com/coccoinomane/crabada.py/issues/3#issuecomment-1073066318).
+I have no plans to implement automatic looting/attacking [for the reasons outlined here](https://github.com/coccoinomane/crabada.py/issues/3#issuecomment-1073066318).
 
 # Run without human supervision
 

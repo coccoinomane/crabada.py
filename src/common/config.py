@@ -5,8 +5,6 @@ from src.common.types import (
     ConfigUser,
     Tus,
     TeamTask,
-    LootStrategyName,
-    ReinforceStrategyName,
 )
 from .dotenv import getenv, parseFloat, parseInt
 from typing import List, cast
@@ -32,13 +30,11 @@ while getenv(f"USER_1_TEAM_{teamNumber}"):
             "task": cast(
                 TeamTask, getenv(f"USER_1_TEAM_{teamNumber}_TASK", "mine")
             ),  # not implemented yet
-            "lootStrategyName": cast(
-                LootStrategyName,
-                getenv(f"USER_1_TEAM_{teamNumber}_LOOT_STRATEGY", "LowestBp"),
+            "lootStrategyName": getenv(
+                f"USER_1_TEAM_{teamNumber}_LOOT_STRATEGY", "LowestBp"
             ),
-            "reinforceStrategyName": cast(
-                ReinforceStrategyName,
-                getenv(f"USER_1_TEAM_{teamNumber}_REINFORCE_STRATEGY", "HighestBp"),
+            "reinforceStrategyName": getenv(
+                f"USER_1_TEAM_{teamNumber}_REINFORCE_STRATEGY", "HighestBp"
             ),
         }
     )
@@ -101,14 +97,6 @@ for team in teams:
     if team["task"] not in typing.get_args(TeamTask):
         raise InvalidConfig(
             f"The TASK parameter of team {team['id']} must be one of {str(typing.get_args(TeamTask))}, but '{team['task']}' was given"
-        )
-    if team["lootStrategyName"] not in typing.get_args(LootStrategyName):
-        raise InvalidConfig(
-            f"The LOOT_STRATEGY parameter of team {team['id']} must be one of {str(typing.get_args(LootStrategyName))}, but '{team['lootStrategyName']}' was given"
-        )
-    if team["reinforceStrategyName"] not in typing.get_args(ReinforceStrategyName):
-        raise InvalidConfig(
-            f"The REINFORCE STRATEGY parameter of team {team['id']} must be one of {str(typing.get_args(ReinforceStrategyName))}, but '{team['reinforceStrategyName']}' was given"
         )
 
 # Validate users

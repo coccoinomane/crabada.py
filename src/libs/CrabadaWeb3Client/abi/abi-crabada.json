@@ -33,6 +33,16 @@
                 "internalType": "uint256",
                 "name": "attackTeamId",
                 "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "expiredTime",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bytes",
+                "name": "certificate",
+                "type": "bytes"
             }
         ],
         "name": "attack",

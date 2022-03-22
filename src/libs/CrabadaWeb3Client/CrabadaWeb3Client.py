@@ -1,6 +1,6 @@
 from typing import cast
-import json
 from eth_typing import Address
+from hexbytes import HexBytes
 from web3.types import TxParams, Wei
 from src.libs.Web3Client.Web3Client import Web3Client
 from src.libs.Web3Client.AvalancheCWeb3Client import AvalancheCWeb3Client
@@ -30,12 +30,14 @@ class CrabadaWeb3Client(AvalancheCWeb3Client):
         )
         return self.signAndSendTransaction(tx)
 
-    def attack(self, gameId: int, teamId: int) -> HexStr:
+    def attack(
+        self, gameId: int, teamId: int, expiredTime: int, certificate: HexBytes
+    ) -> HexStr:
         """
         Attack an open mine
         """
         tx: TxParams = self.buildContractTransaction(
-            self.contract.functions.attack(gameId, teamId)
+            self.contract.functions.attack(gameId, teamId, expiredTime, certificate)
         )
         return self.signAndSendTransaction(tx)
 
