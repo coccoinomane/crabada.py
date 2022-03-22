@@ -15,8 +15,6 @@ def sendTeamsMining(user: User) -> int:
     Send mining the available teams with the 'mine' task.
 
     Returns the opened mines
-
-    TODO: implement paging
     """
 
     availableTeams = fetchAvailableTeamsForTask(user, "mine")

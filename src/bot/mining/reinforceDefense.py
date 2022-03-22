@@ -21,12 +21,10 @@ def reinforceDefense(user: User) -> int:
     Check if any of the teams of the user that are mining can be
     reinforced, and do so if this is the case; return the
     number of borrowed reinforcements.
-
-    TODO: implement paging
     """
 
-    openMines = fetchOpenMines(user)
-    reinforceableMines = [m for m in openMines if minerCanReinforce(m)]
+    reinforceableMines = [m for m in fetchOpenMines(user) if minerCanReinforce(m)]
+
     if not reinforceableMines:
         logger.info("No mines to reinforce for user " + str(user.address))
         return 0

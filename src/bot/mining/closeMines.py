@@ -9,6 +9,7 @@ from src.helpers.sms import sendSms
 from src.common.clients import crabadaWeb2Client, crabadaWeb3Client
 from eth_typing import Address
 from src.helpers.mines import (
+    fetchOpenMines,
     getNextMineToFinish,
     getRemainingTimeFormatted,
     mineIsFinished,
@@ -20,15 +21,9 @@ def closeMines(user: User) -> int:
     """
     Close all open mining games whose end time is due; return
     the number of closed games.
-
-    TODO: implement paging
     """
 
-    openGames = crabadaWeb2Client.listMines(
-        {"limit": 200, "status": "open", "user_address": user.address}
-    )
-
-    # Games with a reward to claim
+    openGames = fetchOpenMines(user)
     finishedGames = [g for g in openGames if mineIsFinished(g)]
 
     # Print a useful message in case there aren't finished games
