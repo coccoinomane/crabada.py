@@ -12,6 +12,7 @@ def sendIM(body: str, forceSend: bool = False) -> bool:
     if not notifications["instantMessage"]["enable"] and not forceSend:
         return True
 
+    notification_result = False
     try:
         if telegram["enable"]:
             notification_result = sendTelegramMessage(
