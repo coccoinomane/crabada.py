@@ -80,6 +80,25 @@ The bot requires Python 3.9; I have personally tested it on:
 
 Users told me that they managed to run the bot on Ubuntu, too.
 
+# Telegram Notifications
+
+The bot can send notifications to your phone on successful and/or unsuccessful `sendTeamsMining`, `reinforceDefende` and `closeMines` attempts. Follow these instructions for setup :
+
+1. Enter `@Botfather` in the search tab and choose this bot.
+2. Choose or type the `/start` command and send it.
+3. Choose or type the `/newbot` command and send it. And follow Botfather's instructions.
+4. Take a note of your token value e.g. `11112222:AAASBBBSDASD`. This is your `TELEGRAM_API_KEY`. And keep this private!
+5. Enter `@your-newly-created-bot-name` in the search tab and choose this bot.
+6. Choose or type the `/start` command and send it.
+7. Enter `@username_to_id_bot` in the search tab and choose this bot.
+8. Choose or type the `/start` command and send it.
+9. Take a note of your ID e.g. `P.S. Your ID: 1122334455`. This is your `TELEGRAM_CHAT_ID`.
+
+set your .env file:
+
+1. set `NOTIFICATION_IM=1` and `TELEGRAM_ENABLE=1`
+2. set `TELEGRAM_API_KEY` and `TELEGRAM_CHAT_ID`
+
 # To do
 
 * Avoid losing gas on failed reinforce
