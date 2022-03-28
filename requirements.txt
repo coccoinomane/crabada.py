@@ -1,6 +1,6 @@
-python-dotenv==0.19.2
-requests==2.26.0
-types-requests==2.26.0
-web3==5.25.0
-eth-typing==2.2.2
-twilio==7.4.0
+python-dotenv==0.19.*
+requests==2.26.*
+types-requests==2.26.*
+web3==5.25.*
+eth-typing==2.2.*
+twilio==7.4.*
