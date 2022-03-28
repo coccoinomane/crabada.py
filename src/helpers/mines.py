@@ -112,4 +112,4 @@ def fetchOpenLoots(user: User) -> List[Game]:
         {"limit": len(teamIds) * 2, "status": "open", "looter_address": user.address}
     )
 
-    return [g for g in openLoots if g["team_id"] in teamIds]
+    return [g for g in openLoots if g["attack_team_id"] in teamIds]
