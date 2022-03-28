@@ -13,7 +13,7 @@ def testMineStatus() -> None:
     output = {
         "mineHasBeenAttacked": mines.mineHasBeenAttacked(mine),
         "mineIsOpen": mines.mineIsOpen(mine),
-        "mineIsSettled": mines.mineIsSettled(mine),
+        "mineReadyToBeSettled": mines.mineReadyToBeSettled(mine),
         "mineIsFinished": mines.mineIsFinished(mine),
         "mineIsClosed": mines.mineIsClosed(mine),
         "getRemainingTime": mines.getRemainingTime(mine),

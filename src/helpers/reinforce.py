@@ -2,7 +2,7 @@ from typing import Literal
 from eth_typing.evm import Address
 from web3.types import Wei
 from src.common.exceptions import MissingConfig
-from src.helpers.mines import mineHasBeenAttacked, mineIsOpen, mineIsSettled
+from src.helpers.mines import mineHasBeenAttacked, mineIsOpen, mineReadyToBeSettled
 from src.models.User import User
 from src.libs.CrabadaWeb2Client.types import Game
 
@@ -40,7 +40,7 @@ def minerCanReinforceForTheFirstTime(mine: Game) -> bool:
     reinforce at this moment for the first time
     """
     return (
-        not mineIsSettled(mine)
+        not mineReadyToBeSettled(mine)
         and mineHasBeenAttacked(mine)
         and mineIsOpen(mine)
         and mine["round"] == 0
@@ -53,7 +53,7 @@ def minerCanReinforceForTheSecondTime(mine: Game) -> bool:
     reinforce at this moment for the second time
     """
     return (
-        not mineIsSettled(mine)
+        not mineReadyToBeSettled(mine)
         and mineHasBeenAttacked(mine)
         and mineIsOpen(mine)
         and mine["round"] == 2
@@ -93,7 +93,7 @@ def looterCanReinforceForTheFirstTime(mine: Game) -> bool:
     reinforce at this moment for the first time
     """
     return (
-        not mineIsSettled(mine)
+        not mineReadyToBeSettled(mine)
         and mineHasBeenAttacked(mine)
         and mineIsOpen(mine)
         and mine["round"] == 1
@@ -106,7 +106,7 @@ def looterCanReinforceForTheSecondTime(mine: Game) -> bool:
     reinforce at this moment for the second time
     """
     return (
-        not mineIsSettled(mine)
+        not mineReadyToBeSettled(mine)
         and mineHasBeenAttacked(mine)
         and mineIsOpen(mine)
         and mine["round"] == 3
