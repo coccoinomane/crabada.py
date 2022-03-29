@@ -22,14 +22,14 @@ def sendIM(body: str, forceSend: bool = False) -> bool:
         # NOTE <add more IM services here>
 
     except:
-        logger.warning("Notification Error!", exc_info=True)
+        logger.warning("Notification Error!")
         return False
 
     return notification_result
 
 
-def sendTelegramMessage(body: str, apiKey: str, chatId: str):
-    """Send an telegram message using rest api"""
+def sendTelegramMessage(body: str, apiKey: str, chatId: str) -> bool:
+    """Send a telegram message using rest api"""
     headers = {"Content-Type": "application/json"}
 
     data_dict = {
