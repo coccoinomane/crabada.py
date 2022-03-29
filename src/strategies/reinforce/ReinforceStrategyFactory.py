@@ -20,6 +20,8 @@ from src.strategies.reinforce.CheapestCrabReinforceStrategy import (
     CheapestCrabReinforceStrategy,
 )
 from src.strategies.reinforce.NoReinforceStrategy import NoReinforceStrategy
+from src.strategies.reinforce.InventoryOrHighestBP import InventoryOrHighestBP
+from src.strategies.reinforce.InventoryOrHighestMP import InventoryOrHighestMP
 from src.strategies.reinforce.ReinforceStrategy import ReinforceStrategy
 from src.models.User import User
 
@@ -28,6 +30,8 @@ reinforceStrategies = {
     "CheapestCrab": CheapestCrabReinforceStrategy,
     "HighestBp": HighestBpReinforceStrategy,
     "HighestMp": HighestMpReinforceStrategy,
+    "InventoryOrHighestBP": InventoryOrHighestBP,
+    "InventoryOrHighestMP": InventoryOrHighestMP,
 }
 
 

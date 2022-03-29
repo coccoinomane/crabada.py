@@ -178,3 +178,34 @@ class CrabadaWeb2Client:
         }
         actualParams = defaultParams | params
         return requests.request("GET", url, params=actualParams).json()  # type: ignore
+
+    def listCrabsForLendingFromInventory(
+        self, user_address: Address, params: dict[str, Any] = {}
+    ) -> List[CrabForLending]:
+        """
+        Get all crabs available for lending as reinforcements from users own inventory.
+        """
+        params["user_address"] = user_address
+        res = self.listCrabsForLendingFromInventory_Raw(params)
+        try:
+            crabadas = res["result"]["data"] or []
+            for cra in crabadas:
+                # lending(tavern) and can-join-team(inventory) api has different fields for crabs.
+                # add missing information for this endpoint.
+
+                # price is important, it is required by the contract
+                # and we may use it for ordering and stuff...
+                cra["price"] = 0
+
+                # others not so much...
+                cra["lender"] = ""
+                cra["is_being_borrowed"] = 0
+                cra["borrower"] = ""
+                cra["game_id"] = 0
+            return crabadas
+        except:
+            return []
+
+    def listCrabsForLendingFromInventory_Raw(self, params: dict[str, Any] = {}) -> Any:
+        url = self.baseUri + "/crabadas/can-join-team"
+        return requests.request("GET", url, params=params).json()  # type: ignore
