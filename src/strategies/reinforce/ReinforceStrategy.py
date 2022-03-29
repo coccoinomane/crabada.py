@@ -25,7 +25,7 @@ class ReinforceStrategy(Strategy):
     the given mine.
 
     To define a complete strategy, extend this class and override
-    the query(), filter() and pick() methods.
+    the query(), process() and pick() methods.
 
     If you need a different criterion for the 2nd reinforcement, you
     can optionally, override any of query2(), process2() or pick2().
