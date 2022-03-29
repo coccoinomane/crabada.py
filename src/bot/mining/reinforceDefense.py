@@ -12,7 +12,7 @@ from src.common.txLogger import txLogger, logTx
 from src.helpers.mines import fetchOpenMines
 from src.helpers.reinforce import minerCanReinforce
 from src.helpers.sms import sendSms
-from src.helpers.instant_message import sendIM
+from src.helpers.instantMessage import sendIM
 from src.common.clients import crabadaWeb3Client
 from src.models.User import User
 from src.strategies.reinforce.ReinforceStrategyFactory import getBestReinforcement

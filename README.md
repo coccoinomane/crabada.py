@@ -8,6 +8,7 @@ Scripts to interact with [Crabada](play.crabada.com)'s smart contracts 🦀
 - Choose between several reinforcement strategies.
 - Run the bot without human supervision.
 - Manage multiple teams at the same time.
+- Send Telegram and/or SMS notifications.
 
 # Quick start
 
@@ -82,8 +83,9 @@ Users told me that they managed to run the bot on Ubuntu, too.
 
 # Telegram Notifications
 
-The bot can send notifications to your phone on successful and/or unsuccessful `sendTeamsMining`, `reinforceDefende` and `closeMines` attempts. Follow these instructions for setup :
+The bot can send notifications to your phone on successful and unsuccessful commands (e.g. `sendTeamsMining`, `reinforceDefense`, `reinforceAttack`, etc). Follow these instructions for setup:
 
+1. Open Telegram.
 1. Enter `@Botfather` in the search tab and choose this bot.
 2. Choose or type the `/start` command and send it.
 3. Choose or type the `/newbot` command and send it. And follow Botfather's instructions.
@@ -94,10 +96,14 @@ The bot can send notifications to your phone on successful and/or unsuccessful `
 8. Choose or type the `/start` command and send it.
 9. Take a note of your ID e.g. `P.S. Your ID: 1122334455`. This is your `TELEGRAM_CHAT_ID`.
 
-set your .env file:
+Then, set your .env file:
 
 1. set `NOTIFICATION_IM=1` and `TELEGRAM_ENABLE=1`
 2. set `TELEGRAM_API_KEY` and `TELEGRAM_CHAT_ID`
+3. run `python3 -m src.tests.testSendIM`
+
+If everything worked fine, you should receive a Telegram message on your newly created bot.
+
 
 # To do
 
