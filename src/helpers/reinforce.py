@@ -1,9 +1,10 @@
 from typing import Literal
-from eth_typing.evm import Address
-from web3.types import Wei
-from src.common.exceptions import MissingConfig
-from src.helpers.mines import mineHasBeenAttacked, mineIsOpen, mineReadyToBeSettled
-from src.models.User import User
+from src.helpers.mines import (
+    attackIsOver,
+    mineHasBeenAttacked,
+    mineIsOpen,
+    mineIsSettled,
+)
 from src.libs.CrabadaWeb2Client.types import Game
 
 
@@ -18,13 +19,14 @@ def minerCanReinforce(mine: Game) -> bool:
 
 def getMinerReinforcementStatus(mine: Game) -> Literal[0, 1, 2]:
     """
-    Determines whether the game can be reinforced and
-    at which reinforcement stage we are.
+    Determines whether the miner can reinforce and, if this
+    is the case, whether the 1st or 2nd reinforcement is
+    needed
 
     Returns:
-    - 0 if the mine cannot be reinforced
-    - 1 if the mine can be reinforced the first time
-    - 2 if the mine can be reinforced the second time
+    - 0 if the miner cannot reinforce
+    - 1 if the miner can reinforce for the first time
+    - 2 if the miner can reinforce for the second time
     """
     if minerCanReinforceForTheFirstTime(mine):
         return 1
@@ -40,9 +42,10 @@ def minerCanReinforceForTheFirstTime(mine: Game) -> bool:
     reinforce at this moment for the first time
     """
     return (
-        not mineReadyToBeSettled(mine)
+        mineIsOpen(mine)
         and mineHasBeenAttacked(mine)
-        and mineIsOpen(mine)
+        and not attackIsOver(mine)
+        and not mineIsSettled(mine)
         and mine["round"] == 0
     )
 
@@ -53,9 +56,10 @@ def minerCanReinforceForTheSecondTime(mine: Game) -> bool:
     reinforce at this moment for the second time
     """
     return (
-        not mineReadyToBeSettled(mine)
+        mineIsOpen(mine)
         and mineHasBeenAttacked(mine)
-        and mineIsOpen(mine)
+        and not attackIsOver(mine)
+        and not mineIsSettled(mine)
         and mine["round"] == 2
     )
 
@@ -71,13 +75,14 @@ def looterCanReinforce(mine: Game) -> bool:
 
 def getLooterReinforcementStatus(mine: Game) -> Literal[0, 1, 2]:
     """
-    Determines whether the game can be reinforced and
-    at which reinforcement stage we are.
+    Determines whether the looter can reinforce and, if this
+    is the case, whether the 1st or 2nd reinforcement is
+    needed
 
     Returns:
-    - 0 if the mine cannot be reinforced
-    - 1 if the mine can be reinforced the first time
-    - 2 if the mine can be reinforced the second time
+    - 0 if the looter cannot reinforce
+    - 1 if the looter can reinforce for the first time
+    - 2 if the looter can reinforce for the second time
     """
     if looterCanReinforceForTheFirstTime(mine):
         return 1
@@ -93,9 +98,10 @@ def looterCanReinforceForTheFirstTime(mine: Game) -> bool:
     reinforce at this moment for the first time
     """
     return (
-        not mineReadyToBeSettled(mine)
+        mineIsOpen(mine)
         and mineHasBeenAttacked(mine)
-        and mineIsOpen(mine)
+        and not attackIsOver(mine)
+        and not mineIsSettled(mine)
         and mine["round"] == 1
     )
 
@@ -106,19 +112,9 @@ def looterCanReinforceForTheSecondTime(mine: Game) -> bool:
     reinforce at this moment for the second time
     """
     return (
-        not mineReadyToBeSettled(mine)
+        mineIsOpen(mine)
         and mineHasBeenAttacked(mine)
-        and mineIsOpen(mine)
+        and not attackIsOver(mine)
+        and not mineIsSettled(mine)
         and mine["round"] == 3
     )
-
-
-def reinforcementIsTooExpensive(price: Wei, userAddress: Address) -> bool:
-    """
-    Return True if the given price is too much for lending a
-    reinforcement crab.
-
-    The price must be given as it is returned by the listCrabsForLending
-    endpoint, that is, in Wei, that is, in units of 1e-18 TUS."""
-    maxPrice = User(userAddress).config.get("reinforcementMaxPriceInTusWei")
-    return price > maxPrice

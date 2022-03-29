@@ -10,7 +10,12 @@ TeamStatus = Literal["MINING", "LOOTING", "AVAILABLE"]
 
 class GameProcess(TypedDict):
     action: Literal[
-        "create-game", "attack", "reinforce-defence", "reinforce-attack", "settle"
+        "create-game",
+        "attack",
+        "reinforce-defense",
+        "reinforce-attack",
+        "settle",
+        "close-game",
     ]
     transaction_time: int
 

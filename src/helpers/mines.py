@@ -7,7 +7,7 @@ from src.helpers.dates import getPrettySeconds
 from time import time
 from src.common.clients import crabadaWeb2Client
 from src.helpers.general import firstOrNone
-from src.libs.CrabadaWeb2Client.types import Game
+from src.libs.CrabadaWeb2Client.types import Game, GameProcess
 from src.models.User import User
 
 
@@ -26,16 +26,77 @@ def mineIsOpen(mine: Game) -> bool:
     return mine["status"] == "open"
 
 
-def mineReadyToBeSettled(mine: Game) -> bool:
+def mineCanBeSettled(mine: Game) -> bool:
     """
     Return True if the given game is ready to be settled
     """
-    # TODO: Update to account for the situation where the looting team has less
-    # BP than the mining team since the beginning, in which case you get a weird
-    # situation where the mine['winner_team_id'] is None. Maybe use process?
-    # Example:
-    # [{'game_id': 787426, 'start_time': 1643482620, 'end_time': 1643497020, 'cra_reward': 3750000000000000000, 'tus_reward': 303750000000000000000, 'miner_cra_reward': 3750000000000000000, 'miner_tus_reward': 303750000000000000000, 'looter_cra_reward': 300000000000000000, 'looter_tus_reward': 24300000000000000000, 'estimate_looter_win_cra': 2737500000000000000, 'estimate_looter_win_tus': 221737500000000000000, 'estimate_looter_lose_cra': 300000000000000000, 'estimate_looter_lose_tus': 24300000000000000000, 'estimate_miner_lose_cra': 1312500000000000000, 'estimate_miner_lose_tus': 106312500000000000000, 'estimate_miner_win_cra': 3750000000000000000, 'estimate_miner_win_tus': 303750000000000000000, 'round': 0, 'team_id': 6264, 'owner': '0x7ee27ef2ba8535f83798c930255d7bb5d04aeae8', 'defense_point': 711, 'defense_mine_point': 198, 'attack_team_id': 4476, 'attack_team_owner': '0x5818a5f1ff6df3b7f5dad8ac66e100cce9e33e8e', 'attack_point': 647, 'winner_team_id': None, 'status': 'open', 'process': [{'action': 'create-game', 'transaction_time': 1643482620}, {'action': 'attack', 'transaction_time': 1643482627}], 'crabada_id_1': 18953, 'crabada_id_2': 18955, 'crabada_id_3': 16969, 'mine_point_modifier': 0, 'crabada_1_photo': '18953.png', 'crabada_2_photo': '18955.png', 'crabada_3_photo': '16969.png', 'defense_crabada_number': 3}]
-    return getRemainingTime(mine) < 15000 or mine["winner_team_id"] is not None
+    return (
+        attackIsOver(mine)
+        and not mineIsSettled(mine)  # can't settle if already settled
+        and getElapsedTime(mine) > 3600  # can't settle before one hour since start
+    )
+
+
+def attackIsOver(mine: Game) -> bool:
+    """
+    Return true if the given mine has been attacked and if no
+    further reinforcement can be added.
+
+    The latter happens in several occasions:
+    - The 30-minute reinforce window has passed without either the
+      miner or the looter reinforcing.
+    - Both the miner and the looter have already reinforced twice.
+    - A looter attacked a miner with more BPs (suicide loot)
+    """
+    return mineHasBeenAttacked(mine) and (
+        getElapsedTimeSinceLastAction(mine) > 1800  # reinforce window over
+        or (getTimesMinerReinforced(mine) == 2 and getTimesLooterReinforced(mine) == 2)
+        or isSuicideAttack(mine)
+    )
+
+
+def isSuicideAttack(mine: Game) -> bool:
+    """
+    TO BE IMPLEMENTED: Requires factional advantage.
+
+    Return true if the given mine was attacked by a looter
+    with less BPs than the miner.
+
+    We call it a suicide attack because the looter instantly
+    loses without the chance to reinforce
+    """
+    return False
+
+
+def minerIsWinning(mine: Game) -> bool:
+    """
+    Return true if the miner is currently winning or if it has won
+    """
+    return mine["attack_point"] <= mine["defense_point"]
+
+
+def looterIsWinning(mine: Game) -> bool:
+    """
+    Return true if the looter is currently winning or if it has won
+    """
+    return mine["attack_point"] > mine["defense_point"]
+
+
+def mineIsWaitToSettle(mine: Game) -> bool:
+    """
+    Return true if the given mine is in the state "Wait to settle",
+    meaning the attack sequence is over but the looter still has to
+    wait a bit before settling.
+
+    NB: If the looter loses, the Crabada UI shows the "Finished" badge
+    instead of the "Wait to settle" one. In this case, the function will
+    still return True because the looter will still need to settle.
+    """
+    return (
+        attackIsOver(mine)
+        and not mineIsSettled(mine)  # can't settle if already settled
+        and getElapsedTime(mine) <= 3600  # can't settle before one hour since start
+    )
 
 
 def mineIsFinished(game: Game) -> bool:
@@ -47,17 +108,33 @@ def mineIsFinished(game: Game) -> bool:
 
 def mineIsClosed(game: Game) -> bool:
     """
-    Return true if the given game is closed (meaning the
-    game has been settled and the reward has been claimed)
+    Return true if the given game is closed, meaning the
+    reward have been claimed.
     """
     return game["status"] == "close"
+
+
+def mineIsSettled(game: Game) -> bool:
+    """
+    Return true if the given game is settled, meaning
+    either the looter has settled on his own or the game
+    was closed by the miner
+    """
+    return len([p for p in game["process"] if p["action"] == "settle"]) > 0
 
 
 def getRemainingTime(game: Game) -> int:
     """
     Seconds to the end of the given game
     """
-    return int(game["end_time"] - time())
+    return max(0, int(game["end_time"] - time()))
+
+
+def getElapsedTime(game: Game) -> int:
+    """
+    Seconds since the start of the given game
+    """
+    return int(time() - game["start_time"])
 
 
 def getRemainingTimeFormatted(game: Game) -> str:
@@ -65,6 +142,45 @@ def getRemainingTimeFormatted(game: Game) -> str:
     Hours, minutes and seconds to the end of the given game
     """
     return getPrettySeconds(getRemainingTime(game))
+
+
+def getElapsedTimeFormatted(game: Game) -> str:
+    """
+    Hours, minutes and seconds since the start of the given game
+    """
+    return getPrettySeconds(getElapsedTime(game))
+
+
+def getRemainingTimeBeforeSettle(mine: Game) -> int:
+    """
+    Seconds before the given mine will be ready to be settled.
+
+    The output makes sense only if the attack sequence is over,
+    which you can check via attackIsOver()
+    """
+    return max(0, 3600 - getElapsedTime(mine))
+
+
+def getRemainingTimeBeforeSettleFormatted(mine: Game) -> str:
+    """
+    Hours, minutes and seconds to the time when the mine will
+    be ready to be settled
+    """
+    return getPrettySeconds(getRemainingTimeBeforeSettle(mine))
+
+
+def getTimesLooterReinforced(mine: Game) -> int:
+    """
+    Number of times the looter has reinforced so far
+    """
+    return len([x for x in mine["process"] if x["action"] == "reinforce-attack"])
+
+
+def getTimesMinerReinforced(mine: Game) -> int:
+    """
+    Number of times the miner has reinforced so far
+    """
+    return len([x for x in mine["process"] if x["action"] == "reinforce-defense"])
 
 
 def getNextMineToFinish(games: List[Game]) -> Game:
@@ -77,6 +193,22 @@ def getNextMineToFinish(games: List[Game]) -> Game:
     """
     unfinishedGames = [g for g in games if not mineIsFinished(g)]
     return firstOrNone(sorted(unfinishedGames, key=lambda g: g["end_time"]))
+
+
+def getLastAction(mine: Game) -> GameProcess:
+    """
+    Return the last action performed to the mine, together
+    with its execution time
+    """
+    return mine["process"][-1]
+
+
+def getElapsedTimeSinceLastAction(mine: Game) -> int:
+    """
+    Seconds since the last action performed to the mine
+    """
+    lastAction = getLastAction(mine)
+    return int(time() - lastAction["transaction_time"])
 
 
 def fetchOpenMines(user: User) -> List[Game]:

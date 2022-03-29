@@ -82,14 +82,14 @@ Users told me that they managed to run the bot on Ubuntu, too.
 
 # To do
 
-* Avoid losing gas on failed reinforce
 * Fix `closeLoots`
+* Merge mines.py and reinforce.py helpers in Mine class
+* Avoid losing gas on failed reinforce
 * Use a virtual environment to manage dependencies
 * Multi-user support: send teams from multiple wallets
 
 # Might do
 
-* Looting reinforcement: Implement faction advantage
 * Use cron library to schedule scripts
 * Gas control: Stop if wallet has less than X ETH + set daily gas limit
 * Better gas estimation ([eth_baseFee and eth_maxPriorityFeePerGas](https://docs.avax.network/learn/platform-overview/transaction-fees/))
