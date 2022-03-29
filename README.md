@@ -82,8 +82,9 @@ Users told me that they managed to run the bot on Ubuntu, too.
 
 # To do
 
-* Avoid losing gas on failed reinforce
 * Fix `closeLoots`
+* Merge mines.py and reinforce.py helpers in Mine class
+* Avoid losing gas on failed reinforce
 * Use a virtual environment to manage dependencies
 * Multi-user support: send teams from multiple wallets
 
