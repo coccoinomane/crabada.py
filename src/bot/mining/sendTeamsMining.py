@@ -36,12 +36,12 @@ def sendTeamsMining(user: User) -> int:
         txReceipt = crabadaWeb3Client.getTransactionReceipt(txHash)
         logTx(txReceipt)
         if txReceipt["status"] != 1:
-            sendSms(f"Crabada: ERROR sending > {txHash}")
-            logger.error(f"Error sending team {teamId}")
-            sendIM(f"Error sending team {teamId}")
+            sendSms(f"Crabada: Error sending team {teamId} mining")
+            logger.error(f"Error sending team {teamId} mining")
+            sendIM(f"Error sending team {teamId} mining")
         else:
             nSentTeams += 1
-            logger.info(f"Team {teamId} sent succesfully")
-            sendIM(f"Team {teamId} sent succesfully")
+            logger.info(f"Team {teamId} sent successfully")
+            sendIM(f"Team {teamId} sent successfully")
 
     return nSentTeams

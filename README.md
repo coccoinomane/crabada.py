@@ -108,8 +108,8 @@ If everything worked fine, you should receive a Telegram message on your newly c
 # To do
 
 * Avoid losing gas on failed reinforce
-* Fix `closeLoots`
 * Use a virtual environment to manage dependencies
+* Simplify notification mess (src/bot/mining/reinforceDefense.py)
 * Multi-user support: send teams from multiple wallets
 
 # Might do
@@ -117,6 +117,5 @@ If everything worked fine, you should receive a Telegram message on your newly c
 * Looting reinforcement: Implement faction advantage
 * Use cron library to schedule scripts
 * Gas control: Stop if wallet has less than X ETH + set daily gas limit
-* Better gas estimation ([eth_baseFee and eth_maxPriorityFeePerGas](https://docs.avax.network/learn/platform-overview/transaction-fees/))
 * Use web3 default variable WEB3_PROVIDER_URI instead of WEB3_NODE_URI
 * Use @property to define classattributes > https://realpython.com/python-property/

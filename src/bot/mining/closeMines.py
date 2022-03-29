@@ -47,7 +47,7 @@ def closeMines(user: User) -> int:
         logTx(txReceipt)
         if txReceipt["status"] != 1:
             logger.error(f"Error closing mine {gameId}")
-            sendSms(f"Crabada: ERROR closing mine > {txHash}")
+            sendSms(f"Crabada: Error closing mine {gameId}")
             sendIM(f"Error closing mine {gameId}")
         else:
             nClosedGames += 1

@@ -54,7 +54,7 @@ def reinforceDefense(user: User) -> int:
         crabId = crab["crabada_id"]
         price = crab["price"]
         crabInfoMsg = f"Borrowing crab {crabId} for mine {mineId} at {Web3.fromWei(price, 'ether')} TUS... [strategy={strategyName}, BP={crab['battle_point']}, MP={crab['mine_point']}]"
-        logger.info(crabInfoMsg)
+        logger.info(crabInfoMsg)  # TODO: also send to Telegram, asynchronously
 
         # Borrow the crab
         txHash = crabadaWeb3Client.reinforceDefense(mineId, crabId, price)
@@ -62,7 +62,7 @@ def reinforceDefense(user: User) -> int:
         txReceipt = crabadaWeb3Client.getTransactionReceipt(txHash)
         logTx(txReceipt)
         if txReceipt["status"] != 1:
-            sendSms(f"Crabada: ERROR reinforcing > {txHash}")
+            sendSms(f"Crabada: Error reinforcing mine {mineId}")
             logger.error(f"Error reinforcing mine {mineId}")
             sendIM(crabInfoMsg)
             sendIM(f"Error reinforcing mine {mineId}")
