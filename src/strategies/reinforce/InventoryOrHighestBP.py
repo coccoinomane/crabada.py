@@ -41,10 +41,3 @@ class InventoryOrHighestBP(ReinforceStrategy):
 
         affordableCrabs = [c for c in crabs if weiToTus(c["price"]) < self.maxPrice1]
         return sorted(affordableCrabs, key=lambda c: (-c["battle_point"], c["price"]))
-
-    def pick(self, game: Game, crabs: List[CrabForLending]) -> CrabForLending:
-        """
-        Pick the n-th crab or, if there are fewer than n, the last one
-        """
-        n = self.teamConfig["reinforcementToPick"]
-        return nthOrLastOrNone(crabs, n - 1)
