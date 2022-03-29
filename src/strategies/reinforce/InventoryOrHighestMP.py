@@ -7,8 +7,8 @@ from src.helpers.price import weiToTus
 
 class InventoryOrHighestMP(ReinforceStrategy):
     """
-    Strategy that chooses the crab with a price lower than maxPrice
-    which has the highest mine point value
+    If Inventory Crab is available, then reinforce with it
+    Else, reinforce using tavern with maxTus price set and strategy.
     """
 
     def query(self, game: Game) -> dict[str, Any]:
