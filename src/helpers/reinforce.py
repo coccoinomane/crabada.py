@@ -1,21 +1,11 @@
 from typing import Literal
-from eth_typing.evm import Address
-from web3.types import Wei
 from src.helpers.mines import (
+    attackIsOver,
     mineHasBeenAttacked,
     mineIsOpen,
     mineIsSettled,
-    mineReadyToBeSettled,
 )
-from src.models.User import User
 from src.libs.CrabadaWeb2Client.types import Game
-
-
-def getTimesMinerReinforced(mine: Game) -> int:
-    """
-    Number of times the miner has reinforced so far
-    """
-    return len([x for x in mine["process"] if x["action"] == "reinforce-defense"])
 
 
 def minerCanReinforce(mine: Game) -> bool:
@@ -54,7 +44,7 @@ def minerCanReinforceForTheFirstTime(mine: Game) -> bool:
     return (
         mineIsOpen(mine)
         and mineHasBeenAttacked(mine)
-        and not mineReadyToBeSettled(mine)
+        and not attackIsOver(mine)
         and not mineIsSettled(mine)
         and mine["round"] == 0
     )
@@ -68,17 +58,10 @@ def minerCanReinforceForTheSecondTime(mine: Game) -> bool:
     return (
         mineIsOpen(mine)
         and mineHasBeenAttacked(mine)
-        and not mineReadyToBeSettled(mine)
+        and not attackIsOver(mine)
         and not mineIsSettled(mine)
         and mine["round"] == 2
     )
-
-
-def getTimesLooterReinforced(mine: Game) -> int:
-    """
-    Number of times the looter has reinforced so far
-    """
-    return len([x for x in mine["process"] if x["action"] == "reinforce-attack"])
 
 
 def looterCanReinforce(mine: Game) -> bool:
@@ -117,7 +100,7 @@ def looterCanReinforceForTheFirstTime(mine: Game) -> bool:
     return (
         mineIsOpen(mine)
         and mineHasBeenAttacked(mine)
-        and not mineReadyToBeSettled(mine)
+        and not attackIsOver(mine)
         and not mineIsSettled(mine)
         and mine["round"] == 1
     )
@@ -131,7 +114,7 @@ def looterCanReinforceForTheSecondTime(mine: Game) -> bool:
     return (
         mineIsOpen(mine)
         and mineHasBeenAttacked(mine)
-        and not mineReadyToBeSettled(mine)
+        and not attackIsOver(mine)
         and not mineIsSettled(mine)
         and mine["round"] == 3
     )

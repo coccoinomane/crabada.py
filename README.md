@@ -90,7 +90,6 @@ Users told me that they managed to run the bot on Ubuntu, too.
 
 # Might do
 
-* Looting reinforcement: Implement faction advantage
 * Use cron library to schedule scripts
 * Gas control: Stop if wallet has less than X ETH + set daily gas limit
 * Better gas estimation ([eth_baseFee and eth_maxPriorityFeePerGas](https://docs.avax.network/learn/platform-overview/transaction-fees/))
