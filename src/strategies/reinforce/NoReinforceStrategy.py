@@ -11,3 +11,6 @@ class NoReinforceStrategy(ReinforceStrategy):
 
     def query(self, game: Game) -> List[CrabForLending]:
         return None
+
+    def handleNoSuitableCrabFound(self, crab: CrabForLending) -> None:
+        pass

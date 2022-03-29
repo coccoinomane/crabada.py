@@ -170,12 +170,10 @@ class ReinforceStrategy(Strategy):
         """
         query = self.query(self.game)
 
-        # If a None query is given, we assume the reinforcement is not needed
-        if query is None:
-            return None
+        # Get the list of borrowable reinforcements from Crabada
+        crabs = self.web2Client.listCrabsForLending(query) if query is not None else []
 
-        # Get & process the borrowable reinforcements from Crabada
-        crabs = self.web2Client.listCrabsForLending(query)
+        # Process the list of crabs
         processedCrabs = self.process(self.game, crabs)
 
         # Select the crab based on the strategy
@@ -196,12 +194,10 @@ class ReinforceStrategy(Strategy):
         """
         query = self.query2(self.game)
 
-        # If a None query is given, we assume the reinforcement is not needed
-        if query is None:
-            return None
+        # Get the list of borrowable reinforcements from Crabada
+        crabs = self.web2Client.listCrabsForLending(query) if query is not None else []
 
-        # Get & process the borrowable reinforcements from Crabada
-        crabs = self.web2Client.listCrabsForLending(query)
+        # Process the list of crabs
         processedCrabs = self.process2(self.game, crabs)
 
         # Select the crab based on the strategy
