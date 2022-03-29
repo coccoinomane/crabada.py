@@ -24,8 +24,6 @@ class HighestBpReinforceStrategy(ReinforceStrategy):
 
     def process(self, game: Game, crabs: List[CrabForLending]) -> List[CrabForLending]:
         affordableCrabs = [c for c in crabs if weiToTus(c["price"]) < self.maxPrice1]
-        if len(affordableCrabs) == 0:
-            return None
         return sorted(affordableCrabs, key=lambda c: (-c["battle_point"], c["price"]))
 
     def pick(self, game: Game, crabs: List[CrabForLending]) -> CrabForLending:
