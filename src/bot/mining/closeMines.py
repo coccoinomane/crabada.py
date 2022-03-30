@@ -6,6 +6,7 @@ of a given user
 from src.common.logger import logger
 from src.common.txLogger import txLogger, logTx
 from src.helpers.sms import sendSms
+from src.helpers.instantMessage import sendIM
 from src.common.clients import crabadaWeb3Client
 from src.helpers.mines import (
     fetchOpenMines,
@@ -46,9 +47,11 @@ def closeMines(user: User) -> int:
         logTx(txReceipt)
         if txReceipt["status"] != 1:
             logger.error(f"Error closing mine {gameId}")
-            sendSms(f"Crabada: ERROR closing mine > {txHash}")
+            sendSms(f"Crabada: Error closing mine {gameId}")
+            sendIM(f"Error closing mine {gameId}")
         else:
             nClosedGames += 1
             logger.info(f"Mine {gameId} closed correctly")
+            sendIM(f"Mine {gameId} closed correctly")
 
     return nClosedGames

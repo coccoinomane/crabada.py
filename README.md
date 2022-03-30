@@ -8,6 +8,7 @@ Scripts to interact with [Crabada](play.crabada.com)'s smart contracts 🦀
 - Choose between several reinforcement strategies.
 - Run the bot without human supervision.
 - Manage multiple teams at the same time.
+- Telegram and SMS notifications.
 
 # Quick start
 
@@ -80,18 +81,43 @@ The bot requires Python 3.9; I have personally tested it on:
 
 Users told me that they managed to run the bot on Ubuntu, too.
 
+# Telegram Notifications
+
+The bot can send notifications to your phone on successful and unsuccessful commands (e.g. `sendTeamsMining`, `reinforceDefense`, `reinforceAttack`, etc). Follow these instructions for setup:
+
+1. Open Telegram.
+1. Enter `@Botfather` in the search tab and choose this bot.
+2. Choose or type the `/start` command and send it.
+3. Choose or type the `/newbot` command and send it. And follow Botfather's instructions.
+4. Take a note of your token value e.g. `11112222:AAASBBBSDASD`. This is your `TELEGRAM_API_KEY`. And keep this private!
+5. Enter `@your-newly-created-bot-name` in the search tab and choose this bot.
+6. Choose or type the `/start` command and send it.
+7. Enter `@username_to_id_bot` in the search tab and choose this bot.
+8. Choose or type the `/start` command and send it.
+9. Take a note of your ID e.g. `P.S. Your ID: 1122334455`. This is your `TELEGRAM_CHAT_ID`.
+
+Then, set your .env file:
+
+1. set `NOTIFICATION_IM=1` and `TELEGRAM_ENABLE=1`
+2. set `TELEGRAM_API_KEY` and `TELEGRAM_CHAT_ID`
+3. run `python3 -m src.tests.testSendIM`
+
+If everything worked fine, you should receive a Telegram message on your newly created bot.
+
+
 # To do
 
-* Fix `closeLoots`
-* Merge mines.py and reinforce.py helpers in Mine class
+* Donate mechanism
+* Test `closeLoots` fix
 * Avoid losing gas on failed reinforce
+* Merge mines.py and reinforce.py helpers in Mine class
 * Use a virtual environment to manage dependencies
+* Simplify notification mess (src/bot/mining/reinforceDefense.py)
 * Multi-user support: send teams from multiple wallets
 
 # Might do
 
 * Use cron library to schedule scripts
 * Gas control: Stop if wallet has less than X ETH + set daily gas limit
-* Better gas estimation ([eth_baseFee and eth_maxPriorityFeePerGas](https://docs.avax.network/learn/platform-overview/transaction-fees/))
 * Use web3 default variable WEB3_PROVIDER_URI instead of WEB3_NODE_URI
 * Use @property to define classattributes > https://realpython.com/python-property/

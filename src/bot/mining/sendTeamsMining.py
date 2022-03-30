@@ -5,6 +5,7 @@ Send a user's available teams mining
 from src.common.logger import logger
 from src.common.txLogger import txLogger, logTx
 from src.helpers.sms import sendSms
+from src.helpers.instantMessage import sendIM
 from src.common.clients import crabadaWeb3Client
 from src.helpers.teams import fetchAvailableTeamsForTask
 from src.models.User import User
@@ -35,10 +36,12 @@ def sendTeamsMining(user: User) -> int:
         txReceipt = crabadaWeb3Client.getTransactionReceipt(txHash)
         logTx(txReceipt)
         if txReceipt["status"] != 1:
-            sendSms(f"Crabada: ERROR sending > {txHash}")
-            logger.error(f"Error sending team {teamId}")
+            sendSms(f"Crabada: Error sending team {teamId} mining")
+            logger.error(f"Error sending team {teamId} mining")
+            sendIM(f"Error sending team {teamId} mining")
         else:
             nSentTeams += 1
-            logger.info(f"Team {teamId} sent succesfully")
+            logger.info(f"Team {teamId} sent successfully")
+            sendIM(f"Team {teamId} sent successfully")
 
     return nSentTeams

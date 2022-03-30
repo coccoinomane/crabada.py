@@ -12,6 +12,7 @@ from src.common.txLogger import txLogger, logTx
 from src.helpers.mines import fetchOpenMines
 from src.helpers.reinforce import minerCanReinforce
 from src.helpers.sms import sendSms
+from src.helpers.instantMessage import sendIM
 from src.common.clients import crabadaWeb3Client
 from src.models.User import User
 from src.strategies.reinforce.ReinforceStrategyFactory import getBestReinforcement
@@ -52,9 +53,8 @@ def reinforceDefense(user: User) -> int:
 
         crabId = crab["crabada_id"]
         price = crab["price"]
-        logger.info(
-            f"Borrowing crab {crabId} for mine {mineId} at {Web3.fromWei(price, 'ether')} TUS... [strategy={strategyName}, BP={crab['battle_point']}, MP={crab['mine_point']}]"
-        )
+        crabInfoMsg = f"Borrowing crab {crabId} for mine {mineId} at {Web3.fromWei(price, 'ether')} TUS... [strategy={strategyName}, BP={crab['battle_point']}, MP={crab['mine_point']}]"
+        logger.info(crabInfoMsg)  # TODO: also send to Telegram, asynchronously
 
         # Borrow the crab
         txHash = crabadaWeb3Client.reinforceDefense(mineId, crabId, price)
@@ -62,11 +62,15 @@ def reinforceDefense(user: User) -> int:
         txReceipt = crabadaWeb3Client.getTransactionReceipt(txHash)
         logTx(txReceipt)
         if txReceipt["status"] != 1:
-            sendSms(f"Crabada: ERROR reinforcing > {txHash}")
+            sendSms(f"Crabada: Error reinforcing mine {mineId}")
             logger.error(f"Error reinforcing mine {mineId}")
+            sendIM(crabInfoMsg)
+            sendIM(f"Error reinforcing mine {mineId}")
         else:
             nBorrowedReinforments += 1
             logger.info(f"Mine {mineId} reinforced correctly")
+            sendIM(crabInfoMsg)
+            sendIM(f"Mine {mineId} reinforced correctly")
 
         # Wait some time to avoid renting the same crab for different teams
         if len(reinforceableMines) > 1:

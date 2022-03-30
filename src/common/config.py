@@ -9,7 +9,7 @@ from src.common.types import (
     ConfigUser,
 )
 from src.common.dotenv import getenv, parseInt
-from typing import List
+from typing import Any, Dict, List
 from src.helpers.config import parseTeamConfig, parseUserConfig
 
 #################
@@ -47,15 +47,24 @@ defaultGasPrice = getenv("DEFAULT_GAS_PRICE", "25")  # gwei
 # Notifications
 ##################
 
-twilio = {
+twilio: Dict[str, Any] = {
     "accountSid": getenv("TWILIO_ACCOUNT_SID"),
     "authToken": getenv("TWILIO_AUTH_TOKEN"),
 }
 
-notifications = {
+telegram: Dict[str, Any] = {
+    "enable": True if "1" == getenv("TELEGRAM_ENABLE", "1") else False,
+    "apiKey": getenv("TELEGRAM_API_KEY"),
+    "chatId": getenv("TELEGRAM_CHAT_ID"),
+}
+
+notifications: Dict[str, Any] = {
     "sms": {
-        "enable": True if "1" == str(getenv("NOTIFICATION_SMS", "0")) else False,
+        "enable": True if "1" == getenv("NOTIFICATION_SMS", "0") else False,
         "from": getenv("NOTIFICATION_SMS_FROM"),
         "to": getenv("NOTIFICATION_SMS_TO"),
-    }
+    },
+    "instantMessage": {
+        "enable": True if "1" == str(getenv("NOTIFICATION_IM", "0")) else False,
+    },
 }
