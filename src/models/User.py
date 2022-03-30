@@ -93,8 +93,18 @@ class User(Model):
         return firstOrNone([u for u in users if u["address"] == userAddress])
 
     @staticmethod
-    def create(userAddress: Address) -> User:
+    def find(userNumber: int) -> User:
         """
-        User factory
+        Return a user object given its number in the
+        configuration file
         """
-        return User(userAddress)
+
+        if userNumber == 0:
+            raise UserException("Invalid user number 0")
+
+        try:
+            user = User(users[userNumber - 1]["address"])
+        except:
+            raise UserException(f"User {userNumber} not found, max is {len(users)}")
+
+        return user

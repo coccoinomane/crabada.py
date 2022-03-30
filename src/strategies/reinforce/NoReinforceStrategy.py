@@ -10,4 +10,10 @@ class NoReinforceStrategy(ReinforceStrategy):
     """
 
     def query(self, game: Game) -> List[CrabForLending]:
+        """No need to make a query at all"""
         return None
+
+    def handleNoSuitableCrabFound(self, crab: CrabForLending) -> None:
+        """No need to raise an exception, as finding no crab is
+        the aim of the strategy :-)"""
+        pass

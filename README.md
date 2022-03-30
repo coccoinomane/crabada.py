@@ -8,7 +8,7 @@ Scripts to interact with [Crabada](play.crabada.com)'s smart contracts 🦀
 - Choose between several reinforcement strategies.
 - Run the bot without human supervision.
 - Manage multiple teams at the same time.
-- Send Telegram and/or SMS notifications.
+- Telegram and SMS notifications.
 
 # Quick start
 
@@ -107,14 +107,16 @@ If everything worked fine, you should receive a Telegram message on your newly c
 
 # To do
 
+* Donate mechanism
+* Test `closeLoots` fix
 * Avoid losing gas on failed reinforce
+* Merge mines.py and reinforce.py helpers in Mine class
 * Use a virtual environment to manage dependencies
 * Simplify notification mess (src/bot/mining/reinforceDefense.py)
 * Multi-user support: send teams from multiple wallets
 
 # Might do
 
-* Looting reinforcement: Implement faction advantage
 * Use cron library to schedule scripts
 * Gas control: Stop if wallet has less than X ETH + set daily gas limit
 * Use web3 default variable WEB3_PROVIDER_URI instead of WEB3_NODE_URI
