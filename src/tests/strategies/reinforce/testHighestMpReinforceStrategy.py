@@ -33,13 +33,13 @@ def testHighestMpStrategy() -> None:
 
     print(">>> FIRST CRAB REINFORCEMENT")
     try:
-        print(strategy._getCrab1())
+        print(strategy.getCrab1())
     except Exception as e:
         print("ERROR RAISED: " + e.__class__.__name__ + ": " + str(e))
 
     print(">>> SECOND CRAB REINFORCEMENT")
     try:
-        print(strategy._getCrab2())
+        print(strategy.getCrab2())
     except Exception as e:
         print("ERROR RAISED: " + e.__class__.__name__ + ": " + str(e))
 

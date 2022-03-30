@@ -2,16 +2,26 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import Any, Tuple
 from src.common.exceptions import StrategyNotApplicable
+from src.common.types import ConfigTeam
 from src.libs.CrabadaWeb2Client.CrabadaWeb2Client import CrabadaWeb2Client
+from src.models.User import User
 
 
 class Strategy(ABC):
     """
     A generic strategy to be applied to a given game; extend this class
     to make your own strategies.
+
+    A strategy can always use all of the configurations of the user and
+    of the team involved; you can access them via self.user and self.teamConfig,
+    respectively.
     """
 
-    def __init__(self, web2Client: CrabadaWeb2Client) -> None:
+    def __init__(
+        self, user: User, teamConfig: ConfigTeam, web2Client: CrabadaWeb2Client
+    ) -> None:
+        self.user: User = user
+        self.teamConfig: ConfigTeam = teamConfig
         self.web2Client: CrabadaWeb2Client = web2Client
 
     def setParams(self, *args: Any, **kwargs: Any) -> Strategy:

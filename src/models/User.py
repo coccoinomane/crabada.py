@@ -4,9 +4,9 @@ from eth_typing import Address
 from web3.types import Wei
 from src.common.config import users
 from src.common.exceptions import UserException
-from src.common.types import ConfigTeam, ConfigUser, Tus
+from src.common.types import ConfigTeam, ConfigUser, Tus, TeamTask
 from src.helpers.general import findInList, firstOrNone
-from src.libs.CrabadaWeb2Client.types import Game, Team, TeamStatus
+from src.libs.CrabadaWeb2Client.types import Game, TeamStatus
 from src.models.Model import Model
 
 
@@ -17,9 +17,10 @@ class User(Model):
     """
 
     def __init__(self, userAddress: Address):
+        self.address = userAddress
         self.config: ConfigUser = User.getUserConfig(userAddress)
         if not self.config:
-            raise UserException("User address not registered: {userAddress}")
+            raise UserException(f"User address not registered: {str(userAddress)}")
 
     def getTeamConfig(self, teamId: int) -> ConfigTeam:
         """
@@ -62,13 +63,22 @@ class User(Model):
         """
         Return whether a crab costs too much to borrow for the user
         """
-        return price > self.config["maxPriceToReinforceInTus"]
+        return price > self.config["reinforcementMaxPriceInTus"]
 
     def isTooExpensiveToBorrowTusWei(self, price: Wei) -> bool:
         """
         Return whether a crab costs too much to borrow for the user
         """
-        return price > self.config["maxPriceToReinforceInTusWei"]
+        return price > self.config["reinforcementMaxPriceInTusWei"]
+
+    def getTeamsByTask(self, task: TeamTask) -> List[ConfigTeam]:
+        """
+        Get user's teams tasked with the given task
+        """
+        return [t for t in self.getTeams() if t["task"] == task]
+
+    def __str__(self) -> str:
+        return str(self.address)
 
     @staticmethod
     def isRegistered(userAddress: Address) -> bool:
@@ -83,8 +93,18 @@ class User(Model):
         return firstOrNone([u for u in users if u["address"] == userAddress])
 
     @staticmethod
-    def create(userAddress: Address) -> User:
+    def find(userNumber: int) -> User:
         """
-        User factory
+        Return a user object given its number in the
+        configuration file
         """
-        return User(userAddress)
+
+        if userNumber == 0:
+            raise UserException("Invalid user number 0")
+
+        try:
+            user = User(users[userNumber - 1]["address"])
+        except:
+            raise UserException(f"User {userNumber} not found, max is {len(users)}")
+
+        return user

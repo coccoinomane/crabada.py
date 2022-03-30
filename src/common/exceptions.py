@@ -24,7 +24,11 @@ class StrategyNotApplicable(StrategyException):
     pass
 
 
-class CrabBorrowPriceTooHigh(StrategyException):
+class ReinforcementTooExpensive(StrategyException):
+    pass
+
+
+class NoSuitableReinforcementFound(StrategyException):
     pass
 
 

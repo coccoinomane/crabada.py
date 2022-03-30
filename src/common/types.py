@@ -9,33 +9,22 @@ Task assigned to a team
 """
 TeamTask = Literal["loot", "mine"]
 
-"""
-Strategy that a team should follow to choose the best mine
-to loot
-"""
-LootStrategyName = Literal["LowestBp"]
-
-"""
-Strategy that the team should follow to get the best
-reincorcement
-"""
-ReinforceStrategyName = Literal["CheapestCrab", "HighestMp", "HighestBp"]
-
 
 class ConfigTeam(TypedDict):
     id: int
     userAddress: Address
     battlePoints: int
     task: TeamTask
-    lootStrategyName: LootStrategyName
-    reinforceStrategyName: ReinforceStrategyName
+    lootStrategyName: str
+    reinforceStrategyName: str
+    reinforcementToPick: int
 
 
 class ConfigUser(TypedDict):
     address: Address
     privateKey: str
-    maxPriceToReinforceInTus: Tus
-    maxPriceToReinforceInTusWei: Wei
+    reinforcementMaxPriceInTus: Tus
+    reinforcementMaxPriceInTusWei: Wei
     teams: List[ConfigTeam]
 
 

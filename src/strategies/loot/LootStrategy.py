@@ -1,7 +1,6 @@
 from abc import abstractmethod
 from typing import List, Tuple
 from src.helpers.general import firstOrNone
-from src.helpers.teams import teamCanLoot
 from src.strategies.Strategy import Strategy
 from src.libs.CrabadaWeb2Client.types import Game, Team
 
@@ -10,6 +9,8 @@ class LootStrategy(Strategy):
     """
     Generic looting strategy, consisting in finding the perfect
     mine to loot, given a looter team.
+
+    TODO: Implement factional advantage.
     """
 
     def setParams(self, team: Team, minesToFetch: int = 5) -> Strategy:
@@ -28,12 +29,12 @@ class LootStrategy(Strategy):
         """
         The strategy can be applied only if the team is busy
         """
-        isApplicable = teamCanLoot(self.team)
+        isApplicable = self.team["status"] == "AVAILABLE"
         return (
             isApplicable,
             ""
             if isApplicable
-            else f"Team cannot loot {self.team['team_id']} (status = {self.team['status']})",
+            else f"Team '{self.team['team_id']}' cannot loot (status = {self.team['status']})",
         )
 
     @abstractmethod
