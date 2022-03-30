@@ -14,9 +14,12 @@ Scripts to interact with [Crabada](play.crabada.com)'s smart contracts 🦀
 
 1. Make sure you have Python 3.9 or later installed.
 1. Install dependencies: `pip install -r requirements.txt`.
-1. Copy _.env.example_ in _.env_ and customize the latter.
-1. Make sure you `cd` in the root folder of the project (the same where this readme is)
+1. Copy _.env.example_ in _.env_.
+1. Configure _.env_.
+1. `cd` in the root folder of the project (the same where this readme is)
 1. Run any of the scripts in the _bin_ folder.
+
+Please note that the bot will only consider the teams that you have registered in _.env_.
 
 # Mining scripts
 
@@ -77,9 +80,9 @@ Then, you can run any of the scripts described above and they will apply to all 
 The bot requires Python 3.9; I have personally tested it on:
 
 - **Mac Os 11 (Big Sur)** > Install python3 and pip3 with [Homebrew](https://brew.sh/) > `brew install python3`
-- **Debian GNU/Linux 11 (bullseye)** > Install python3 and pip with apt-get > `apt-get install python3 pip git`
+- **Debian GNU/Linux 11 (bullseye)** > Install python3 and pip with apt-get > `apt-get install python3 pip git` ([more details here](https://github.com/coccoinomane/crabada.py/issues/28#issuecomment-1082615253))
 
-Users told me that they managed to run the bot on Ubuntu, too.
+Users told me that they managed to run the bot on Ubuntu, too. Attempts have been made to run the bot on a Raspberry PI, too, but [without success](https://github.com/coccoinomane/crabada.py/issues/28#issuecomment-1082613093).
 
 # Telegram Notifications
 
