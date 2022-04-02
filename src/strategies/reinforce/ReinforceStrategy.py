@@ -58,19 +58,6 @@ class ReinforceStrategy(Strategy):
         self.maxPrice2: Tus = maxPrice2 if maxPrice2 else self.maxPrice1
         return self
 
-    def isApplicable(self) -> Tuple[bool, str]:
-        """
-        The strategy can be applied only if the mine can
-        be reinforced
-        """
-        isApplicable = minerCanReinforce(self.game) or looterCanReinforce(self.game)
-        return (
-            isApplicable,
-            ""
-            if isApplicable
-            else f"Game cannot be reinforced [mine_id = {self.game['game_id']}, round = {self.game['round']}, winner_team_id = {self.game['winner_team_id']}]",
-        )
-
     @abstractmethod
     def query(self, game: Game) -> dict[str, Any]:
         """
@@ -210,3 +197,16 @@ class ReinforceStrategy(Strategy):
             self.handlePriceTooHigh(crab, self.maxPrice2)
 
         return crab
+
+    def isApplicable(self) -> Tuple[bool, str]:
+        """
+        The strategy can be applied only if the mine can
+        be reinforced
+        """
+        isApplicable = minerCanReinforce(self.game) or looterCanReinforce(self.game)
+        return (
+            isApplicable,
+            ""
+            if isApplicable
+            else f"Game cannot be reinforced [mine_id = {self.game['game_id']}, round = {self.game['round']}, winner_team_id = {self.game['winner_team_id']}]",
+        )
