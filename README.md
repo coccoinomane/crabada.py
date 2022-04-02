@@ -75,6 +75,32 @@ USER_1_TEAM_3="3333"
 
 Then, you can run any of the scripts described above and they will apply to all of the registered teams.
 
+# Strategies
+
+Crabada can be played in different ways, especially when it comes to reinforcing.
+
+Choose which strategy to adopt using the `TEAM_X_REINFORCE_STRATEGY` parameter in *.env*; these are the available strategies:
+
+- `HighestBp`: Pick the highest-BP crab among the cheapest crabs; useful for looting teams on a budget.
+- `HighestMp`: Pick the highest-MP crab among the cheapest crabs; useful for mining teams on a budget.
+- `HighestBpHighCost`: Pick the highest-BP crab among the highest-BP crabs; useful for looting teams flush with money.
+- `HighestMpHighCost`: Pick the highest-MP crab among the highest-MP crabs; useful for mining teams flush with money.
+- `CheapestCrab`: Pick the cheapest crab in the Tavern.
+
+**Important**: No matter which strategy you choose, the bot will never borrow a crab that is more expensive than `REINFORCEMENT_MAX_PRICE`.
+
+### Create your own strategy
+
+Creating a strategy is very simple:
+
+1. Duplicate a strategy you like and pick a class name.
+2. Customize the three methods in the class: `query()`, `process()` and `pick()`. 
+3. Add the strategy name to the list in the file *ReinforceStrategyFactory.py*
+4. Write the strategy nae in _.env_ in the `TEAM_X_REINFORCE_STRATEGY` parameter.
+
+You can also test the strategy withouth sending transactions using the *testMakeReinforceStrategy.py* script.
+
+
 # System requirements
 
 The bot requires Python 3.9; I have personally tested it on:

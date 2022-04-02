@@ -7,8 +7,8 @@ from src.helpers.price import weiToTus
 
 class HighestBp(ReinforceStrategy):
     """
-    Pick the crab with the highest battle point value and that
-    costs less than maxPrice.
+    Fetch the cheapest crabs in the tavern, then pick the one
+    with the highest BP that costs less than maxPrice.
 
     If the reinforcementToPick mechanism is active, it avoids
     choosing highly requested crabs that could result in failed
@@ -17,7 +17,7 @@ class HighestBp(ReinforceStrategy):
 
     def query(self, game: Game) -> dict[str, Any]:
         return {
-            "limit": 200,  # TODO: make it an argument
+            "limit": 200,
             "orderBy": "price",
             "order": "asc",
         }

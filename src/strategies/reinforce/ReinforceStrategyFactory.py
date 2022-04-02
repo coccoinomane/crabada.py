@@ -12,6 +12,8 @@ from src.common.types import ConfigTeam, Tus
 from src.libs.CrabadaWeb2Client.types import CrabForLending, Game, Team
 from src.strategies.reinforce.HighestBp import HighestBp
 from src.strategies.reinforce.HighestMp import HighestMp
+from src.strategies.reinforce.HighestBpHighCost import HighestBpHighCost
+from src.strategies.reinforce.HighestMpHighCost import HighestMpHighCost
 from src.strategies.reinforce.CheapestCrab import CheapestCrab
 from src.strategies.reinforce.NoReinforceStrategy import NoReinforceStrategy
 from src.strategies.reinforce.ReinforceStrategy import ReinforceStrategy
@@ -22,6 +24,8 @@ reinforceStrategies = {
     "CheapestCrab": CheapestCrab,
     "HighestBp": HighestBp,
     "HighestMp": HighestMp,
+    "HighestBpHighCost": HighestBpHighCost,
+    "HighestMpHighCost": HighestMpHighCost,
 }
 
 
