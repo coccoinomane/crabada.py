@@ -3,7 +3,7 @@ from src.libs.CrabadaWeb2Client.types import Game
 from src.strategies.reinforce.ReinforceStrategy import ReinforceStrategy
 
 
-class CheapestCrabReinforceStrategy(ReinforceStrategy):
+class CheapestCrab(ReinforceStrategy):
     """
     Strategy that always chooses the cheapest crab for reinforcements
     """

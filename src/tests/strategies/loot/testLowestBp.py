@@ -1,6 +1,6 @@
 from src.common.config import users
-from src.helpers.general import findInList, firstOrNone
-from src.strategies.loot.LowestBpLootStrategy import LowestBpLootStrategy
+from src.helpers.general import findInList
+from src.strategies.loot.LowestBp import LowestBp
 from src.common.clients import crabadaWeb2Client
 
 # VARS
@@ -13,10 +13,10 @@ if not team:
     print("Error getting team with ID " + str(teamId))
     exit(1)
 
-strategy: LowestBpLootStrategy = LowestBpLootStrategy(crabadaWeb2Client).setParams(team)
+strategy: LowestBp = LowestBp(crabadaWeb2Client).setParams(team)
 
 # TEST FUNCTIONS
-def testLowestBpStrategy() -> None:
+def test() -> None:
 
     print(">>> IS STRATEGY APPLICABLE?")
     print(strategy.isApplicable())
@@ -29,4 +29,4 @@ def testLowestBpStrategy() -> None:
 
 
 # EXECUTE
-testLowestBpStrategy()
+test()

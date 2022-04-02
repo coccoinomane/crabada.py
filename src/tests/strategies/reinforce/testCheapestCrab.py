@@ -1,33 +1,27 @@
 from typing import cast
 from src.common.types import Tus
 from src.helpers.general import secondOrNone, thirdOrNone
-from src.strategies.reinforce.HighestBpReinforceStrategy import (
-    HighestBpReinforceStrategy,
-)
+from src.strategies.reinforce.CheapestCrab import CheapestCrab
 from src.common.clients import crabadaWeb2Client
 from sys import argv
 
 # VARS
 gameId = secondOrNone(argv)
-maxPrice = cast(Tus, int(thirdOrNone(argv) or 25))
+maxPrice = cast(Tus, thirdOrNone(argv)) or 20
 
 if not gameId:
     print("Provide a game ID")
     exit(1)
 
 game = crabadaWeb2Client.getMine(gameId)
-strategy: HighestBpReinforceStrategy = HighestBpReinforceStrategy(
-    crabadaWeb2Client
-).setParams(game, maxPrice)
+strategy: CheapestCrab = CheapestCrab(crabadaWeb2Client).setParams(game, maxPrice)
 
 # TEST FUNCTIONS
-def testHighestBpStrategy() -> None:
+def test() -> None:
 
     print(">>> CRAB REINFORCEMENT WITH AUTOMATIC SELECTION")
     try:
-        print(
-            strategy.getCrab("MINING")
-        )  # Will print note if mine is not reinforceable
+        print(strategy.getCrab())  # Will print note if mine is not reinforceable
     except Exception as e:
         print("ERROR RAISED: " + e.__class__.__name__ + ": " + str(e))
 
@@ -45,4 +39,4 @@ def testHighestBpStrategy() -> None:
 
 
 # EXECUTE
-testHighestBpStrategy()
+test()

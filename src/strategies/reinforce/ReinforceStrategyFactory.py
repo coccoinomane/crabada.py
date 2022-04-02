@@ -10,24 +10,18 @@ from src.common.exceptions import StrategyException, StrategyNotFound, StrategyN
 from src.common.clients import crabadaWeb2Client
 from src.common.types import ConfigTeam, Tus
 from src.libs.CrabadaWeb2Client.types import CrabForLending, Game, Team
-from src.strategies.reinforce.HighestBpReinforceStrategy import (
-    HighestBpReinforceStrategy,
-)
-from src.strategies.reinforce.HighestMpReinforceStrategy import (
-    HighestMpReinforceStrategy,
-)
-from src.strategies.reinforce.CheapestCrabReinforceStrategy import (
-    CheapestCrabReinforceStrategy,
-)
+from src.strategies.reinforce.HighestBp import HighestBp
+from src.strategies.reinforce.HighestMp import HighestMp
+from src.strategies.reinforce.CheapestCrab import CheapestCrab
 from src.strategies.reinforce.NoReinforceStrategy import NoReinforceStrategy
 from src.strategies.reinforce.ReinforceStrategy import ReinforceStrategy
 from src.models.User import User
 
 reinforceStrategies = {
     "NoReinforce": NoReinforceStrategy,
-    "CheapestCrab": CheapestCrabReinforceStrategy,
-    "HighestBp": HighestBpReinforceStrategy,
-    "HighestMp": HighestMpReinforceStrategy,
+    "CheapestCrab": CheapestCrab,
+    "HighestBp": HighestBp,
+    "HighestMp": HighestMp,
 }
 
 

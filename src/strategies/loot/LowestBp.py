@@ -4,7 +4,7 @@ from src.strategies.loot.LootStrategy import LootStrategy
 from src.helpers.general import firstOrNone
 
 
-class LowestBpLootStrategy(LootStrategy):
+class LowestBp(LootStrategy):
     """
     Looting strategy that chooses the mine with the lowest
     defense points.

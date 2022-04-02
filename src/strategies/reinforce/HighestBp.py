@@ -5,9 +5,9 @@ from src.helpers.general import nthOrLastOrNone
 from src.helpers.price import weiToTus
 
 
-class HighestMpReinforceStrategy(ReinforceStrategy):
+class HighestBp(ReinforceStrategy):
     """
-    Pick the crab with the highest mine point value and that
+    Pick the crab with the highest battle point value and that
     costs less than maxPrice.
 
     If the reinforcementToPick mechanism is active, it avoids
@@ -24,7 +24,7 @@ class HighestMpReinforceStrategy(ReinforceStrategy):
 
     def process(self, game: Game, crabs: List[CrabForLending]) -> List[CrabForLending]:
         affordableCrabs = [c for c in crabs if weiToTus(c["price"]) < self.maxPrice1]
-        return sorted(affordableCrabs, key=lambda c: (-c["mine_point"], c["price"]))
+        return sorted(affordableCrabs, key=lambda c: (-c["battle_point"], c["price"]))
 
     def pick(self, game: Game, crabs: List[CrabForLending]) -> CrabForLending:
         """

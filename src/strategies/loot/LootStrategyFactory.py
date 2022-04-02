@@ -11,11 +11,11 @@ from src.common.clients import crabadaWeb2Client
 from src.common.types import ConfigTeam
 from src.libs.CrabadaWeb2Client.types import Game, Team
 from src.strategies.loot.LootStrategy import LootStrategy
-from src.strategies.loot.LowestBpLootStrategy import LowestBpLootStrategy
+from src.strategies.loot.LowestBp import LowestBp
 from src.models.User import User
 
 lootStrategies = {
-    "LowestBp": LowestBpLootStrategy,
+    "LowestBp": LowestBp,
 }
 
 

@@ -1,9 +1,7 @@
 from typing import cast
 from src.common.types import Tus
 from src.helpers.general import secondOrNone, thirdOrNone
-from src.strategies.reinforce.HighestMpReinforceStrategy import (
-    HighestMpReinforceStrategy,
-)
+from src.strategies.reinforce.HighestMp import HighestMp
 from src.common.clients import crabadaWeb2Client
 from sys import argv
 
@@ -16,12 +14,10 @@ if not gameId:
     exit(1)
 
 game = crabadaWeb2Client.getMine(gameId)
-strategy: HighestMpReinforceStrategy = HighestMpReinforceStrategy(
-    crabadaWeb2Client
-).setParams(game, maxPrice)
+strategy: HighestMp = HighestMp(crabadaWeb2Client).setParams(game, maxPrice)
 
 # TEST FUNCTIONS
-def testHighestMpStrategy() -> None:
+def test() -> None:
 
     print(">>> CRAB REINFORCEMENT WITH AUTOMATIC SELECTION")
     try:
@@ -45,4 +41,4 @@ def testHighestMpStrategy() -> None:
 
 
 # EXECUTE
-testHighestMpStrategy()
+test()
