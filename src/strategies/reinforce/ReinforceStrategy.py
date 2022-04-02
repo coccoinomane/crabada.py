@@ -1,6 +1,6 @@
 from __future__ import annotations
 from abc import abstractmethod
-from typing import List, Tuple, cast
+from typing import Any, List, Tuple, cast
 from src.common.exceptions import (
     ReinforcementTooExpensive,
     NoSuitableReinforcementFound,
@@ -72,12 +72,12 @@ class ReinforceStrategy(Strategy):
         )
 
     @abstractmethod
-    def query(self, game: Game) -> List[CrabForLending]:
+    def query(self, game: Game) -> dict[str, Any]:
         """
         Query for the Crabada endpoint that will fetch the available
         crabs for lending, from which we will pick our reinforcement.
         """
-        return []
+        return {}
 
     def process(self, game: Game, crabs: List[CrabForLending]) -> List[CrabForLending]:
         """
@@ -100,7 +100,7 @@ class ReinforceStrategy(Strategy):
         """
         return firstOrNone(crabs)
 
-    def query2(self, game: Game) -> List[CrabForLending]:
+    def query2(self, game: Game) -> dict[str, Any]:
         """
         Optionally specify a separate query for the second reinforcement
         """

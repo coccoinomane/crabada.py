@@ -9,7 +9,7 @@ class NoReinforceStrategy(ReinforceStrategy):
     at all; useful for auto-lose teams
     """
 
-    def query(self, game: Game) -> List[CrabForLending]:
+    def query(self, game: Game) -> dict[str, Any]:
         """No need to make a query at all"""
         return None
 
