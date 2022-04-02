@@ -79,13 +79,15 @@ Then, you can run any of the scripts described above and they will apply to all 
 
 Crabada can be played in different ways, especially when it comes to reinforcing.
 
-Choose which strategy to adopt using the `TEAM_X_REINFORCE_STRATEGY` parameter in *.env*; these are the available strategies:
+Choose the strategy to use with the `TEAM_X_REINFORCE_STRATEGY` parameter in *.env*:
 
-- `HighestBp`: Pick the highest-BP crab among the cheapest crabs; useful for looting teams on a budget.
-- `HighestMp`: Pick the highest-MP crab among the cheapest crabs; useful for mining teams on a budget.
-- `HighestBpHighCost`: Pick the highest-BP crab among the highest-BP crabs; useful for looting teams flush with money.
-- `HighestMpHighCost`: Pick the highest-MP crab among the highest-MP crabs; useful for mining teams flush with money.
+- `HighestBp`: Pick the highest-BP crab among the cheapest crabs; useful for looting on a budget.
+- `HighestMp`: Pick the highest-MP crab among the cheapest crabs; useful for mining on a budget.
+- `HighestBpHighCost`: Pick the highest-BP crab; make sure you set a high enough `REINFORCEMENT_MAX_PRICE`. 
+- `HighestMpHighCost`: Pick the highest-MP crab; make sure you set a high enough `REINFORCEMENT_MAX_PRICE`
 - `CheapestCrab`: Pick the cheapest crab in the Tavern.
+
+The `Highest` strategies support the optional parameter `REINFORCEMENT_TO_PICK`. Set it to 2, 3, 4 to pick the 2nd, 3rd, 4th-best crab, and so on. Since most bots will compete for the best crab, setting this parameter to a higher-than-1 value can reduce the risk of failed transactions.
 
 **Important**: No matter which strategy you choose, the bot will never borrow a crab that is more expensive than `REINFORCEMENT_MAX_PRICE`.
 
@@ -99,7 +101,6 @@ Creating a strategy is very simple:
 4. Write the strategy nae in _.env_ in the `TEAM_X_REINFORCE_STRATEGY` parameter.
 
 You can also test the strategy withouth sending transactions using the *testMakeReinforceStrategy.py* script.
-
 
 # System requirements
 
