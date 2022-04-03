@@ -1,9 +1,15 @@
-from typing import Any, List, Tuple
+from typing import Any, List, cast
 from eth_typing import Address
 import requests
 from src.helpers.general import firstOrNone, secondOrNone
+from web3.types import Wei
 
-from src.libs.CrabadaWeb2Client.types import CrabForLending, Game, Team
+from src.libs.CrabadaWeb2Client.types import (
+    CrabForLending,
+    Game,
+    Team,
+    CrabFromInventory,
+)
 
 
 class CrabadaWeb2Client:
@@ -178,3 +184,23 @@ class CrabadaWeb2Client:
         }
         actualParams = defaultParams | params
         return requests.request("GET", url, params=actualParams).json()  # type: ignore
+
+    def listCrabsFromInventory(
+        self, userAddress: Address, params: dict[str, Any] = {}
+    ) -> List[CrabFromInventory]:
+        """
+        Get all crabs available as reinforcements from the user's
+        own inventory.
+        """
+        res = self.listCrabsFromInventory_Raw(userAddress, params)
+        try:
+            return res["result"]["data"] or []
+        except:
+            return []
+
+    def listCrabsFromInventory_Raw(
+        self, userAddress: Address, params: dict[str, Any] = {}
+    ) -> Any:
+        url = self.baseUri + "/crabadas/can-join-team"
+        params["user_address"] = userAddress
+        return requests.request("GET", url, params=params).json()
