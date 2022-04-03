@@ -1,5 +1,6 @@
 from __future__ import annotations
 from abc import abstractmethod
+from src.common.logger import logger
 from typing import Any, List, Tuple, cast
 from src.common.exceptions import (
     ReinforcementTooExpensive,
@@ -132,22 +133,22 @@ class ReinforceStrategy(Strategy):
         elif status == 2:  # second reinforcement
             return self.getCrab2()
 
-    def handleNoSuitableCrabFound(self, crab: CrabForLending) -> None:
+    def handleNoSuitableCrabFound(self) -> None:
         """
-        By default, raise an exception if the strategy is unable to find
-        a suitable crab
+        By default, log a message if the strategy is unable to find
+        a suitable crab.
         """
-        raise NoSuitableReinforcementFound(
-            f"Could not find a suitable reinforcement [strategy={self.__class__.__name__}]"
+        logger.info(
+            f"Strategy '{self.__class__.__name__}' could not find a suitable reinforcement for team {self.teamConfig['id']}"
         )
 
     def handlePriceTooHigh(self, crab: CrabForLending, maxPrice: Tus) -> None:
         """
-        By default, raise an exception if the price of the given crab is
+        By default, log a message if the price of the given crab is
         higher than the strategy's max price
         """
-        raise ReinforcementTooExpensive(
-            f"Crab's price is higher than max {maxPrice} TUS [price={weiToTus(crab['price'])}, strategy={self.__class__.__name__}]"
+        logger.info(
+            f"Crab's price is higher than max {maxPrice} TUS [price={weiToTus(crab['price'])}, strategy={self.__class__.__name__}, team={self.teamConfig['id']}]"
         )
 
     def getCrab1(self) -> CrabForLending:
@@ -168,9 +169,11 @@ class ReinforceStrategy(Strategy):
 
         # Handle special cases
         if not crab:
-            self.handleNoSuitableCrabFound(crab)
+            self.handleNoSuitableCrabFound()
+            return None
         elif crab["price"] > tusToWei(self.maxPrice1):
             self.handlePriceTooHigh(crab, self.maxPrice1)
+            return None
 
         return crab
 
@@ -192,9 +195,11 @@ class ReinforceStrategy(Strategy):
 
         # Handle special cases
         if not crab:
-            self.handleNoSuitableCrabFound(crab)
+            self.handleNoSuitableCrabFound()
+            return None
         elif crab["price"] > tusToWei(self.maxPrice2):
             self.handlePriceTooHigh(crab, self.maxPrice2)
+            return None
 
         return crab
 
