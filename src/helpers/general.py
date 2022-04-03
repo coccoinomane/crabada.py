@@ -31,7 +31,7 @@ def fourthOrNone(list: List[Any]) -> Any:
 
 def nthOrNone(list: List[Any], n: int) -> Any:
     """
-    Return the n-th element of a list or None if it is not set
+    Return the n-th plus 1 element of a list or None if it is not set
     """
     try:
         return list[n]

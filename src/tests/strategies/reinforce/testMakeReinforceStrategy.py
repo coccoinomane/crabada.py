@@ -1,6 +1,6 @@
 from typing import cast
 from src.common.types import Tus
-from src.helpers.general import fourthOrNone, secondOrNone, thirdOrNone
+from src.helpers.general import fourthOrNone, nthOrNone, secondOrNone, thirdOrNone
 from src.helpers.reinforce import minerCanReinforce
 from src.models.User import User
 from src.strategies.reinforce.ReinforceStrategyFactory import (
