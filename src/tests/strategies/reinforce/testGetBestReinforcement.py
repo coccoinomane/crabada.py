@@ -4,7 +4,7 @@ from src.helpers.general import fourthOrNone, secondOrNone, thirdOrNone
 from src.helpers.reinforce import minerCanReinforce
 from src.models.User import User
 from src.strategies.reinforce.ReinforceStrategyFactory import (
-    makeReinforceStrategy,
+    getBestReinforcement,
 )
 from src.common.clients import crabadaWeb2Client
 from sys import argv
@@ -17,7 +17,9 @@ maxPrice = cast(
     Tus, int(secondOrNone(argv) or user.config["reinforcementMaxPriceInTus"])
 )
 reinforcementToPick = int(thirdOrNone(argv) or teamConfig["reinforcementToPick"])
-strategyName = fourthOrNone(argv) or teamConfig["reinforceStrategies"][0]
+reinforceStrategies = teamConfig["reinforceStrategies"]
+if fourthOrNone(argv):
+    reinforceStrategies = fourthOrNone(argv).split(",")
 
 # Get the first mine that can be reinforced
 openMines = crabadaWeb2Client.listOpenMines({"limit": 100})
@@ -30,22 +32,16 @@ if not game:
 
 # Override config with CLI arguments
 teamConfig["reinforcementToPick"] = reinforcementToPick
+teamConfig["reinforceStrategies"] = reinforceStrategies
 
 # TEST FUNCTIONS
 def testMakeReinforceStrategy() -> None:
-    strategy = makeReinforceStrategy(strategyName, user, teamConfig, game, maxPrice)
-    print(">>> CHOSEN REINFORCE STRATEGY")
-    try:
-        print(strategy.__class__.__name__)
-    except Exception as e:
-        print("ERROR RAISED: " + e.__class__.__name__ + ": " + str(e))
+    print(">>> CHOSEN REINFORCE STRATEGIES")
+    print(teamConfig["reinforceStrategies"])
     print(">>> REINFORCEMENT CRAB THAT WILL BE PICKED")
     print(reinforcementToPick)
     print(">>> REINFORCEMENT CRAB")
-    try:
-        print(strategy.getCrab("MINING"))
-    except Exception as e:
-        print("ERROR RAISED: " + e.__class__.__name__ + ": " + str(e))
+    print(getBestReinforcement(user, game, maxPrice, teamConfig, "MINING"))
 
 
 # EXECUTE
