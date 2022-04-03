@@ -18,8 +18,8 @@ class CrabadaWeb3Client(AvalancheCWeb3Client):
     """
 
     contractAddress = cast(Address, "0x82a85407bd612f52577909f4a58bfc6873f14da8")
-    abiDir = os.path.dirname(os.path.realpath(__file__)) + "/abi"
-    abi = Web3Client.getContractAbiFromFile(abiDir + "/abi-crabada.json")
+    abiDir = os.path.dirname(os.path.realpath(__file__)) + "/contracts"
+    abi = Web3Client.getContractAbiFromFile(abiDir + "/IdleGameAbi.json")
 
     def startGame(self, teamId: int) -> HexStr:
         """
