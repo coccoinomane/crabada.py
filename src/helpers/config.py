@@ -12,7 +12,7 @@ from src.common.types import (
     Tus,
     TeamTask,
 )
-from src.common.dotenv import getenv, parseFloat, parseInt
+from src.common.dotenv import getenv, parseFloat, parseInt, parseListOfStrings
 from typing import List, cast
 from eth_typing import Address
 
@@ -29,11 +29,13 @@ def parseTeamConfig(teamNumber: int, userNumber: int) -> ConfigTeam:
         "userAddress": cast(Address, getenv(f"{userPrefix}_ADDRESS")),
         "battlePoints": parseInt(f"{teamPrefix}_BATTLE_POINTS"),
         "task": cast(TeamTask, getenv(f"{teamPrefix}_TASK", "mine")),
-        "lootStrategyName": getenv(f"{teamPrefix}_LOOT_STRATEGY", "LowestBp"),
-        "reinforceStrategyName": getenv(
-            f"{teamPrefix}_REINFORCE_STRATEGY", "HighestBp"
+        "lootStrategies": parseListOfStrings(
+            f"{teamPrefix}_LOOT_STRATEGY", ["LowestBp"]
         ),
-        "reinforcementToPick": parseInt(f"{teamPrefix}_REINFORCEMENT_TO_PICK") or 1,
+        "reinforceStrategies": parseListOfStrings(
+            f"{teamPrefix}_REINFORCE_STRATEGY", ["HighestBp"]
+        ),
+        "reinforcementToPick": parseInt(f"{teamPrefix}_REINFORCEMENT_TO_PICK", 1),
     }
 
     validateTeamConfig(teamConfig, teamNumber, userNumber)
@@ -49,12 +51,10 @@ def parseUserConfig(userNumber: int, teams: List[ConfigTeam]) -> ConfigUser:
     """
     userPrefix = f"USER_{userNumber}"
     address = cast(Address, getenv(f"{userPrefix}_ADDRESS"))
-    reinforcementMaxPriceInTus = (
-        parseFloat(f"{userPrefix}_REINFORCEMENT_MAX_PRICE") or 0
-    )
+    reinforcementMaxPriceInTus = parseFloat(f"{userPrefix}_REINFORCEMENT_MAX_PRICE", 0)
     if not reinforcementMaxPriceInTus:  # for backward compatibility
-        reinforcementMaxPriceInTus = (
-            parseFloat(f"{userPrefix}_MAX_PRICE_TO_REINFORCE") or 0
+        reinforcementMaxPriceInTus = parseFloat(
+            f"{userPrefix}_MAX_PRICE_TO_REINFORCE", 0
         )
 
     userConfig: ConfigUser = {

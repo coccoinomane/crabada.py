@@ -15,8 +15,8 @@ class ConfigTeam(TypedDict):
     userAddress: Address
     battlePoints: int
     task: TeamTask
-    lootStrategyName: str
-    reinforceStrategyName: str
+    lootStrategies: List[str]
+    reinforceStrategies: List[str]
     reinforcementToPick: int
 
 
