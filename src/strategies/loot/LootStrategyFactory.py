@@ -1,12 +1,17 @@
 """
-Use the "make" functions defined in this class to dinamically
+Use the "make" function defined in this class to dinamically
 instantiate strategies.
 
 Also provides utility function to easily return products of
 strategies (mine, crab, etc) without having to type boilerplate.
 """
 
-from src.common.exceptions import StrategyException, StrategyNotFound, StrategyNotSet
+from src.common.exceptions import (
+    NoSuitableMineFound,
+    StrategyException,
+    StrategyNotFound,
+    StrategyNotSet,
+)
 from src.common.clients import crabadaWeb2Client
 from src.common.types import ConfigTeam
 from src.libs.CrabadaWeb2Client.types import Game, Team
@@ -21,20 +26,22 @@ lootStrategies = {
 
 def getBestMineToLoot(user: User, team: Team) -> Game:
     """
-    Find best mine to loot for the given team, using the Loot strategy
-    provided in the user settings
+    Find best mine to loot for the given team, using the first suitable
+    Loot strategy provided in the user settings
     """
+    teamConfig = user.getTeamConfig(team["team_id"])
 
-    # Fetch the strategy name from the user settings
-    teamConfig = User(user.address).getTeamConfig(team["team_id"])
-    strategyName = teamConfig.get("lootStrategyName")
-    if not strategyName:
-        raise StrategyNotSet(f"Team {teamConfig['id']} has no loot strategy set")
+    mine: Game = None
 
-    # Create the strategy object and use it to get the mine
-    strategy: LootStrategy = makeLootStrategy(strategyName, user, teamConfig, team)
+    for strategyName in teamConfig["lootStrategies"]:
+        strategy: LootStrategy = makeLootStrategy(strategyName, user, teamConfig, team)
+        mine = strategy.getMine()
+        if mine:
+            return mine
 
-    return strategy.getMine()
+    raise NoSuitableMineFound(
+        f"No suitable mine to loot found [team={teamConfig['id']}]"
+    )
 
 
 def makeLootStrategy(

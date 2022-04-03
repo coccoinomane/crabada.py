@@ -32,6 +32,10 @@ class NoSuitableReinforcementFound(StrategyException):
     pass
 
 
+class NoSuitableMineFound(StrategyException):
+    pass
+
+
 class StrategyNotSet(StrategyException):
     pass
 

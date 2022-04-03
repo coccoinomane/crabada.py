@@ -153,3 +153,27 @@ class CrabForLending(TypedDict):
     battle_point: int
     time_point: int
     mine_point: int
+
+
+class CrabFromInventory(TypedDict):
+    crabada_id: int
+    id: int  # it seems to be the same as crabada_id...
+    crabada_name: str
+    owner: str
+    crabada_type: int
+    crabada_class: int
+    class_id: int
+    class_name: str
+    is_origin: Literal[0, 1]
+    is_genesis: Literal[0, 1]
+    legend_number: int
+    pure_number: int
+    photo: str
+    hp: int
+    speed: int
+    damage: int
+    critical: int
+    armor: int
+    battle_point: int
+    time_point: int
+    mine_point: int

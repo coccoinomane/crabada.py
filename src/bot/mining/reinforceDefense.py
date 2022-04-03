@@ -43,7 +43,7 @@ def reinforceDefense(user: User) -> int:
         strategyName = user.getTeamConfig(mine["team_id"]).get("reinforceStrategyName")
         try:
             crab = getBestReinforcement(user, mine, maxPrice)
-        except (ReinforcementTooExpensive, NoSuitableReinforcementFound) as e:
+        except (NoSuitableReinforcementFound) as e:
             logger.warning(e.__class__.__name__ + ": " + str(e))
             continue
 

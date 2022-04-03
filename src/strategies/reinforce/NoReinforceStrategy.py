@@ -13,7 +13,11 @@ class NoReinforceStrategy(ReinforceStrategy):
         """No need to make a query at all"""
         return None
 
-    def handleNoSuitableCrabFound(self, crab: CrabForLending) -> None:
-        """No need to raise an exception, as finding no crab is
+    def handleNoSuitableCrabFound(self) -> None:
+        """No need to alert the user, because finding no crab is
         the aim of the strategy :-)"""
         pass
+
+    def mayReturnNone(self) -> bool:
+        """Do not worry if this strategy returns no result"""
+        return True
