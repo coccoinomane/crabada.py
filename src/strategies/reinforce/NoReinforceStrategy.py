@@ -17,3 +17,7 @@ class NoReinforceStrategy(ReinforceStrategy):
         """No need to alert the user, because finding no crab is
         the aim of the strategy :-)"""
         pass
+
+    def mayReturnNone(self) -> bool:
+        """Do not worry if this strategy returns no result"""
+        return True

@@ -63,7 +63,7 @@ def getBestReinforcement(
             strategyName, user, teamConfig, mine, maxPrice
         )
         crab = strategy.getCrab(lootingOrMining)
-        if crab:
+        if crab or strategy.mayReturnNone():
             return crab
 
     raise NoSuitableReinforcementFound(
