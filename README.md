@@ -32,7 +32,7 @@ Please note that the bot will only consider the teams that you have registered i
 - Run `python -m bin.looting.reinforceAttack <your address>` to reinforce all attacking teams with a crab from the tavern, using the reinforcement strategy specified in the .env file.
 - Run `python -m bin.looting.closeLoots <your address>` to settle and claim rewards on loots that can be settled.
 
-### What about attacking? 🤔
+### - What about attacking? 🤔
 
 The bot can only help looters with automatic reinforcement & settling.
 
@@ -44,7 +44,7 @@ In order to run the bot without human supervision, you'll need to set a cron job
 
 I would recommend to do it on a remote server, for example on Vultr, AWS or Google Cloud; if you can't be bothered, you can also do it on your computer: just make sure you keep the computer turned on all the time.
 
-### Linux & Mac instructions
+### - Linux & Mac instructions
 
 Follow these instructions to send all available teams mining & to collect rewards for you:
 
@@ -79,19 +79,41 @@ Then, you can run any of the scripts described above and they will apply to all 
 
 Crabada can be played in different ways, especially when it comes to reinforcing.
 
-Choose the strategy to use with the `TEAM_X_REINFORCE_STRATEGY` parameter in *.env*:
+Choose the strategy to use with the `USER_X_TEAM_Y_REINFORCE_STRATEGY` parameter in *.env*:
 
+- `NoReinforce`: Do not reinforce at all.
 - `HighestBp`: Pick the highest-BP crab among the cheapest crabs; useful for looting on a budget.
 - `HighestMp`: Pick the highest-MP crab among the cheapest crabs; useful for mining on a budget.
-- `HighestBpHighCost`: Pick the highest-BP crab; make sure you set a high enough `REINFORCEMENT_MAX_PRICE`. 
-- `HighestMpHighCost`: Pick the highest-MP crab; make sure you set a high enough `REINFORCEMENT_MAX_PRICE`
+- `HighestBpHighCost` by **@coinmasterlisting**: Pick the highest-BP crab; make sure you set a high enough *REINFORCEMENT_MAX_PRICE*.
+- `HighestMpHighCost` by **@coinmasterlisting**: Pick the highest-MP crab; make sure you set a high enough *REINFORCEMENT_MAX_PRICE*.
 - `CheapestCrab`: Pick the cheapest crab in the Tavern.
+- `HighestBpFromInventory` by **@yigitest**: Self-reinforce with the highest-BP crab in the inventory.
+- `HighestMpFromInventory` by **@yigitest**: Self-reinforce with the highest-MP crab in the inventory.
+- `FromInventory` by **@yigitest**: Self-reinforce with the first available crab in the inventory.
+
+### - Fallback strategies
+
+Sometimes a strategy will not be able to find a suitable crab. For example, a high-cost strategy might return a crab that is too expensive for the user, or an inventory strategy might fail because there are no free crabs in the user's inventory.
+
+To account for these cases, you can specify multiple strategies as comma-separated values. For example, if you specify:
+
+```bash
+USER_X_TEAM_Y_REINFORCE_STRATEGY="HighestBpFromInventory, HighestBpHighCost, HighestBp"
+```
+
+Then, the bot will:
+
+1. Attempt to self-reinforce with a high-BP crab from the user's inventory.
+2. If there are no free crabs in the inventory, attempt to borrow the highest-BP crab in the tavern.
+3. If the highest-BP crab is too expensive, attempt to borrow the highest-BP among the cheapest crabs in the tavern.
+
+### - Save gas with strategies
 
 The `Highest` strategies support the optional parameter `REINFORCEMENT_TO_PICK`. Set it to 2, 3, 4 to pick the 2nd, 3rd, 4th-best crab, and so on. Since most bots will compete for the best crab, setting this parameter to a higher-than-1 value can reduce the risk of failed transactions.
 
 **Important**: No matter which strategy you choose, the bot will never borrow a crab that is more expensive than `REINFORCEMENT_MAX_PRICE`.
 
-### Create your own strategy
+### - Create your own strategy
 
 Creating a strategy is very simple:
 
