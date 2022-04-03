@@ -9,9 +9,8 @@ class AvalancheCWeb3Client(Web3Client):
     its smart contracts.
     """
 
-    chainId: int = 43114
-    gasLimit: int = 400000  # sensible value for Avalanche
-    maxPriorityFeePerGasInGwei: int = 2  # TODO: fine tune
+    chainId = 43114
+    txType = 0x2
 
     def setNodeUri(self, nodeUri: str = None) -> AvalancheCWeb3Client:
         """
