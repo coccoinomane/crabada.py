@@ -1,4 +1,4 @@
-Scripts to interact with [Crabada](play.crabada.com)'s smart contracts 🦀
+Scripts to interact with [Crabada](https://www.crabada.com)'s smart contracts 🦀
 
 # Features
 
