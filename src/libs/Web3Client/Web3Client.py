@@ -2,10 +2,10 @@ from __future__ import annotations
 import json
 from typing import Any, Union
 from eth_account import Account
-from eth_typing import Address, BlockIdentifier, ChecksumAddress
+from eth_typing import Address
 from web3 import Web3
 from eth_account.datastructures import SignedTransaction
-from web3.contract import Contract, ContractFunction
+from web3.contract import ContractFunction
 from web3.types import BlockData, Nonce, TxParams, TxReceipt, TxData
 from eth_typing.encoding import HexStr
 from src.libs.Web3Client.exceptions import MissingParameter
@@ -62,10 +62,11 @@ class Web3Client:
           maxMaxFeePerGas = 2 * baseFee + maxPriorityFeePerGas.
         """
 
-        # Properties of the tx that depend only on the chain
+        # Properties that you are not likely to change
         tx: TxParams = {
             "type": self.txType,
             "chainId": self.chainId,
+            "from": self.userAddress,
         }
 
         # Miner's tip
@@ -109,9 +110,12 @@ class Web3Client:
             gasLimit,
             maxPriorityFeePerGasInGwei,
         )
-        tx["gas"] = self.estimateGasForTransfer(to, valueInEth)  # type: ignore
-        txValue: TxParams = {"to": to, "value": self.w3.toWei(valueInEth, "ether")}
-        return tx | txValue
+        extraParams: TxParams = {
+            "to": to,
+            "value": self.w3.toWei(valueInEth, "ether"),
+            "gas": self.estimateGasForTransfer(to, valueInEth),  # type: ignore
+        }
+        return tx | extraParams
 
     def buildContractTransaction(
         self,
