@@ -1,5 +1,5 @@
 from typing import cast
-from src.helpers.reinforce import minerCanReinforce
+from src.helpers.reinforce import looterCanReinforce
 from src.libs.Web3Client.helpers.debug import printTxInfo
 from src.common.config import nodeUri, users
 from src.libs.CrabadaWeb3Client.CrabadaWeb3Client import CrabadaWeb3Client
@@ -7,6 +7,7 @@ from src.libs.CrabadaWeb2Client.CrabadaWeb2Client import CrabadaWeb2Client
 from web3 import Web3
 from pprint import pprint
 from src.models.User import User
+from web3.exceptions import ContractLogicError
 
 # VARS
 web3Client = cast(
@@ -16,11 +17,11 @@ web3Client = cast(
 
 web2Client = CrabadaWeb2Client()
 
-userAddress = users[0]["address"]
+looterAddress = users[0]["address"]
 
-openMines = web2Client.listMyOpenMines(userAddress)
-if not openMines:
-    print(f"User {str(userAddress)} has no open mines")
+openLoots = web2Client.listMyOpenLoots(looterAddress)
+if not openLoots:
+    print(f"User {str(looterAddress)} has no open loots")
     exit(1)
 
 cheapestCrab = web2Client.getCheapestCrabForLending()
@@ -29,7 +30,7 @@ if not cheapestCrab:
     exit(1)
 
 price = cheapestCrab["price"]
-if User(userAddress).isTooExpensiveToBorrowTusWei(price):
+if User(looterAddress).isTooExpensiveToBorrowTusWei(price):
     print(
         f"Price of crab is {Web3.fromWei(price, 'ether')} TUS which exceeds the user limit of {Web3.fromWei(users[0]['reinforcementMaxPriceInTusWei'], 'ether')}"
     )
@@ -38,7 +39,7 @@ if User(userAddress).isTooExpensiveToBorrowTusWei(price):
 # TEST FUNCTIONS
 def printGameInfo() -> None:
     print(">>> MINE")
-    pprint(openMines[0])
+    pprint(openLoots[0])
     print(">>> REINFORCEMENT")
     pprint(cheapestCrab)
     print(">>> PRICE IN TUS")
@@ -47,7 +48,7 @@ def printGameInfo() -> None:
 
 def testReinforceAttack() -> None:
     txHash = web3Client.reinforceAttack(
-        openMines[0]["game_id"], cheapestCrab["crabada_id"], cheapestCrab["price"]
+        openLoots[0]["game_id"], cheapestCrab["crabada_id"], cheapestCrab["price"]
     )
     printTxInfo(web3Client, txHash)
 
@@ -55,8 +56,12 @@ def testReinforceAttack() -> None:
 # EXECUTE
 printGameInfo()
 
-if not minerCanReinforce(openMines[0]):
-    print(f"Miner cannot reinforce right now")
-    exit(0)
+if not looterCanReinforce(openLoots[0]):
+    print(">>> WARNING")
+    print(f"Looter cannot reinforce right now, exception ahead")
 
-testReinforceAttack()
+try:
+    testReinforceAttack()
+except ContractLogicError as e:
+    print(">>> CONTRACT EXCEPTION!")
+    print(e)

@@ -6,6 +6,7 @@ from src.helpers.general import fourthOrNone, secondOrNone, thirdOrNone
 from src.common.config import nodeUri, users
 from src.libs.CrabadaWeb3Client.CrabadaWeb3Client import CrabadaWeb3Client
 from sys import argv
+from web3.exceptions import ContractLogicError
 
 # VARS
 client = cast(
@@ -29,4 +30,8 @@ def testAttack() -> None:
 
 
 # EXECUTE
-testAttack()
+try:
+    testAttack()
+except ContractLogicError as e:
+    print(">>> CONTRACT EXCEPTION!")
+    print(e)

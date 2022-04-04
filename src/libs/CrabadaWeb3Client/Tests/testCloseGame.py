@@ -4,6 +4,7 @@ from src.helpers.general import secondOrNone
 from src.libs.Web3Client.helpers.debug import printTxInfo
 from src.common.config import nodeUri, users
 from src.libs.CrabadaWeb3Client.CrabadaWeb3Client import CrabadaWeb3Client
+from web3.exceptions import ContractLogicError
 
 # VARS
 client = cast(
@@ -20,4 +21,8 @@ def testCloseGame() -> None:
 
 
 # EXECUTE
-testCloseGame()
+try:
+    testCloseGame()
+except ContractLogicError as e:
+    print(">>> CONTRACT EXCEPTION!")
+    print(e)

@@ -7,6 +7,7 @@ from src.libs.CrabadaWeb2Client.CrabadaWeb2Client import CrabadaWeb2Client
 from web3 import Web3
 from pprint import pprint
 from src.models.User import User
+from web3.exceptions import ContractLogicError
 
 # VARS
 web3Client = cast(
@@ -56,7 +57,11 @@ def testReinforceDefense() -> None:
 printGameInfo()
 
 if not minerCanReinforce(openMines[0]):
-    print(f"Miner cannot reinforce right now")
-    exit(0)
+    print(">>> WARNING")
+    print(f"Miner cannot reinforce right now, exception ahead")
 
-testReinforceDefense()
+try:
+    testReinforceDefense()
+except ContractLogicError as e:
+    print(">>> CONTRACT EXCEPTION!")
+    print(e)
