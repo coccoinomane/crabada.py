@@ -3,10 +3,7 @@ Helper functions to reinforce all mines of a given user
 """
 
 from web3.main import Web3
-from src.common.exceptions import (
-    ReinforcementTooExpensive,
-    NoSuitableReinforcementFound,
-)
+from src.common.exceptions import NoSuitableReinforcementFound
 from src.common.logger import logger
 from src.common.txLogger import txLogger, logTx
 from src.helpers.mines import fetchOpenMines
@@ -18,6 +15,7 @@ from src.models.User import User
 from src.strategies.reinforce.ReinforceStrategyFactory import getBestReinforcement
 from time import sleep
 from src.common.config import reinforceDelayInSeconds
+from web3.exceptions import ContractLogicError
 
 
 def reinforceDefense(user: User) -> int:
@@ -43,8 +41,8 @@ def reinforceDefense(user: User) -> int:
         strategyName = user.getTeamConfig(mine["team_id"]).get("reinforceStrategyName")
         try:
             crab = getBestReinforcement(user, mine, maxPrice)
-        except (NoSuitableReinforcementFound) as e:
-            logger.warning(e.__class__.__name__ + ": " + str(e))
+        except NoSuitableReinforcementFound as e:
+            logger.warning(f"{e.__class__.__name__}: {e}")
             continue
 
         # Some strategies might return no reinforcement
@@ -57,7 +55,13 @@ def reinforceDefense(user: User) -> int:
         logger.info(crabInfoMsg)  # TODO: also send to Telegram, asynchronously
 
         # Borrow the crab
-        txHash = crabadaWeb3Client.reinforceDefense(mineId, crabId, price)
+        try:
+            txHash = crabadaWeb3Client.reinforceDefense(mineId, crabId, price)
+        except ContractLogicError as e:
+            logger.warning(f"Error reinforcing mine {mineId}: {e}")
+            continue
+
+        # Report
         txLogger.info(txHash)
         txReceipt = crabadaWeb3Client.getTransactionReceipt(txHash)
         logTx(txReceipt)

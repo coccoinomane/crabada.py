@@ -15,6 +15,7 @@ from src.helpers.mines import (
     mineIsFinished,
 )
 from src.models.User import User
+from web3.exceptions import ContractLogicError
 
 
 def closeMines(user: User) -> int:
@@ -39,9 +40,17 @@ def closeMines(user: User) -> int:
 
     # Close the finished games
     for g in finishedGames:
+
+        # Close mine
         gameId = g["game_id"]
         logger.info(f"Closing mine {gameId}...")
-        txHash = crabadaWeb3Client.closeGame(gameId)
+        try:
+            txHash = crabadaWeb3Client.closeGame(gameId)
+        except ContractLogicError as e:
+            logger.warning(f"Error closing mine {gameId}: {e}")
+            continue
+
+        # Report
         txLogger.info(txHash)
         txReceipt = crabadaWeb3Client.getTransactionReceipt(txHash)
         logTx(txReceipt)

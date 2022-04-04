@@ -3,10 +3,7 @@ Helper functions to reinforce all loots of a given user
 """
 
 from web3.main import Web3
-from src.common.exceptions import (
-    NoSuitableReinforcementFound,
-    ReinforcementTooExpensive,
-)
+from src.common.exceptions import NoSuitableReinforcementFound
 from src.common.logger import logger
 from src.common.txLogger import txLogger, logTx
 from src.helpers.instantMessage import sendIM
@@ -18,6 +15,7 @@ from src.models.User import User
 from src.strategies.reinforce.ReinforceStrategyFactory import getBestReinforcement
 from time import sleep
 from src.common.config import reinforceDelayInSeconds
+from web3.exceptions import ContractLogicError
 
 
 def reinforceAttack(user: User) -> int:
@@ -45,8 +43,8 @@ def reinforceAttack(user: User) -> int:
         )
         try:
             crab = getBestReinforcement(user, mine, maxPrice)
-        except (ReinforcementTooExpensive, NoSuitableReinforcementFound) as e:
-            logger.warning(str(e))
+        except NoSuitableReinforcementFound as e:
+            logger.warning(f"{e.__class__.__name__}: {e}")
             continue
 
         # Some strategies might return no reinforcement
@@ -59,7 +57,13 @@ def reinforceAttack(user: User) -> int:
         logger.info(crabInfoMsg)  # TODO: also send to Telegram, asynchronously
 
         # Borrow the crab
-        txHash = crabadaWeb3Client.reinforceAttack(mineId, crabId, price)
+        try:
+            txHash = crabadaWeb3Client.reinforceAttack(mineId, crabId, price)
+        except ContractLogicError as e:
+            logger.warning(f"Error reinforcing loot {mineId}: {e}")
+            continue
+
+        # Report
         txLogger.info(txHash)
         txReceipt = crabadaWeb3Client.getTransactionReceipt(txHash)
         logTx(txReceipt)

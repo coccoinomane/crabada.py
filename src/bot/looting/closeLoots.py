@@ -12,6 +12,7 @@ from src.helpers.mines import (
     mineCanBeSettled,
 )
 from src.models.User import User
+from web3.exceptions import ContractLogicError
 
 
 def closeLoots(user: User) -> int:
@@ -30,9 +31,16 @@ def closeLoots(user: User) -> int:
 
     # Close the settled loots
     for g in settleableMines:
+        # Close loot
         gameId = g["game_id"]
         logger.info(f"Closing loot {gameId}...")
-        txHash = crabadaWeb3Client.settleGame(gameId)
+        try:
+            txHash = crabadaWeb3Client.settleGame(gameId)
+        except ContractLogicError as e:
+            logger.warning(f"Error closing loot {gameId}: {e}")
+            continue
+
+        # Report
         txLogger.info(txHash)
         txReceipt = crabadaWeb3Client.getTransactionReceipt(txHash)
         logTx(txReceipt)

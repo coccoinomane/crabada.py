@@ -1,11 +1,11 @@
 from __future__ import annotations
 import json
-from typing import Any, Dict, Optional, Sequence
+from typing import Any, Union
 from eth_account import Account
-from eth_typing import Address, BlockIdentifier, ChecksumAddress
+from eth_typing import Address
 from web3 import Web3
 from eth_account.datastructures import SignedTransaction
-from web3.contract import Contract, ContractFunction
+from web3.contract import ContractFunction
 from web3.types import BlockData, Nonce, TxParams, TxReceipt, TxData
 from eth_typing.encoding import HexStr
 from src.libs.Web3Client.exceptions import MissingParameter
@@ -21,62 +21,120 @@ class Web3Client:
 
     Attributes
     ----------
-    maxPriorityFeePerGasInGwei : int
-    gasLimit : int
-    contractAddress : Address
-    abi: dict[str, Any] = None
-    chainId: int = None
-    nodeUri: str = None
-    userAddress: Address = None
-    privateKey: str = None
+    chainId: int = None | ID of the chain
+    nodeUri: str = None | RPC node to use
+    txType: int = None | Type of transaction
+    contractAddress: Address | Address of smart contract (optional)
+    abi: dict[str, Any] = None | ABI of smart contract (optional)
+    privateKey: str = None | Private key to use (optional)
+    maxPriorityFeePerGasInGwei: int | Default miner's tip (optional)
+    userAddress: Address = None | Address of the user (TODO: not needed)
 
     Derived attributes
     ----------
     contractChecksumAddress: str = None
     w3: Web3 = None
     contract: Contract = None
+
+    TODO: Add support for pre-EIP-1559 transactions
     """
 
     ####################
     # Build Tx
     ####################
 
-    def buildBaseTransaction(self) -> TxParams:
+    def buildBaseTransaction(
+        self,
+        nonce: Nonce = None,
+        gasLimit: int = None,
+        maxPriorityFeePerGasInGwei: int = None,
+    ) -> TxParams:
         """
-        Build a basic EIP-1559 transaction with just nonce, chain ID and gas;
+        Build a basic transaction with type, nonce, chain ID and gas;
         before invoking this method you need to have specified a chainId and
         called setNodeUri().
 
-        Gas is estimated according to the formula
-        maxMaxFeePerGas = 2 * baseFee + maxPriorityFeePerGas.
+        - If not given, the nonce will be computed on chain
+        - If not given, the gas limit will be estimated on chain using gas_estimate()
+        - If not given, the miner's tip (maxPriorityFeePerGas) will be set to
+          self.maxPriorityFeePerGasInGwei or, if not present, to 1
+        - The gas price is estimated according to the usual formula
+          maxMaxFeePerGas = 2 * baseFee + maxPriorityFeePerGas.
         """
+
+        # Properties that you are not likely to change
         tx: TxParams = {
-            "type": 0x2,
+            "type": self.txType,
             "chainId": self.chainId,
-            "gas": self.gasLimit,  # type: ignore
-            "maxFeePerGas": Web3.toWei(self.estimateMaxFeePerGasInGwei(), "gwei"),
-            "maxPriorityFeePerGas": Web3.toWei(self.maxPriorityFeePerGasInGwei, "gwei"),
-            "nonce": self.getNonce(),
+            "from": self.userAddress,
         }
+
+        # Miner's tip
+        if maxPriorityFeePerGasInGwei is None:
+            try:
+                maxPriorityFeePerGasInGwei = self.maxPriorityFeePerGasInGwei
+            except:
+                maxPriorityFeePerGasInGwei = 1
+        tx["maxPriorityFeePerGas"] = Web3.toWei(maxPriorityFeePerGasInGwei, "gwei")
+
+        # Estimate the maximum price per unit of gas
+        tx["maxFeePerGas"] = Web3.toWei(
+            self.estimateMaxFeePerGasInGwei(maxPriorityFeePerGasInGwei), "gwei"
+        )
+
+        # If not explicitly given, fetch the nonce on chain
+        tx["nonce"] = self.getNonce() if nonce is None else nonce
+
+        # If needed, let web3 compute the gas-limit on chain.
+        # For more details, see docs of ContractFunction.transact in
+        # https://web3py.readthedocs.io/en/stable/contracts.html
+        if gasLimit is not None:
+            tx["gas"] = gasLimit  # type: ignore
+
         return tx
 
-    def buildTransactionWithValue(self, to: Address, valueInEth: float) -> TxParams:
+    def buildTransactionWithValue(
+        self,
+        to: Address,
+        valueInEth: float,
+        nonce: Nonce = None,
+        gasLimit: int = None,
+        maxPriorityFeePerGasInGwei: int = None,
+    ) -> TxParams:
         """
         Build a transaction involving a transfer of value to an address,
         where the value is expressed in the blockchain token (e.g. ETH or AVAX).
         """
-        tx = self.buildBaseTransaction()
-        txValue: TxParams = {"to": to, "value": self.w3.toWei(valueInEth, "ether")}
-        return tx | txValue
+        tx = self.buildBaseTransaction(
+            nonce,
+            gasLimit,
+            maxPriorityFeePerGasInGwei,
+        )
+        extraParams: TxParams = {
+            "to": to,
+            "value": self.w3.toWei(valueInEth, "ether"),
+            "gas": self.estimateGasForTransfer(to, valueInEth),  # type: ignore
+        }
+        return tx | extraParams
 
-    def buildContractTransaction(self, contractFunction: ContractFunction) -> TxParams:
+    def buildContractTransaction(
+        self,
+        contractFunction: ContractFunction,
+        nonce: Nonce = None,
+        gasLimit: int = None,
+        maxPriorityFeePerGasInGwei: int = None,
+    ) -> TxParams:
         """
         Build a transaction that involves a contract interation.
 
         Requires passing the contract function as detailed in the docs:
         https://web3py.readthedocs.io/en/stable/web3.eth.account.html#sign-a-contract-transaction
         """
-        baseTx = self.buildBaseTransaction()
+        baseTx = self.buildBaseTransaction(
+            nonce,
+            gasLimit,
+            maxPriorityFeePerGasInGwei,
+        )
         return contractFunction.buildTransaction(baseTx)
 
     ####################
@@ -146,7 +204,7 @@ class Web3Client:
             address = self.userAddress
         return self.w3.eth.get_transaction_count(address)
 
-    def estimateMaxFeePerGasInGwei(self) -> int:
+    def estimateMaxFeePerGasInGwei(self, maxPriorityFeePerGasInGwei: int) -> int:
         """
         Gets the base fee from the latest block and returns a maxFeePerGas
         estimate as 2 * baseFee + maxPriorityFeePerGas, as done in the
@@ -156,7 +214,7 @@ class Web3Client:
         latest_block = self.w3.eth.get_block("latest")
         baseFeeInWei = latest_block["baseFeePerGas"]  # in wei
         baseFeeInGwei = int(Web3.fromWei(baseFeeInWei, "gwei"))
-        return 2 * baseFeeInGwei + self.maxPriorityFeePerGasInGwei
+        return 2 * baseFeeInGwei + maxPriorityFeePerGasInGwei
 
     def getLatestBlock(self) -> BlockData:
         """
@@ -169,6 +227,19 @@ class Web3Client:
         Return the pending block
         """
         return self.w3.eth.get_block("pending")
+
+    def estimateGasForTransfer(self, to: Address, valueInEth: float) -> int:
+        """
+        Return the gas that would be required to send some ETH
+        to an address
+        """
+        return self.w3.eth.estimate_gas(
+            {
+                "from": self.userAddress,
+                "to": to,
+                "value": self.w3.toWei(valueInEth, "ether"),
+            }
+        )
 
     ####################
     # Setters
@@ -222,14 +293,14 @@ class Web3Client:
         self.chainId = int(chainId)
         return self
 
+    def setTxType(self, txType: Union[int, HexStr]) -> Web3Client:
+        self.txType = txType
+        return self
+
     def setMaxPriorityFeePerGasInGwei(
         self, maxPriorityFeePerGasInGwei: int
     ) -> Web3Client:
         self.maxPriorityFeePerGasInGwei = maxPriorityFeePerGasInGwei
-        return self
-
-    def setGasLimit(self, gasLimit: int) -> Web3Client:
-        self.gasLimit = gasLimit
         return self
 
     ####################

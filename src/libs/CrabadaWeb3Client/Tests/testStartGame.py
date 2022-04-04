@@ -2,7 +2,7 @@ from typing import cast
 from src.libs.Web3Client.helpers.debug import printTxInfo
 from src.common.config import nodeUri, users
 from src.libs.CrabadaWeb3Client.CrabadaWeb3Client import CrabadaWeb3Client
-from pprint import pprint
+from web3.exceptions import ContractLogicError
 
 # VARS
 client = cast(
@@ -19,4 +19,8 @@ def testStartGame() -> None:
 
 
 # EXECUTE
-testStartGame()
+try:
+    testStartGame()
+except ContractLogicError as e:
+    print(">>> CONTRACT EXCEPTION!")
+    print(e)
