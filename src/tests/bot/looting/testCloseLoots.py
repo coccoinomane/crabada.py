@@ -5,10 +5,10 @@ from src.models.User import User
 # VARS
 
 # TEST FUNCTIONS
-def testCloseLoots() -> None:
+def test() -> None:
     nFinished = closeLoots(User(users[0]["address"]))
     print(f"CLOSED {nFinished} LOOTING GAMES")
 
 
 # EXECUTE
-testCloseLoots()
+test()

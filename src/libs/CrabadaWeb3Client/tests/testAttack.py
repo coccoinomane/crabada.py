@@ -21,14 +21,14 @@ if not (mineId and expiredTime and certificate):
     exit(1)
 
 # TEST FUNCTIONS
-def testAttack() -> None:
+def test() -> None:
     txHash = client.attack(mineId, teamId, expiredTime, certificate)
     printTxInfo(client, txHash)
 
 
 # EXECUTE
 try:
-    testAttack()
+    test()
 except ContractLogicError as e:
     print(">>> CONTRACT EXCEPTION!")
     print(e)

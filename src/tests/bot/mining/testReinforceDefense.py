@@ -5,10 +5,10 @@ from src.models.User import User
 # VARS
 
 # TEST FUNCTIONS
-def testReinforceDefense() -> None:
+def test() -> None:
     nBorrowed = reinforceDefense(User(users[0]["address"]))
     print(f"BORROWED {nBorrowed} REINFORCEMENT")
 
 
 # EXECUTE
-testReinforceDefense()
+test()

@@ -12,14 +12,14 @@ client = CrabadaWeb3Client(nodeUri=nodeUri, privateKey=users[0]["privateKey"])
 gameId = int(secondOrNone(argv) or 284549)
 
 # TEST FUNCTIONS
-def testCloseGame() -> None:
+def test() -> None:
     txHash = client.closeGame(gameId)
     printTxInfo(client, txHash)
 
 
 # EXECUTE
 try:
-    testCloseGame()
+    test()
 except ContractLogicError as e:
     print(">>> CONTRACT EXCEPTION!")
     print(e)

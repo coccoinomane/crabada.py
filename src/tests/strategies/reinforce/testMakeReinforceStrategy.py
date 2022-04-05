@@ -32,7 +32,7 @@ if not game:
 teamConfig["reinforcementToPick"] = reinforcementToPick
 
 # TEST FUNCTIONS
-def testMakeReinforceStrategy() -> None:
+def test() -> None:
     strategy = makeReinforceStrategy(strategyName, user, teamConfig, game, maxPrice)
     print(">>> CHOSEN REINFORCE STRATEGY")
     try:
@@ -49,4 +49,4 @@ def testMakeReinforceStrategy() -> None:
 
 
 # EXECUTE
-testMakeReinforceStrategy()
+test()

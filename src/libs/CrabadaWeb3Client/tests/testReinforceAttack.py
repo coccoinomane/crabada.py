@@ -43,7 +43,7 @@ def printGameInfo() -> None:
     pprint(Web3.fromWei(price, "ether"))
 
 
-def testReinforceAttack() -> None:
+def test() -> None:
     txHash = web3Client.reinforceAttack(
         openLoots[0]["game_id"], cheapestCrab["crabada_id"], cheapestCrab["price"]
     )
@@ -58,7 +58,7 @@ if not looterCanReinforce(openLoots[0]):
     print(f"Looter cannot reinforce right now, exception ahead")
 
 try:
-    testReinforceAttack()
+    test()
 except ContractLogicError as e:
     print(">>> CONTRACT EXCEPTION!")
     print(e)

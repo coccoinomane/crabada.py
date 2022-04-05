@@ -35,7 +35,7 @@ teamConfig["reinforcementToPick"] = reinforcementToPick
 teamConfig["reinforceStrategies"] = reinforceStrategies
 
 # TEST FUNCTIONS
-def testMakeReinforceStrategy() -> None:
+def test() -> None:
     print(">>> CHOSEN REINFORCE STRATEGIES")
     print(teamConfig["reinforceStrategies"])
     print(">>> REINFORCEMENT CRAB THAT WILL BE PICKED")
@@ -45,4 +45,4 @@ def testMakeReinforceStrategy() -> None:
 
 
 # EXECUTE
-testMakeReinforceStrategy()
+test()
