@@ -5,9 +5,9 @@ from pprint import pprint
 currency = "ether"
 
 # TEST FUNCTIONS
-def testToWei() -> None:
+def test() -> None:
     pprint(Web3.toWei(1, currency))
 
 
 # EXECUTE
-testToWei()
+test()

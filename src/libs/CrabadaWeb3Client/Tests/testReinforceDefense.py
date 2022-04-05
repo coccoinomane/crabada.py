@@ -10,10 +10,7 @@ from src.models.User import User
 from web3.exceptions import ContractLogicError
 
 # VARS
-web3Client = cast(
-    CrabadaWeb3Client,
-    (CrabadaWeb3Client().setNodeUri(nodeUri).setCredentials(users[0]["privateKey"])),
-)
+web3Client = CrabadaWeb3Client(nodeUri=nodeUri, privateKey=users[0]["privateKey"])
 
 web2Client = CrabadaWeb2Client()
 

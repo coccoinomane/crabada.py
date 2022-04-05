@@ -23,7 +23,7 @@ txHash = cast(
     ),
 )
 
-client = cast(CrabadaWeb3Client, (CrabadaWeb3Client().setNodeUri(nodeUri)))
+client = CrabadaWeb3Client(nodeUri=nodeUri)
 
 tx = client.getTransaction(txHash)
 txReceipt = client.getTransactionReceipt(txHash)

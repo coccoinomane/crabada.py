@@ -5,10 +5,10 @@ from pprint import pprint
 from src.libs.Web3Client.helpers.debug import pprintAttributeDict
 
 # VARS
-client = AvalancheCWeb3Client().setNodeUri(nodeUri)
+client = AvalancheCWeb3Client(nodeUri=nodeUri)
 
 # TEST FUNCTIONS
-def testGetBlock() -> None:
+def test() -> None:
     print(">>> LATEST BLOCK")
     pprintAttributeDict(client.w3.eth.get_block("latest"))
     print(">>> PENDING BLOCK")
@@ -16,4 +16,4 @@ def testGetBlock() -> None:
 
 
 # EXECUTE
-testGetBlock()
+test()

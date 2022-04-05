@@ -7,10 +7,7 @@ from src.libs.CrabadaWeb3Client.CrabadaWeb3Client import CrabadaWeb3Client
 from web3.exceptions import ContractLogicError
 
 # VARS
-client = cast(
-    CrabadaWeb3Client,
-    (CrabadaWeb3Client().setNodeUri(nodeUri).setCredentials(users[0]["privateKey"])),
-)
+client = CrabadaWeb3Client(nodeUri=nodeUri, privateKey=users[0]["privateKey"])
 
 gameId = int(secondOrNone(argv) or 284549)
 

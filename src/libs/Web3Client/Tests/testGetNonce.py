@@ -3,12 +3,15 @@ from src.libs.Web3Client.Web3Client import Web3Client
 from pprint import pprint
 
 # VARS
-client = Web3Client().setNodeUri(nodeUri).setCredentials(users[0]["privateKey"])
+client = Web3Client(
+    nodeUri=nodeUri,
+    privateKey=users[0]["privateKey"],
+)
 
 # TEST FUNCTIONS
-def testGetNonce() -> None:
+def test() -> None:
     pprint(client.getNonce())
 
 
 # EXECUTE
-testGetNonce()
+test()

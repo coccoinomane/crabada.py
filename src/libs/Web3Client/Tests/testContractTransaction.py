@@ -4,16 +4,17 @@ from src.libs.Web3Client.AvalancheCWeb3Client import AvalancheCWeb3Client
 from pprint import pprint
 from src.libs.Web3Client.helpers.debug import printTxInfo
 from sys import argv
+from web3.exceptions import ContractLogicError
 
 # VARS
 contractAddress = CrabadaWeb3Client.contractAddress
 contractAbi = CrabadaWeb3Client.abi
 
-client = (
-    AvalancheCWeb3Client()
-    .setNodeUri(nodeUri)
-    .setContract(address=contractAddress, abi=contractAbi)
-    .setCredentials(users[0]["privateKey"])
+client = AvalancheCWeb3Client(
+    nodeUri=nodeUri,
+    contractAddress=contractAddress,
+    abi=contractAbi,
+    privateKey=users[0]["privateKey"],
 )
 
 # Contract
@@ -38,6 +39,15 @@ def testSend() -> None:
 
 
 # EXECUTE
-testBuild()
+try:
+    testBuild()
+except ContractLogicError as e:
+    print(">>> CONTRACT EXCEPTION!")
+    print(e)
+
 if len(argv) > 1 and argv[1] == "--send":
-    testSend()
+    try:
+        testSend()
+    except ContractLogicError as e:
+        print(">>> CONTRACT EXCEPTION!")
+        print(e)

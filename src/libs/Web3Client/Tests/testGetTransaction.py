@@ -15,12 +15,12 @@ txHash = cast(
     ),
 )
 
-client = Web3Client().setNodeUri(nodeUri)
+client = Web3Client(nodeUri=nodeUri)
 txReceipt = client.getTransactionReceipt(txHash)
 tx = client.getTransaction(txHash)
 
 # TEST FUNCTIONS
-def testGetTransaction() -> None:
+def test() -> None:
     print(">>> TX RECEIPT")
     pprintAttributeDict(txReceipt)
     print(">>> ACTUAL TX")
@@ -28,4 +28,4 @@ def testGetTransaction() -> None:
 
 
 # EXECUTE
-testGetTransaction()
+test()

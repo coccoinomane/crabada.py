@@ -18,11 +18,11 @@ from web3.types import Wei
 contractAddress = CrabadaWeb3Client.contractAddress
 contractAbi = CrabadaWeb3Client.abi
 
-client = (
-    AvalancheCWeb3Client()
-    .setNodeUri(nodeUri)
-    .setContract(address=contractAddress, abi=contractAbi)
-    .setCredentials(users[0]["privateKey"])
+client = AvalancheCWeb3Client(
+    nodeUri=nodeUri,
+    contractAddress=contractAddress,
+    abi=contractAbi,
+    privateKey=users[0]["privateKey"],
 )
 
 # This set of parameters should return 210309

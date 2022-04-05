@@ -7,28 +7,29 @@ from src.libs.Web3Client.helpers.debug import printTxInfo
 from pprint import pprint
 
 # VARS
-client = (
-    AvalancheCWeb3Client().setNodeUri(nodeUri).setCredentials(users[0]["privateKey"])
+client = AvalancheCWeb3Client(
+    nodeUri=nodeUri,
+    privateKey=users[0]["privateKey"],
 )
 
 to = cast(Address, "0xBc3a38C981B13625FAF7729fF105Cb6E15bdDE3A")
 valueInEth = 0.00001  # ETH / AVAX / etc
 
 # TEST FUNCTIONS
-def testBuildTransactionWithValue() -> None:
+def testBuild() -> None:
     tx = client.buildTransactionWithValue(to, valueInEth)
     print(">>> TX")
     pprint(tx)
 
 
-def testSignTransaction() -> None:
+def testSign() -> None:
     tx = client.buildTransactionWithValue(to, valueInEth)
     signedTx = client.signTransaction(tx)
     print(">>> SIGNED TX")
     pprint(signedTx)
 
 
-def testSendSignedTransaction() -> None:
+def testSend() -> None:
     tx = client.buildTransactionWithValue(to, valueInEth)
     signedTx = client.signTransaction(tx)
     txHash = client.sendSignedTransaction(signedTx)
@@ -36,7 +37,7 @@ def testSendSignedTransaction() -> None:
 
 
 # EXECUTE
-testBuildTransactionWithValue()
-testSignTransaction()
+testBuild()
+testSign()
 if len(argv) > 1 and argv[1] == "--send":
-    testSendSignedTransaction()
+    testSend()
