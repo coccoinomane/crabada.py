@@ -5,11 +5,15 @@ Scripts to interact with [Crabada](https://www.crabada.com)'s smart contracts ðŸ
 - Automatically send crabs mining.
 - Automatically reinforce mines & loots.
 - Automatically claim rewards for mines & loots.
-- Choose between several reinforcement strategies.
-- Self-reinforce from inventory.
 - Run the bot without human supervision.
 - Manage multiple teams at the same time.
 - Telegram and SMS notifications.
+
+Reinforce-specific features:
+
+- Choose between several reinforcement strategies.
+- Self-reinforce from inventory.
+- Do not reinforce if gas is too expensive.
 
 # Quick start
 
@@ -63,7 +67,7 @@ Follow these instructions to send all available teams mining & to collect reward
    2,12,22,32,42,52 * * * * cd $HOME/crabada.py && python -m bin.mining.reinforceDefense <your address>
    ```
 
-# Strategies
+# Reinforce Strategies
 
 Crabada can be played in different ways, especially when it comes to reinforcing.
 
@@ -114,6 +118,14 @@ Creating a strategy is very simple:
 5. Configure _.env_ to use your new strategy via the `USER_X_TEAM_Y_REINFORCE_STRATEGY` parameter.
 
 To **test the strategy** withouth sending transactions, use the *testMakeReinforceStrategy.py* script.
+
+### - Gas control
+
+Use the `USER_X_REINFORCEMENT_MAX_GAS` parameter to set the maximum you are willing to spend for gas when reinforcing, in gwei.
+
+If Avalanche's base fee is higher than that, the bot will not reinforce.
+
+As a reference, when the base fee is 100 gwei, you will roughly spend 0.02 AVAX to reinforce.
 
 # Support for multiple teams
 
