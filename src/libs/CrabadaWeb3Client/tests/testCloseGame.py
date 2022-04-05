@@ -1,6 +1,7 @@
 from sys import argv
 from typing import cast
 from src.helpers.general import secondOrNone
+from src.libs.Web3Client.exceptions import Web3ClientException
 from src.libs.Web3Client.helpers.debug import printTxInfo
 from src.common.config import nodeUri, users
 from src.libs.CrabadaWeb3Client.CrabadaWeb3Client import CrabadaWeb3Client
@@ -22,4 +23,7 @@ try:
     test()
 except ContractLogicError as e:
     print(">>> CONTRACT EXCEPTION!")
+    print(e)
+except Web3ClientException as e:
+    print(">>> CLIENT EXCEPTION!")
     print(e)

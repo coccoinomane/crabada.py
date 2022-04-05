@@ -65,7 +65,7 @@ def parseUserConfig(userNumber: int, teams: List[ConfigTeam]) -> ConfigUser:
             reinforcementMaxPriceInTus, "ether"
         ),
         "reinforcementMaxGasInGwei": parseFloat(
-            f"{userPrefix}_REINFORCEMENT_MAX_GAS", 0
+            f"{userPrefix}_REINFORCEMENT_MAX_GAS", float("inf")
         ),
         "teams": [t for t in teams if t["userAddress"] == address],
     }

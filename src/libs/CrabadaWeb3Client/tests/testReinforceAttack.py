@@ -1,5 +1,6 @@
 from typing import cast
 from src.helpers.reinforce import looterCanReinforce
+from src.libs.Web3Client.exceptions import Web3ClientException
 from src.libs.Web3Client.helpers.debug import printTxInfo
 from src.common.config import nodeUri, users
 from src.libs.CrabadaWeb3Client.CrabadaWeb3Client import CrabadaWeb3Client
@@ -10,7 +11,11 @@ from src.models.User import User
 from web3.exceptions import ContractLogicError
 
 # VARS
-web3Client = CrabadaWeb3Client(nodeUri=nodeUri, privateKey=users[0]["privateKey"])
+web3Client = CrabadaWeb3Client(
+    nodeUri=nodeUri,
+    privateKey=users[0]["privateKey"],
+    upperLimitForBaseFeeInGwei=users[0]["reinforcementMaxGasInGwei"],
+)
 
 web2Client = CrabadaWeb2Client()
 
@@ -61,4 +66,7 @@ try:
     test()
 except ContractLogicError as e:
     print(">>> CONTRACT EXCEPTION!")
+    print(e)
+except Web3ClientException as e:
+    print(">>> CLIENT EXCEPTION!")
     print(e)

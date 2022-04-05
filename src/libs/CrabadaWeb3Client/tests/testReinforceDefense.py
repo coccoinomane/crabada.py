@@ -8,9 +8,14 @@ from web3 import Web3
 from pprint import pprint
 from src.models.User import User
 from web3.exceptions import ContractLogicError
+from src.libs.Web3Client.exceptions import Web3ClientException
 
 # VARS
-web3Client = CrabadaWeb3Client(nodeUri=nodeUri, privateKey=users[0]["privateKey"])
+web3Client = CrabadaWeb3Client(
+    nodeUri=nodeUri,
+    privateKey=users[0]["privateKey"],
+    upperLimitForBaseFeeInGwei=users[0]["reinforcementMaxGasInGwei"],
+)
 
 web2Client = CrabadaWeb2Client()
 
@@ -61,4 +66,7 @@ try:
     test()
 except ContractLogicError as e:
     print(">>> CONTRACT EXCEPTION!")
+    print(e)
+except Web3ClientException as e:
+    print(">>> CLIENT EXCEPTION!")
     print(e)

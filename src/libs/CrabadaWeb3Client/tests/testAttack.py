@@ -1,6 +1,7 @@
 from typing import cast
 
 from hexbytes import HexBytes
+from src.libs.Web3Client.exceptions import Web3ClientException
 from src.libs.Web3Client.helpers.debug import printTxInfo
 from src.helpers.general import fourthOrNone, secondOrNone, thirdOrNone
 from src.common.config import nodeUri, users
@@ -31,4 +32,7 @@ try:
     test()
 except ContractLogicError as e:
     print(">>> CONTRACT EXCEPTION!")
+    print(e)
+except Web3ClientException as e:
+    print(">>> CLIENT EXCEPTION!")
     print(e)
