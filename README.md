@@ -97,9 +97,9 @@ Then, the bot will:
 2. If there are no free crabs in the inventory, attempt to borrow the highest-BP crab in the tavern.
 3. If the highest-BP crab is too expensive, attempt to borrow the highest-BP among the cheapest crabs in the tavern.
 
-### - Save gas with strategies
+### - Avoid the competition
 
-The `Highest` strategies support the optional parameter `REINFORCEMENT_TO_PICK`. Set it to 2, 3, 4 to pick the 2nd, 3rd, 4th-best crab, and so on. Since most bots will compete for the best crab, setting this parameter to a higher-than-1 value can reduce the risk of failed transactions.
+The `Highest` non-inventory strategies support the optional parameter `REINFORCEMENT_TO_PICK`. Set it to 2, 3, 4 to pick the 2nd, 3rd, 4th-best crab, and so on. Since most bots will compete for the first crab, setting this parameter to a higher-than-1 value can reduce the risk of a reverted transaction. Use this strategy if you constantly fail to get the first crab.
 
 **Important**: No matter which strategy you choose, the bot will never borrow a crab that is more expensive than `REINFORCEMENT_MAX_PRICE`.
 
@@ -169,7 +169,6 @@ If everything worked fine, you should receive a Telegram message on your newly c
 # To do
 
 * Donate mechanism
-* Avoid losing gas on failed reinforce
 * Merge mines.py and reinforce.py helpers in Mine class
 * Use a virtual environment to manage dependencies
 * Simplify notification mess (src/bot/mining/reinforceDefense.py)
