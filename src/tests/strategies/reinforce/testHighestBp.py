@@ -2,10 +2,11 @@ from typing import cast
 from src.common.types import Tus
 from src.helpers.general import secondOrNone, thirdOrNone
 from src.strategies.reinforce.HighestBp import HighestBp
-from src.common.clients import crabadaWeb2Client
+from src.common.clients import makeCrabadaWeb2Client
 from sys import argv
 
 # VARS
+client = makeCrabadaWeb2Client()
 gameId = secondOrNone(argv)
 maxPrice = cast(Tus, int(thirdOrNone(argv) or 25))
 
@@ -13,8 +14,8 @@ if not gameId:
     print("Provide a game ID")
     exit(1)
 
-game = crabadaWeb2Client.getMine(gameId)
-strategy: HighestBp = HighestBp(crabadaWeb2Client).setParams(game, maxPrice)
+game = client.getMine(gameId)
+strategy: HighestBp = HighestBp(client).setParams(game, maxPrice)
 
 # TEST FUNCTIONS
 def test() -> None:

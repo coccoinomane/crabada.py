@@ -118,9 +118,12 @@ class Web3Client:
         tx["maxFeePerGas"] = Web3.toWei(maxFeePerGasInGwei, "gwei")
 
         # Raise an exception if the fee is too high
-        if baseFeeInGwei > self.upperLimitForBaseFeeInGwei:
+        if (
+            self.upperLimitForBaseFeeInGwei is not None
+            and baseFeeInGwei > self.upperLimitForBaseFeeInGwei
+        ):
             raise TransactionTooExpensive(
-                f"Base fee is {baseFeeInGwei} gwei which is bigger than max of {self.upperLimitForBaseFeeInGwei} gwei "
+                f"Transaction would be too expensive [baseFee={baseFeeInGwei}, max={self.upperLimitForBaseFeeInGwei}"
             )
 
         # If not explicitly given, fetch the nonce on chain

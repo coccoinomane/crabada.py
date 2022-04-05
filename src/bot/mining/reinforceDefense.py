@@ -10,7 +10,7 @@ from src.helpers.mines import fetchOpenMines
 from src.helpers.reinforce import minerCanReinforce
 from src.helpers.sms import sendSms
 from src.helpers.instantMessage import sendIM
-from src.common.clients import crabadaWeb3Client
+from src.common.clients import makeCrabadaWeb3Client
 from src.models.User import User
 from src.strategies.reinforce.ReinforceStrategyFactory import getBestReinforcement
 from time import sleep
@@ -24,7 +24,7 @@ def reinforceDefense(user: User) -> int:
     reinforced, and do so if this is the case; return the
     number of borrowed reinforcements.
     """
-
+    client = makeCrabadaWeb3Client()
     reinforceableMines = [m for m in fetchOpenMines(user) if minerCanReinforce(m)]
 
     if not reinforceableMines:
@@ -56,14 +56,14 @@ def reinforceDefense(user: User) -> int:
 
         # Borrow the crab
         try:
-            txHash = crabadaWeb3Client.reinforceDefense(mineId, crabId, price)
+            txHash = client.reinforceDefense(mineId, crabId, price)
         except ContractLogicError as e:
             logger.warning(f"Error reinforcing mine {mineId}: {e}")
             continue
 
         # Report
         txLogger.info(txHash)
-        txReceipt = crabadaWeb3Client.getTransactionReceipt(txHash)
+        txReceipt = client.getTransactionReceipt(txHash)
         logTx(txReceipt)
         if txReceipt["status"] != 1:
             sendSms(f"Crabada: Error reinforcing mine {mineId}")
