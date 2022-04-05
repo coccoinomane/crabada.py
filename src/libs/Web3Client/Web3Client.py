@@ -123,7 +123,7 @@ class Web3Client:
             and baseFeeInGwei > self.upperLimitForBaseFeeInGwei
         ):
             raise TransactionTooExpensive(
-                f"Transaction would be too expensive [baseFee={baseFeeInGwei}, max={self.upperLimitForBaseFeeInGwei}"
+                f"Gas too expensive [baseFee={baseFeeInGwei} gwei, max={self.upperLimitForBaseFeeInGwei} gwei]"
             )
 
         # If not explicitly given, fetch the nonce on chain

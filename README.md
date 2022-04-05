@@ -170,7 +170,6 @@ If everything worked fine, you should receive a Telegram message on your newly c
 
 * Donate mechanism
 * Avoid losing gas on failed reinforce
-* Gas control by setting a max pricePerGas
 * Merge mines.py and reinforce.py helpers in Mine class
 * Use a virtual environment to manage dependencies
 * Simplify notification mess (src/bot/mining/reinforceDefense.py)

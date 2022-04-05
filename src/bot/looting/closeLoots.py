@@ -38,6 +38,7 @@ def closeLoots(user: User) -> int:
             txHash = client.settleGame(gameId)
         except ContractLogicError as e:
             logger.warning(f"Error closing loot {gameId}: {e}")
+            sendIM(f"Error closing loot {gameId}: {e}")
             continue
 
         # Report

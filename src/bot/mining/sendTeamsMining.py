@@ -36,6 +36,7 @@ def sendTeamsMining(user: User) -> int:
             txHash = client.startGame(teamId)
         except ContractLogicError as e:
             logger.warning(f"Error sending team {teamId} mining: {e}")
+            sendIM(f"Error sending team {teamId} mining: {e}")
             continue
 
         # Report

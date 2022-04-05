@@ -16,6 +16,7 @@ from src.strategies.reinforce.ReinforceStrategyFactory import getBestReinforceme
 from time import sleep
 from src.common.config import reinforceDelayInSeconds
 from web3.exceptions import ContractLogicError
+from src.libs.Web3Client.exceptions import TransactionTooExpensive
 
 
 def reinforceAttack(user: User) -> int:
@@ -24,7 +25,13 @@ def reinforceAttack(user: User) -> int:
     reinforced, and do so if this is the case; return the
     number of borrowed reinforcements.
     """
-    client = makeCrabadaWeb3Client()
+
+    # Client with gas control
+    client = makeCrabadaWeb3Client(
+        upperLimitForBaseFeeInGwei=user.config["reinforcementMaxGasInGwei"]
+    )
+
+    # User's loots that can be reinforced
     reinforceableMines = [m for m in fetchOpenLoots(user) if looterCanReinforce(m)]
 
     if not reinforceableMines:
@@ -38,9 +45,6 @@ def reinforceAttack(user: User) -> int:
         # Find best reinforcement crab to borrow
         mineId = mine["game_id"]
         maxPrice = user.config["reinforcementMaxPriceInTus"]
-        strategyName = user.getTeamConfig(mine["attack_team_id"]).get(
-            "reinforceStrategyName"
-        )
         try:
             crab = getBestReinforcement(user, mine, maxPrice)
         except NoSuitableReinforcementFound as e:
@@ -53,14 +57,15 @@ def reinforceAttack(user: User) -> int:
 
         crabId = crab["crabada_id"]
         price = crab["price"]
-        crabInfoMsg = f"Borrowing crab {crabId} for mine {mineId} at {Web3.fromWei(price, 'ether')} TUS... [strategy={strategyName}, BP={crab['battle_point']}, MP={crab['mine_point']}]"
+        crabInfoMsg = f"Borrowing crab {crabId} for mine {mineId} at {Web3.fromWei(price, 'ether')} TUS... [BP={crab['battle_point']}, MP={crab['mine_point']}]"
         logger.info(crabInfoMsg)  # TODO: also send to Telegram, asynchronously
 
         # Borrow the crab
         try:
             txHash = client.reinforceAttack(mineId, crabId, price)
-        except ContractLogicError as e:
+        except (ContractLogicError, TransactionTooExpensive) as e:
             logger.warning(f"Error reinforcing loot {mineId}: {e}")
+            sendIM(f"Error reinforcing loot {mineId}: {e}")
             continue
 
         # Report

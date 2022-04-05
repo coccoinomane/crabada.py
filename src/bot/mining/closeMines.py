@@ -48,6 +48,7 @@ def closeMines(user: User) -> int:
             txHash = client.closeGame(gameId)
         except ContractLogicError as e:
             logger.warning(f"Error closing mine {gameId}: {e}")
+            sendIM(f"Error closing mine {gameId}: {e}")
             continue
 
         # Report
