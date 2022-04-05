@@ -1,28 +1,27 @@
-from sys import argv
 from typing import cast
-from src.helpers.general import secondOrNone
+from src.libs.Web3Client.exceptions import Web3ClientException
 from src.libs.Web3Client.helpers.debug import printTxInfo
 from src.common.config import nodeUri, users
 from src.libs.CrabadaWeb3Client.CrabadaWeb3Client import CrabadaWeb3Client
 from web3.exceptions import ContractLogicError
 
 # VARS
-client = cast(
-    CrabadaWeb3Client,
-    (CrabadaWeb3Client().setNodeUri(nodeUri).setCredentials(users[0]["privateKey"])),
-)
+client = CrabadaWeb3Client(nodeUri=nodeUri, privateKey=users[0]["privateKey"])
 
-gameId = int(secondOrNone(argv) or 284549)
+teamId = users[0]["teams"][0]["id"]
 
 # TEST FUNCTIONS
-def testCloseGame() -> None:
-    txHash = client.closeGame(gameId)
+def test() -> None:
+    txHash = client.startGame(teamId)
     printTxInfo(client, txHash)
 
 
 # EXECUTE
 try:
-    testCloseGame()
+    test()
 except ContractLogicError as e:
     print(">>> CONTRACT EXCEPTION!")
+    print(e)
+except Web3ClientException as e:
+    print(">>> CLIENT EXCEPTION!")
     print(e)

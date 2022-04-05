@@ -6,7 +6,7 @@ from src.models.User import User
 from src.strategies.reinforce.ReinforceStrategyFactory import (
     getBestReinforcement,
 )
-from src.common.clients import crabadaWeb2Client
+from src.common.clients import makeCrabadaWeb2Client
 from sys import argv
 
 # VARS
@@ -22,7 +22,7 @@ if fourthOrNone(argv):
     reinforceStrategies = fourthOrNone(argv).split(",")
 
 # Get the first mine that can be reinforced
-openMines = crabadaWeb2Client.listOpenMines({"limit": 100})
+openMines = makeCrabadaWeb2Client().listOpenMines({"limit": 100})
 reinforceableMines = [m for m in openMines if minerCanReinforce(m)]
 game = secondOrNone(reinforceableMines)
 
@@ -35,7 +35,7 @@ teamConfig["reinforcementToPick"] = reinforcementToPick
 teamConfig["reinforceStrategies"] = reinforceStrategies
 
 # TEST FUNCTIONS
-def testMakeReinforceStrategy() -> None:
+def test() -> None:
     print(">>> CHOSEN REINFORCE STRATEGIES")
     print(teamConfig["reinforceStrategies"])
     print(">>> REINFORCEMENT CRAB THAT WILL BE PICKED")
@@ -45,4 +45,4 @@ def testMakeReinforceStrategy() -> None:
 
 
 # EXECUTE
-testMakeReinforceStrategy()
+test()

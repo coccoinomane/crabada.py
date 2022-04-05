@@ -7,14 +7,14 @@ from pprint import pprint
 contractAddress = CrabadaWeb3Client.contractAddress
 contractAbi = CrabadaWeb3Client.abi
 
-client = (
-    Web3Client()
-    .setNodeUri(nodeUri)
-    .setContract(address=contractAddress, abi=contractAbi)
+client = Web3Client(
+    nodeUri=nodeUri,
+    contractAddress=contractAddress,
+    abi=contractAbi,
 )
 
 # TEST FUNCTIONS
-def testGetContract() -> None:
+def test() -> None:
     print(">>> CHECKSUM ADDRESS")
     print(">>> " + client.contractChecksumAddress)
     print(">>> ABI")
@@ -26,4 +26,4 @@ def testGetContract() -> None:
 
 
 # EXECUTE
-testGetContract()
+test()

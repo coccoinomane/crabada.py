@@ -7,7 +7,7 @@ from pprint import pprint
 body = "Join Earth's mightiest heroes. Like Kevin Bacon."
 
 # TEST FUNCTIONS
-def testSendSmsWithTwilio() -> None:
+def test() -> None:
     output = sendSms(
         body=body,
         forceSend=True,  # send SMS regardless of settings
@@ -18,4 +18,4 @@ def testSendSmsWithTwilio() -> None:
 
 
 # EXECUTE
-testSendSmsWithTwilio()
+test()

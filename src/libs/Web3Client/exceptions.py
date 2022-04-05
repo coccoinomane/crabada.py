@@ -4,3 +4,7 @@ class Web3ClientException(BaseException):
 
 class MissingParameter(Web3ClientException):
     pass
+
+
+class TransactionTooExpensive(Web3ClientException):
+    pass

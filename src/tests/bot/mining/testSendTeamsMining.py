@@ -5,10 +5,10 @@ from src.models.User import User
 # VARS
 
 # TEST FUNCTIONS
-def testSendTeamsMining() -> None:
+def test() -> None:
     nSent = sendTeamsMining(User(users[0]["address"]))
     print(f"SENT {nSent} TEAMS MINING")
 
 
 # EXECUTE
-testSendTeamsMining()
+test()

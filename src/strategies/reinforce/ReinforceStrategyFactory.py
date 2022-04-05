@@ -12,7 +12,7 @@ from src.common.exceptions import (
     StrategyException,
     StrategyNotFound,
 )
-from src.common.clients import crabadaWeb2Client
+from src.common.clients import makeCrabadaWeb2Client
 from src.common.types import ConfigTeam, Tus
 from src.libs.CrabadaWeb2Client.types import CrabForLending, Game, Team, TeamStatus
 from src.strategies.reinforce.HighestBp import HighestBp
@@ -91,4 +91,6 @@ def makeReinforceStrategy(
     if not issubclass(strategyClass, (ReinforceStrategy)):
         raise StrategyException(f"Error fetching reinforce strategy {strategyName}")
 
-    return strategyClass(user, teamConfig, crabadaWeb2Client).setParams(mine, maxPrice)
+    return strategyClass(user, teamConfig, makeCrabadaWeb2Client()).setParams(
+        mine, maxPrice
+    )

@@ -9,7 +9,7 @@ from pprint import pprint
 from sys import argv
 
 # VARS
-client = cast(CrabadaWeb3Client, (CrabadaWeb3Client().setNodeUri(nodeUri)))
+client = CrabadaWeb3Client(nodeUri=nodeUri)
 event = client.contract.events.StartGame()
 filter = event.createFilter(fromBlock="latest")
 
@@ -18,7 +18,7 @@ doAsync = True
 handler = lambda log: print(log)
 
 # TEST FUNCTIONS
-def testWatchCrabadaEvent() -> None:
+def test() -> None:
     watcher = Watcher(client, doAsync).setFilter(filter)
     watcher.addHandler(lambda log: pprintAttributeDict(log))
     watcher.addNotFoundHandler(lambda: print("No event found"))
@@ -26,4 +26,4 @@ def testWatchCrabadaEvent() -> None:
 
 
 # EXECUTE
-testWatchCrabadaEvent()
+test()

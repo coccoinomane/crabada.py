@@ -13,15 +13,16 @@ import pprint
 from src.libs.Web3Client.helpers.debug import pprintAttributeDict
 
 # VARS
-client = (
-    AvalancheCWeb3Client().setNodeUri(nodeUri).setCredentials(users[0]["privateKey"])
+client = AvalancheCWeb3Client(
+    nodeUri=nodeUri,
+    privateKey=users[0]["privateKey"],
 )
 
 latest = client.w3.eth.get_block("latest")
 pending = client.w3.eth.get_block("pending")
 
 # TEST FUNCTIONS
-def testPendingBlock() -> None:
+def test() -> None:
     diffBlock = {}
     for key in pending:
         diffBlock[key] = "equal" if latest[key] == pending[key] else "different"  # type: ignore
@@ -38,4 +39,4 @@ def testPendingBlock() -> None:
 
 
 # EXECUTE
-testPendingBlock()
+test()

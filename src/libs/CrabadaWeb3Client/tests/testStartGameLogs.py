@@ -23,14 +23,14 @@ txHash = cast(
     ),
 )
 
-client = cast(CrabadaWeb3Client, (CrabadaWeb3Client().setNodeUri(nodeUri)))
+client = CrabadaWeb3Client(nodeUri=nodeUri)
 
 tx = client.getTransaction(txHash)
 txReceipt = client.getTransactionReceipt(txHash)
 logs = client.contract.events.StartGame().processReceipt(txReceipt)
 
 # TEST FUNCTIONS
-def testContractEvents() -> None:
+def test() -> None:
     print(">>> TX")
     pprint(tx)
     print(">>> TX LOGS")
@@ -39,4 +39,4 @@ def testContractEvents() -> None:
 
 
 # EXECUTE
-testContractEvents()
+test()

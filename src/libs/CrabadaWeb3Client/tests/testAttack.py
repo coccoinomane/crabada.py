@@ -1,6 +1,7 @@
 from typing import cast
 
 from hexbytes import HexBytes
+from src.libs.Web3Client.exceptions import Web3ClientException
 from src.libs.Web3Client.helpers.debug import printTxInfo
 from src.helpers.general import fourthOrNone, secondOrNone, thirdOrNone
 from src.common.config import nodeUri, users
@@ -9,10 +10,7 @@ from sys import argv
 from web3.exceptions import ContractLogicError
 
 # VARS
-client = cast(
-    CrabadaWeb3Client,
-    (CrabadaWeb3Client().setNodeUri(nodeUri).setCredentials(users[0]["privateKey"])),
-)
+client = CrabadaWeb3Client(nodeUri=nodeUri, privateKey=users[0]["privateKey"])
 
 teamId = users[0]["teams"][0]["id"]
 mineId = int(secondOrNone(argv) or 0)
@@ -24,14 +22,17 @@ if not (mineId and expiredTime and certificate):
     exit(1)
 
 # TEST FUNCTIONS
-def testAttack() -> None:
+def test() -> None:
     txHash = client.attack(mineId, teamId, expiredTime, certificate)
     printTxInfo(client, txHash)
 
 
 # EXECUTE
 try:
-    testAttack()
+    test()
 except ContractLogicError as e:
     print(">>> CONTRACT EXCEPTION!")
+    print(e)
+except Web3ClientException as e:
+    print(">>> CLIENT EXCEPTION!")
     print(e)

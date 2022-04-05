@@ -25,6 +25,7 @@ class ConfigUser(TypedDict):
     privateKey: str
     reinforcementMaxPriceInTus: Tus
     reinforcementMaxPriceInTusWei: Wei
+    reinforcementMaxGasInGwei: float
     teams: List[ConfigTeam]
 
 

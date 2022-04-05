@@ -8,9 +8,9 @@ client = CrabadaWeb2Client()
 mineId = secondOrNone(argv) or 269751
 
 # TEST FUNCTIONS
-def testGetMine() -> None:
+def test() -> None:
     pprint(client.getMine(mineId))
 
 
 # EXECUTE
-testGetMine()
+test()

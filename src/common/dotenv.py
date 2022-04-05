@@ -30,7 +30,7 @@ def parseInt(key: str, default: int = None) -> int:
         raise InvalidConfig(f"Config value {key} must be an integer, {value} given")
 
 
-def parseFloat(key: str, default: int = 0) -> float:
+def parseFloat(key: str, default: float = 0) -> float:
     """
     Get an env variable and cast it to a float; return the
     default value if the variable is not found; raises an
@@ -42,7 +42,9 @@ def parseFloat(key: str, default: int = 0) -> float:
     try:
         return float(value)
     except:
-        raise InvalidConfig(f"Config value {key} must be a float number, {value} given")
+        raise InvalidConfig(
+            f"Config value {key} must be a float number, '{value}' given"
+        )
 
 
 def parseListOfStrings(key: str, default: List[str] = []) -> List[str]:

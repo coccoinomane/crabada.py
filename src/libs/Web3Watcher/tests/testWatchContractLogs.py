@@ -19,7 +19,7 @@ contractAddress = Web3.toChecksumAddress(
 )
 pollInterval = float(thirdOrNone(argv) or 2)  # seconds
 
-client = Web3Client().setNodeUri(nodeUri)
+client = Web3Client(nodeUri=nodeUri)
 
 filterParams: FilterParams = {
     "fromBlock": "latest",
@@ -30,7 +30,7 @@ doAsync = True
 handler = lambda log: print(log)
 
 # TEST FUNCTIONS
-def testWatchContractLogs() -> None:
+def test() -> None:
     watcher = Watcher(client, doAsync).setFilterParams(filterParams)
     watcher.addHandler(lambda log: pprintAttributeDict(log))
     watcher.addNotFoundHandler(lambda: print("No event found"))
@@ -38,4 +38,4 @@ def testWatchContractLogs() -> None:
 
 
 # EXECUTE
-testWatchContractLogs()
+test()

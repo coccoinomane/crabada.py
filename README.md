@@ -169,7 +169,6 @@ If everything worked fine, you should receive a Telegram message on your newly c
 # To do
 
 * Donate mechanism
-* Gas control by setting a max pricePerGas
 * Merge mines.py and reinforce.py helpers in Mine class
 * Use a virtual environment to manage dependencies
 * Simplify notification mess (src/bot/mining/reinforceDefense.py)
@@ -177,7 +176,6 @@ If everything worked fine, you should receive a Telegram message on your newly c
 
 # Might do
 
-* Avoid losing gas on failed reinforce
 * Use cron library to schedule scripts
 * Use web3 default variable WEB3_PROVIDER_URI instead of WEB3_NODE_URI
 * Use @property to define classattributes > https://realpython.com/python-property/
