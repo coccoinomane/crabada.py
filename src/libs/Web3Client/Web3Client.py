@@ -1,43 +1,79 @@
 from __future__ import annotations
 import json
-from typing import Any, Union
+from typing import Any, Tuple, Union
 from eth_account import Account
+from eth_account.signers.local import LocalAccount
 from eth_typing import Address
 from web3 import Web3
 from eth_account.datastructures import SignedTransaction
 from web3.contract import ContractFunction
 from web3.types import BlockData, Nonce, TxParams, TxReceipt, TxData
 from eth_typing.encoding import HexStr
-from src.libs.Web3Client.exceptions import MissingParameter
+from src.libs.Web3Client.exceptions import MissingParameter, TransactionTooExpensive
+from web3.contract import Contract
 
 
 class Web3Client:
     """
-    Client to interact with a blockchain, with smart
-    contract support.
+    Client to interact with a blockchain, with smart contract
+    support.
 
-    Wrapper of the Web3 library intended to make it easier
-    to use.
+    The client is a wrapper the Web3 library intended to make it
+    easier to use.
 
     Attributes
-    ----------
+    ----------------------
+    nodeUri: str = None | RPC node to use, set via
     chainId: int = None | ID of the chain
-    nodeUri: str = None | RPC node to use
     txType: int = None | Type of transaction
-    contractAddress: Address | Address of smart contract (optional)
-    abi: dict[str, Any] = None | ABI of smart contract (optional)
     privateKey: str = None | Private key to use (optional)
-    maxPriorityFeePerGasInGwei: int | Default miner's tip (optional)
-    userAddress: Address = None | Address of the user (TODO: not needed)
+    maxPriorityFeePerGasInGwei: float | Miner's tip (optional, default is 1)
+    upperLimitForBaseFeeInGwei: float | Raise an exception if baseFee is larger than this (optional, default is no limit)
+    contractAddress: Address | Address of smart contract (optional)
+    abi: dict[str, Any] = None | ABI of smart contract; to generate from a JSON file, use static method getContractAbiFromFile() (optional)
+
 
     Derived attributes
-    ----------
-    contractChecksumAddress: str = None
-    w3: Web3 = None
-    contract: Contract = None
+    ------------------
+    w3: Web3 = None | Web3.py client
+    account: LocalAccount = None | Account object for the user
+    userAddress: Address = None | Address of the user
+    contract: Contract = None | Web3.py contract
+    contractChecksumAddress: str = None | Check-summmed contract address
 
     TODO: Add support for pre-EIP-1559 transactions
     """
+
+    def __init__(
+        self,
+        nodeUri: str,
+        chainId: int = None,
+        txType: Union[int, HexStr] = 2,
+        privateKey: str = None,
+        maxPriorityFeePerGasInGwei: float = 1,
+        upperLimitForBaseFeeInGwei: float = float("inf"),
+        contractAddress: Address = None,
+        abi: dict[str, Any] = None,
+    ) -> None:
+        # Set attributes
+        self.nodeUri: str = nodeUri
+        self.chainId: int = chainId
+        self.txType: Union[int, HexStr] = txType
+        self.privateKey: str = privateKey
+        self.maxPriorityFeePerGasInGwei: float = maxPriorityFeePerGasInGwei
+        self.upperLimitForBaseFeeInGwei: float = upperLimitForBaseFeeInGwei
+        self.contractAddress: Address = contractAddress
+        self.abi: dict[str, Any] = abi
+        # Initialize web3.py provider
+        self.w3 = self.getProvider(nodeUri)
+        # Initialize the contract
+        if self.contractAddress and self.abi:
+            self.contract = self.getContract(contractAddress, self.w3, abi=self.abi)
+            self.contractChecksumAddress = Web3.toChecksumAddress(self.contractAddress)
+        # Derived values
+        if self.privateKey:
+            self.account: LocalAccount = Account.from_key(self.privateKey)
+            self.userAddress: Address = self.account.address
 
     ####################
     # Build Tx
@@ -47,7 +83,7 @@ class Web3Client:
         self,
         nonce: Nonce = None,
         gasLimit: int = None,
-        maxPriorityFeePerGasInGwei: int = None,
+        maxPriorityFeePerGasInGwei: float = None,
     ) -> TxParams:
         """
         Build a basic transaction with type, nonce, chain ID and gas;
@@ -57,7 +93,7 @@ class Web3Client:
         - If not given, the nonce will be computed on chain
         - If not given, the gas limit will be estimated on chain using gas_estimate()
         - If not given, the miner's tip (maxPriorityFeePerGas) will be set to
-          self.maxPriorityFeePerGasInGwei or, if not present, to 1
+          self.maxPriorityFeePerGasInGwei
         - The gas price is estimated according to the usual formula
           maxMaxFeePerGas = 2 * baseFee + maxPriorityFeePerGas.
         """
@@ -70,17 +106,22 @@ class Web3Client:
         }
 
         # Miner's tip
-        if maxPriorityFeePerGasInGwei is None:
-            try:
-                maxPriorityFeePerGasInGwei = self.maxPriorityFeePerGasInGwei
-            except:
-                maxPriorityFeePerGasInGwei = 1
+        maxPriorityFeePerGasInGwei = (
+            maxPriorityFeePerGasInGwei or self.maxPriorityFeePerGasInGwei
+        )
         tx["maxPriorityFeePerGas"] = Web3.toWei(maxPriorityFeePerGasInGwei, "gwei")
 
         # Estimate the maximum price per unit of gas
-        tx["maxFeePerGas"] = Web3.toWei(
-            self.estimateMaxFeePerGasInGwei(maxPriorityFeePerGasInGwei), "gwei"
+        (maxFeePerGasInGwei, baseFeeInGwei) = self.estimateMaxFeePerGasInGwei(
+            maxPriorityFeePerGasInGwei
         )
+        tx["maxFeePerGas"] = Web3.toWei(maxFeePerGasInGwei, "gwei")
+
+        # Raise an exception if the fee is too high
+        if baseFeeInGwei > self.upperLimitForBaseFeeInGwei:
+            raise TransactionTooExpensive(
+                f"Base fee is {baseFeeInGwei} gwei which is bigger than max of {self.upperLimitForBaseFeeInGwei} gwei "
+            )
 
         # If not explicitly given, fetch the nonce on chain
         tx["nonce"] = self.getNonce() if nonce is None else nonce
@@ -199,22 +240,30 @@ class Web3Client:
     # Utils
     ####################
 
-    def getNonce(self, address: str = None) -> Nonce:
+    def getNonce(self, address: Address = None) -> Nonce:
         if not address:
             address = self.userAddress
         return self.w3.eth.get_transaction_count(address)
 
-    def estimateMaxFeePerGasInGwei(self, maxPriorityFeePerGasInGwei: int) -> int:
+    def estimateMaxFeePerGasInGwei(
+        self, maxPriorityFeePerGasInGwei: float
+    ) -> Tuple[float, float]:
         """
-        Gets the base fee from the latest block and returns a maxFeePerGas
-        estimate as 2 * baseFee + maxPriorityFeePerGas, as done in the
-        web3 gas_price_strategy middleware (and also here >
-        https://ethereum.stackexchange.com/a/113373/89782)
+        Estimate the maxFeePerGas parameter using the formula
+        2 * baseFee + maxPriorityFeePerGas.
+
+        This is the same formula used by web3 and here
+        https://ethereum.stackexchange.com/a/113373/89782
+
+        The baseFee is fetched on chain from the latest block.
+
+        Returns both the estimate (in gwei) and the baseFee
+        (also in gwei).
         """
         latest_block = self.w3.eth.get_block("latest")
-        baseFeeInWei = latest_block["baseFeePerGas"]  # in wei
-        baseFeeInGwei = int(Web3.fromWei(baseFeeInWei, "gwei"))
-        return 2 * baseFeeInGwei + maxPriorityFeePerGasInGwei
+        baseFeeInWei = latest_block["baseFeePerGas"]
+        baseFeeInGwei = float(Web3.fromWei(baseFeeInWei, "gwei"))
+        return (2 * baseFeeInGwei + maxPriorityFeePerGasInGwei, baseFeeInGwei)
 
     def getLatestBlock(self) -> BlockData:
         """
@@ -242,80 +291,41 @@ class Web3Client:
         )
 
     ####################
-    # Setters
+    # Static
     ####################
 
-    def setContract(
-        self, address: Address, abiFile: str = None, abi: dict[str, Any] = None
-    ) -> Web3Client:
+    @staticmethod
+    def getContract(
+        address: Address,
+        provider: Web3,
+        abiFile: str = None,
+        abi: dict[str, Any] = None,
+    ) -> Contract:
         """
         Load the smart contract, required before running
         buildContractTransaction().
-
-        Run only after setting the node URI (setNodeUri)
         """
-        self.contractAddress = address
-        self.contractChecksumAddress = Web3.toChecksumAddress(address)
-        if abiFile:  # Read the contract's ABI from a JSON file
-            self.abi = self.getContractAbiFromFile(abiFile)
-        elif abi:  # read the contract's ABI from a string
-            self.abi = abi
-        if not self.abi:
-            raise MissingParameter("Missing ABI")
-        self.contract = self.w3.eth.contract(
-            address=self.contractChecksumAddress, abi=self.abi
-        )
-        return self
-
-    def setNodeUri(self, nodeUri: str = None) -> Web3Client:
-        """
-        Set node URI and initalize provider (HTTPS & WS supported).
-
-        Provide an empty nodeUri to use autodetection,
-        docs here https://web3py.readthedocs.io/en/stable/providers.html#how-automated-detection-works
-        """
-        self.nodeUri = nodeUri
-        self.w3 = self.getProvider()
-        # Set the contract if possible, e.g. if the subclass defines address & ABI.
-        try:
-            self.setContract(address=self.contractAddress, abi=self.abi)
-        except:
-            pass
-        return self
-
-    def setCredentials(self, privateKey: str) -> Web3Client:
-        self.privateKey = privateKey
-        account = Account.from_key(self.privateKey)
-        self.userAddress = account.address
-        return self
-
-    def setChainId(self, chainId: int) -> Web3Client:
-        self.chainId = int(chainId)
-        return self
-
-    def setTxType(self, txType: Union[int, HexStr]) -> Web3Client:
-        self.txType = txType
-        return self
-
-    def setMaxPriorityFeePerGasInGwei(
-        self, maxPriorityFeePerGasInGwei: int
-    ) -> Web3Client:
-        self.maxPriorityFeePerGasInGwei = maxPriorityFeePerGasInGwei
-        return self
-
-    ####################
-    # Protected
-    ####################
+        checksum = Web3.toChecksumAddress(address)
+        if abiFile:
+            abi = Web3Client.getContractAbiFromFile(abiFile)
+        return provider.eth.contract(address=checksum, abi=abi)
 
     @staticmethod
     def getContractAbiFromFile(fileName: str) -> Any:
         with open(fileName) as file:
             return json.load(file)
 
-    def getProvider(self) -> Web3:
-        if self.nodeUri[0:4] == "http":
-            return Web3(Web3.HTTPProvider(self.nodeUri))
-        elif self.nodeUri[0:2] == "ws":
-            return Web3(Web3.WebsocketProvider(self.nodeUri))
+    @staticmethod
+    def getProvider(nodeUri: str) -> Web3:
+        """
+        Initialize provider (HTTPS & WS supported).
+
+        TODO: Support autodetection with empty nodeUri
+        docs here https://web3py.readthedocs.io/en/stable/providers.html#how-automated-detection-works
+        """
+        if nodeUri[0:4] == "http":
+            return Web3(Web3.HTTPProvider(nodeUri))
+        elif nodeUri[0:2] == "ws":
+            return Web3(Web3.WebsocketProvider(nodeUri))
         else:
             return Web3()
