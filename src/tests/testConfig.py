@@ -4,9 +4,10 @@ from pprint import pprint
 # VARS
 
 # TEST FUNCTIONS
-def testConfig() -> None:
+def test() -> None:
     pprint(">>> USERS & TEAMS")
     pprint(users)
 
+
 # EXECUTE
-testConfig()
+test()

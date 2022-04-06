@@ -5,16 +5,18 @@ from pprint import pprint
 client = CrabadaWeb2Client()
 
 # TEST FUNCTIONS
-def testListCrabsForLendingByPrice() -> None:
+def testByPrice() -> None:
     params = {"limit": 3, "page": 1, "orderBy": "price", "order": "asc"}
     pprint(client.listCrabsForLending(params=params))
 
-def testListCrabsForLendingByMinePoints() -> None:
+
+def testByMp() -> None:
     params = {"limit": 3, "page": 1, "orderBy": "mine_point", "order": "desc"}
     pprint(client.listCrabsForLending(params=params))
 
+
 # EXECUTE
 print(">>> REINFORCEMENTS - CHEAPEST FIRST")
-testListCrabsForLendingByPrice()
+testByPrice()
 print(">>> REINFORCEMENTS - HIGHEST MINE POINTS FIRST")
-testListCrabsForLendingByMinePoints()
+testByMp()

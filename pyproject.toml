@@ -1,0 +1,21 @@
+[tool.black]
+line-length = 88
+
+[tool.mypy]
+check_untyped_defs = true
+disable-error-code = "str-bytes-safe"
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+no_implicit_optional = true
+show_error_codes = true
+strict_equality = true
+strict_optional = false
+warn_redundant_casts = true
+warn_unused_configs = true
+warn_unused_ignores = true
+# TODO: for some reason this doesn't like the Strategy class...
+# disallow_any_unimported = true
+# TODO: disallow untyped calls after entire web3 codebase has type hints
+# disallow_untyped_calls = true

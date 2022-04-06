@@ -7,8 +7,9 @@ from src.libs.CrabadaWeb2Client.types import CrabForLending
 client = CrabadaWeb2Client()
 
 # TEST FUNCTIONS
-def testGetCheapestCrabForLending() -> None:
+def test() -> None:
     pprint(client.getCheapestCrabForLending())
 
+
 # EXECUTE
-testGetCheapestCrabForLending()
+test()

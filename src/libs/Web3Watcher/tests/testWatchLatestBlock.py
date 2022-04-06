@@ -5,16 +5,17 @@ from src.helpers.general import secondOrNone
 from sys import argv
 
 # VARS
-pollInterval = float(secondOrNone(argv) or 2) # seconds
+pollInterval = float(secondOrNone(argv) or 2)  # seconds
 doAsync = False
 handler = lambda log: print(log)
 
 # TEST FUNCTIONS
-def testWatchLatestBlock() -> None:
-    client = AvalancheCWeb3Client().setNodeUri(nodeUri)
-    watcher = Watcher(client, doAsync).setFilterParams('latest')
+def test() -> None:
+    client = AvalancheCWeb3Client(nodeUri=nodeUri)
+    watcher = Watcher(client, doAsync).setFilterParams("latest")
     watcher.addHandler(lambda log: print(log))
     watcher.run(pollInterval)
 
+
 # EXECUTE
-testWatchLatestBlock()
+test()

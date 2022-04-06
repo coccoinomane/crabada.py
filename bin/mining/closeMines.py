@@ -19,11 +19,7 @@ from sys import argv
 userAddress = secondOrNone(argv)
 
 if not userAddress:
-    logger.error('Specify a user address')
+    logger.error("Specify a user address")
     exit(1)
 
-if not User.isRegistered(userAddress):
-    logger.error('The given user address is not registered')
-    exit(1)    
-
-nClosed = closeMines(userAddress)
+nClosed = closeMines(User(userAddress))

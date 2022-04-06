@@ -4,49 +4,54 @@ Settle all loots of a given user
 
 from src.common.logger import logger
 from src.common.txLogger import txLogger, logTx
+from src.helpers.instantMessage import sendIM
 from src.helpers.sms import sendSms
-from typing import List, Literal
-from src.common.clients import crabadaWeb2Client, crabadaWeb3Client
-from eth_typing import Address
-from src.helpers.mines import getNextMineToFinish, getRemainingTimeFormatted, mineIsSettled
-from src.libs.CrabadaWeb2Client.types import Game
+from src.common.clients import makeCrabadaWeb3Client
+from src.helpers.mines import (
+    fetchOpenLoots,
+    mineCanBeSettled,
+)
+from src.models.User import User
+from web3.exceptions import ContractLogicError
 
-def closeLoots(userAddress: Address) -> int:
+
+def closeLoots(user: User) -> int:
     """
     Settle all open loot games that can be settled; return
     the number of closed loots.
-
-    TODO: implement paging
     """
+    client = makeCrabadaWeb3Client()
+    settleableMines = [g for g in fetchOpenLoots(user) if mineCanBeSettled(g)]
 
-    openLoots = crabadaWeb2Client.listMines({
-        "limit": 200,
-        "status": "open",
-        "looter_address": userAddress})
-    
-    # Games with a reward to claim
-    settledGames = [ g for g in openLoots if mineIsSettled(g) ]
-
-    # Print a useful message in case there aren't finished games 
-    if not settledGames:
-        logger.info(f'No loots to close for user {str(userAddress)}')
+    if not settleableMines:
+        logger.info(f"No loots to close for user {str(user.address)}")
         return 0
 
     nClosedLoots = 0
 
     # Close the settled loots
-    for g in settledGames:
-        gameId = g['game_id']
-        logger.info(f'Closing loot {gameId}...')
-        txHash = crabadaWeb3Client.settleGame(gameId)
+    for g in settleableMines:
+        # Close loot
+        gameId = g["game_id"]
+        logger.info(f"Closing loot {gameId}...")
+        try:
+            txHash = client.settleGame(gameId)
+        except ContractLogicError as e:
+            logger.warning(f"Error closing loot {gameId}: {e}")
+            sendIM(f"Error closing loot {gameId}: {e}")
+            continue
+
+        # Report
         txLogger.info(txHash)
-        txReceipt = crabadaWeb3Client.getTransactionReceipt(txHash)
+        txReceipt = client.getTransactionReceipt(txHash)
         logTx(txReceipt)
-        if txReceipt['status'] != 1:
-            logger.error(f'Error closing loot {gameId}')
-            sendSms(f'Crabada: ERROR closing loot > {txHash}')
+        if txReceipt["status"] != 1:
+            logger.error(f"Error closing loot {gameId}")
+            sendSms(f"Crabada: Error closing loot {gameId}")
+            sendIM(f"Error closing Loot {gameId}")
         else:
             nClosedLoots += 1
-            logger.info(f'Loot {gameId} closed correctly')
-    
+            logger.info(f"Loot {gameId} closed correctly")
+            sendIM(f"Loot {gameId} closed correctly")
+
     return nClosedLoots

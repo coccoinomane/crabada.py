@@ -10,10 +10,11 @@ import time
 import asyncio
 from web3.types import BlockParams
 
+
 class Watcher(ABC):
     """
     Base class representing a blockchain watcher.
-    
+
     1. Set a filter with either setFilter() or setFilterParams().
     2. Register as many callbacks as you wish with addHandler().
     3. Start the watcher with run().
@@ -21,23 +22,23 @@ class Watcher(ABC):
     The filter will be used to sieve the blockchain for corresponding
     log entries; each time a log is found, it is passed to the handlers.
     The handlers are executed in the same order they are provided.
-    
+
     Glossary: A log entry is an event submitted by a smart contract; for
     this reason, "log entry" will be used interchangeably with "event".
-    
+
     Nota bene: Please use a websocket URI to run the watcher, otherwise
     you might run into errors (for example 'filter not found') or slow
     execution.
-    
+
     Docs: https://web3py.readthedocs.io/en/stable/filters.html
     """
 
     # Settable
-    logger: Logger = logging # type: ignore
+    logger: Logger = logging  # type: ignore
     filterParams: Union[FilterParams, BlockParams] = {}
     handlers: List[Callable[[LogReceipt], None]] = []
     notFoundHandlers: List[Callable[[], None]] = []
-    
+
     # Derived
     filter: Any = None
 
@@ -45,7 +46,7 @@ class Watcher(ABC):
         self.client = client
         self.doAsync = doAsync
         pass
-    
+
     def addHandler(self, handler: Callable[[LogReceipt], None]) -> Watcher:
         """
         Add a handler to the queue; all handlers will be executed when a log
@@ -53,7 +54,7 @@ class Watcher(ABC):
         """
         self.handlers.append(handler)
         return self
-    
+
     def addNotFoundHandler(self, notFoundHandler: Callable[[], None]) -> Watcher:
         """
         Add a handler to the 'not found' queue; all handlers will be executed
@@ -61,7 +62,7 @@ class Watcher(ABC):
         """
         self.notFoundHandlers.append(notFoundHandler)
         return self
-    
+
     def setFilterParams(self, params: Union[FilterParams, BlockParams]) -> Watcher:
         """
         Given valid filter parameters, create and set the filter to
@@ -89,7 +90,7 @@ class Watcher(ABC):
         """
         while True:
             newLogs = cast(List[LogReceipt], filter.get_new_entries())
-            if (not newLogs):
+            if not newLogs:
                 self.logger.debug("Watcher: No new log entry found")
                 self.handleNotFound()
             for logEntry in newLogs:
@@ -104,7 +105,7 @@ class Watcher(ABC):
         """
         while True:
             newLogs = cast(List[LogReceipt], filter.get_new_entries())
-            if (not newLogs):
+            if not newLogs:
                 self.logger.debug("Watcher: No new log entry found")
                 self.handleNotFound()
             for logEntry in newLogs:
@@ -131,10 +132,12 @@ class Watcher(ABC):
         """
         Start watching for log entries
         """
-        if (self.doAsync):
+        if self.doAsync:
             loop = asyncio.get_event_loop()
             try:
-                loop.run_until_complete(asyncio.gather(self.asyncLoop(self.filter, pollInterval)))
+                loop.run_until_complete(
+                    asyncio.gather(self.asyncLoop(self.filter, pollInterval))
+                )
             finally:
                 loop.close()
         else:
