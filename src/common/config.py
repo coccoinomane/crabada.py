@@ -39,10 +39,6 @@ if not users:
 nodeUri = getenv("WEB3_NODE_URI")
 reinforceDelayInSeconds = parseInt("REINFORCE_DELAY_IN_SECONDS", 30)
 
-# Gas
-defaultGas = getenv("DEFAULT_GAS", "200000")  # units
-defaultGasPrice = getenv("DEFAULT_GAS_PRICE", "25")  # gwei
-
 ##################
 # Notifications
 ##################
