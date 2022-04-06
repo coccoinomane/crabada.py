@@ -1,4 +1,3 @@
-from __future__ import annotations
 import json
 from typing import Any, Tuple, Union
 from eth_account import Account
@@ -56,24 +55,38 @@ class Web3Client:
         abi: dict[str, Any] = None,
     ) -> None:
         # Set attributes
-        self.nodeUri: str = nodeUri
         self.chainId: int = chainId
         self.txType: Union[int, HexStr] = txType
-        self.privateKey: str = privateKey
         self.maxPriorityFeePerGasInGwei: float = maxPriorityFeePerGasInGwei
         self.upperLimitForBaseFeeInGwei: float = upperLimitForBaseFeeInGwei
+        # Initialize web3.py provider
+        if nodeUri:
+            self.setProvider(nodeUri)
+        # User account
+        if privateKey:
+            self.setAccount(privateKey)
+        # Initialize the contract
+        if contractAddress and abi:
+            self.setContract(contractAddress, abi)
+
+    ####################
+    # Setters
+    ####################
+
+    def setProvider(self, nodeUri: str) -> None:
+        self.nodeUri: str = nodeUri
+        self.w3 = self.getProvider(nodeUri)
+
+    def setAccount(self, privateKey: str) -> None:
+        self.privateKey: str = privateKey
+        self.account: LocalAccount = Account.from_key(privateKey)
+        self.userAddress: Address = self.account.address
+
+    def setContract(self, contractAddress: Address, abi: dict[str, Any]) -> None:
         self.contractAddress: Address = contractAddress
         self.abi: dict[str, Any] = abi
-        # Initialize web3.py provider
-        self.w3 = self.getProvider(nodeUri)
-        # Initialize the contract
-        if self.contractAddress and self.abi:
-            self.contract = self.getContract(contractAddress, self.w3, abi=self.abi)
-            self.contractChecksumAddress = Web3.toChecksumAddress(self.contractAddress)
-        # Derived values
-        if self.privateKey:
-            self.account: LocalAccount = Account.from_key(self.privateKey)
-            self.userAddress: Address = self.account.address
+        self.contract = self.getContract(contractAddress, self.w3, abi=abi)
+        self.contractChecksumAddress = Web3.toChecksumAddress(contractAddress)
 
     ####################
     # Build Tx
