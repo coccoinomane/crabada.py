@@ -1,10 +1,9 @@
 from typing import cast
 from eth_typing import Address
 from src.common.config import nodeUri, users
-from src.libs.Web3Client.AvalancheCErc20Web3Client import AvalancheCErc20Web3Client
 from src.helpers.general import secondOrNone, thirdOrNone
 from sys import argv
-from pprint import pprint
+from src.libs.Web3Client.Erc20Web3Client import Erc20Web3Client
 from src.libs.Web3Client.helpers.debug import printTxInfo
 from src.libs.Web3Client.exceptions import Web3ClientException
 from web3.exceptions import ContractLogicError
@@ -23,45 +22,27 @@ if not to:
 
 amount = 1
 
-client = AvalancheCErc20Web3Client(
-    nodeUri=nodeUri, privateKey=users[0]["privateKey"], contractAddress=tokenAddress
+client = Erc20Web3Client(
+    nodeUri=nodeUri,
+    contractAddress=tokenAddress,
+    privateKey=users[0]["privateKey"],
+    txType=2,
+    chainId=43114,
 )
 
-contractFunction = client.contract.functions.transfer(to, amount)
-
 # TEST FUNCTIONS
-def testBuild() -> None:
-    pprint(client.buildContractTransaction(contractFunction))
-
-
-def testSend() -> None:
-    tx = client.buildContractTransaction(contractFunction)
-    txHash = client.signAndSendTransaction(tx)
+def test() -> None:
+    txHash = client.transfer(to, amount)
+    print(txHash)
     printTxInfo(client, txHash)
 
 
 # EXECUTE
 try:
-    testBuild()
+    test()
 except ContractLogicError as e:
     print(">>> CONTRACT EXCEPTION!")
     print(e)
 except Web3ClientException as e:
     print(">>> CLIENT EXCEPTION!")
     print(e)
-
-try:
-    argv.index("--send")
-    doSend = True
-except ValueError:
-    doSend = False
-
-if doSend:
-    try:
-        testSend()
-    except ContractLogicError as e:
-        print(">>> CONTRACT EXCEPTION!")
-        print(e)
-    except Web3ClientException as e:
-        print(">>> CLIENT EXCEPTION!")
-        print(e)

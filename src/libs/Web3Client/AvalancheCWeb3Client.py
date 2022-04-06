@@ -1,4 +1,3 @@
-from __future__ import annotations
 from typing import Any
 from eth_typing import Address, HexStr
 from src.libs.Web3Client.Web3Client import Web3Client
