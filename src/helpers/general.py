@@ -51,6 +51,7 @@ def nthOrLastOrNone(list: List[Any], n: int) -> Any:
 
 def findInList(l: List[dict[str, Any]], key: str, value: Any) -> Any:
     """
-    Search a list of dictionaries for a specific one
+    Return the first dictionary in the list that has the
+    given key value
     """
     return firstOrNone([item for item in l if item[key] == value])
