@@ -1,11 +1,11 @@
 from src.common.config import nodeUri
-from src.libs.Web3Client.AvalancheCWeb3Client import AvalancheCWeb3Client
-from pprint import pprint
-
+from src.helpers.general import secondOrNone
+from src.libs.Web3Client.Web3ClientFactory import makeWeb3Client
 from src.libs.Web3Client.helpers.debug import pprintAttributeDict
+from sys import argv
 
 # VARS
-client = AvalancheCWeb3Client(nodeUri=nodeUri)
+client = makeWeb3Client("Avalanche", nodeUri)
 
 # TEST FUNCTIONS
 def test() -> None:

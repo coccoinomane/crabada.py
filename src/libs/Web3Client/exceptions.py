@@ -8,3 +8,7 @@ class MissingParameter(Web3ClientException):
 
 class TransactionTooExpensive(Web3ClientException):
     pass
+
+
+class NetworkNotFound(Web3ClientException):
+    pass

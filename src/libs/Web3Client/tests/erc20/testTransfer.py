@@ -4,6 +4,7 @@ from src.common.config import nodeUri, users
 from src.helpers.general import secondOrNone, thirdOrNone
 from sys import argv
 from src.libs.Web3Client.Erc20Web3Client import Erc20Web3Client
+from src.libs.Web3Client.Web3ClientFactory import makeErc20Client
 from src.libs.Web3Client.helpers.debug import printTxInfo
 from src.libs.Web3Client.exceptions import Web3ClientException
 from web3.exceptions import ContractLogicError
@@ -22,12 +23,11 @@ if not to:
 
 amount = 1
 
-client = Erc20Web3Client(
-    nodeUri=nodeUri,
-    contractAddress=tokenAddress,
+client = makeErc20Client(
+    "Avalanche",
+    nodeUri,
+    tokenAddress,
     privateKey=users[0]["privateKey"],
-    txType=2,
-    chainId=43114,
 )
 
 # TEST FUNCTIONS
