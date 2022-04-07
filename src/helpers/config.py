@@ -104,3 +104,21 @@ def validateUserConfig(user: ConfigUser, userNumber: int) -> None:
         )
     if not user["teams"]:
         raise MissingConfig(f"User {userNumber} has no team configured")
+
+
+def parseDonate() -> float:
+    """
+    Get the donation % from .env
+
+    Whatever value is given, the % is capped to 50%,
+    in order to prevent for user mistakes.
+    """
+    try:
+        value = parseFloat("DONATE", None)
+    except:
+        return None
+
+    if value and value > 0:
+        return min(50, value)
+
+    return None
