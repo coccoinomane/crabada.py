@@ -47,7 +47,7 @@ class Web3Client:
         self,
         nodeUri: str,
         chainId: int = None,
-        txType: Union[int, HexStr] = 2,
+        txType: int = 2,
         privateKey: str = None,
         maxPriorityFeePerGasInGwei: float = 1,
         upperLimitForBaseFeeInGwei: float = float("inf"),
@@ -56,7 +56,7 @@ class Web3Client:
     ) -> None:
         # Set attributes
         self.chainId: int = chainId
-        self.txType: Union[int, HexStr] = txType
+        self.txType: int = txType
         self.maxPriorityFeePerGasInGwei: float = maxPriorityFeePerGasInGwei
         self.upperLimitForBaseFeeInGwei: float = upperLimitForBaseFeeInGwei
         # Initialize web3.py provider

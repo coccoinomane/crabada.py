@@ -28,7 +28,7 @@ class Erc20Web3Client(Web3Client):
         self,
         nodeUri: str,
         chainId: int = None,
-        txType: Union[int, HexStr] = 2,
+        txType: int = 2,
         privateKey: str = None,
         maxPriorityFeePerGasInGwei: float = 1,
         upperLimitForBaseFeeInGwei: float = float("inf"),
