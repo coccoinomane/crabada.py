@@ -76,6 +76,10 @@ class Web3Client:
         if privateKey:
             self.setAccount(privateKey)
         # Initialize the contract
+        # TODO: we should be able to load an ABI without a specific address.
+        # This might be useful to access the ABI decoding functions of web3.
+        # For example, to read events from a tx only the ABI is needed, you
+        # do not need the token address.
         if contractAddress and abi:
             self.setContract(contractAddress, abi)
         # Add web3.py middlewares
