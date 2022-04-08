@@ -16,6 +16,7 @@ from src.helpers.mines import (
 )
 from src.models.User import User
 from web3.exceptions import ContractLogicError
+from src.helpers.donate import maybeDonate
 
 
 def closeMines(user: User) -> int:
@@ -63,5 +64,6 @@ def closeMines(user: User) -> int:
             nClosedGames += 1
             logger.info(f"Mine {gameId} closed correctly")
             sendIM(f"Mine {gameId} closed correctly")
+            maybeDonate(txReceipt)
 
     return nClosedGames
