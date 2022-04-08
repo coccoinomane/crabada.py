@@ -1,7 +1,8 @@
 from typing import Any, Union
 from eth_typing import Address, HexStr
+from web3 import Web3
 from src.libs.Web3Client.Web3Client import Web3Client
-from web3.types import TxParams
+from web3.types import TxParams, Nonce
 import os
 
 
@@ -83,12 +84,17 @@ class Erc20Web3Client(Web3Client):
     # Write
     ####################
 
-    def transfer(self, to: Address, amount: int) -> HexStr:
+    def transfer(self, to: Address, amount: int, nonce: Nonce = None) -> HexStr:
         """
         Transfer some amount of the token to an address; does not
         require approval.
         """
+
         tx: TxParams = self.buildContractTransaction(
-            self.contract.functions.transfer(to, amount)
+            self.contract.functions.transfer(Web3.toChecksumAddress(to), amount)
         )
+
+        if nonce:
+            tx["nonce"] = nonce
+
         return self.signAndSendTransaction(tx)
