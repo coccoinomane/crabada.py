@@ -1,5 +1,5 @@
 import json
-from typing import Any, List, Tuple
+from typing import Any, List, Tuple, cast
 from eth_account import Account
 from eth_account.signers.local import LocalAccount
 from eth_typing import Address
@@ -46,8 +46,7 @@ class Web3Client:
     w3: Web3 = None | Web3.py client
     account: LocalAccount = None | Account object for the user
     userAddress: Address = None | Address of the user
-    contract: Contract = None | Web3.py contract
-    contractChecksumAddress: str = None | Check-summmed contract address
+    contract: Contract = None | Contract object of web3.py
 
     TODO: Add support for pre-EIP-1559 transactions
     """
@@ -100,10 +99,11 @@ class Web3Client:
         self.userAddress: Address = self.account.address
 
     def setContract(self, contractAddress: Address, abi: dict[str, Any]) -> None:
-        self.contractAddress: Address = contractAddress
+        self.contractAddress: Address = cast(
+            Address, Web3.toChecksumAddress(contractAddress)
+        )
         self.abi: dict[str, Any] = abi
         self.contract = self.getContract(contractAddress, self.w3, abi=abi)
-        self.contractChecksumAddress = Web3.toChecksumAddress(contractAddress)
 
     def setMiddlewares(self, middlewares: List[Middleware]) -> None:
         self.middlewares: List[Middleware] = middlewares
@@ -367,3 +367,13 @@ class Web3Client:
             return Web3(Web3.WebsocketProvider(nodeUri))
         else:
             return Web3()
+
+    @staticmethod
+    def getGasSpentInEth(txReceipt: TxReceipt) -> float:
+        """
+        Given the transaction receipt, return the ETH that
+        was spent in gas to process the transaction
+        """
+        return float(
+            Web3.fromWei(txReceipt["effectiveGasPrice"] * txReceipt["gasUsed"], "ether")
+        )
