@@ -118,7 +118,8 @@ def parseDonate() -> float:
     except:
         return None
 
+    # Never donate more than 100%!
     if value and value > 0:
-        return min(50, value)
+        return min(100, value)
 
     return None

@@ -3,6 +3,7 @@ from eth_typing import Address
 from web3.types import Wei
 
 Tus = NewType("Tus", float)
+Cra = NewType("Cra", float)
 
 """
 Task assigned to a team
