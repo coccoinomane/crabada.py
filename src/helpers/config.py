@@ -106,15 +106,15 @@ def validateUserConfig(user: ConfigUser, userNumber: int) -> None:
         raise MissingConfig(f"User {userNumber} has no team configured")
 
 
-def parseDonate() -> float:
+def parseDonatePercentage() -> float:
     """
     Get the donation % from .env
 
-    Whatever value is given, the % is capped to 50%,
-    in order to prevent for user mistakes.
+    Whatever value is given, the % is capped to 100%,
+    in order to prevent user mistakes.
     """
     try:
-        value = parseFloat("DONATE", None)
+        value = parseFloat("DONATE_PERCENTAGE", None)
     except:
         return None
 

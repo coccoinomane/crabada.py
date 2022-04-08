@@ -10,7 +10,7 @@ from src.common.types import (
 )
 from src.common.dotenv import getenv, parseInt
 from typing import Any, Dict, List
-from src.helpers.config import parseDonate, parseTeamConfig, parseUserConfig
+from src.helpers.config import parseDonatePercentage, parseTeamConfig, parseUserConfig
 
 #################
 # Users config
@@ -38,7 +38,8 @@ if not users:
 
 nodeUri = getenv("WEB3_NODE_URI")
 reinforceDelayInSeconds = parseInt("REINFORCE_DELAY_IN_SECONDS", 30)
-donatePercentage = parseDonate()
+donatePercentage = parseDonatePercentage()
+donateFrequency = parseInt("DONATE_FREQUENCY", 10)
 
 ##################
 # Notifications
