@@ -169,7 +169,8 @@ If everything worked fine, you should receive a Telegram message on your newly c
 # To do
 
 * Donate mechanism
-* Make a separate project for Web3Client
+* Web3Client: Make a separate project
+* Web3Client: Allow override of nonce, gas, etc, at the contract function level
 * Merge mines.py and reinforce.py helpers in Mine class
 * Use a virtual environment to manage dependencies
 * Simplify notification mess (src/bot/mining/reinforceDefense.py)

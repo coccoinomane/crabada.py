@@ -1,5 +1,5 @@
 from typing import Any, List, cast
-from src.helpers.general import findInList
+from src.helpers.general import findInListOfDicts
 from src.libs.Web3Client.exceptions import NetworkNotFound
 from src.libs.Web3Client.types import NetworkConfig
 from web3.middleware import geth_poa_middleware
@@ -27,7 +27,7 @@ def getNetworkConfig(networkName: str) -> NetworkConfig:
     Return the configuration for the network with the given
     name; raises an exception if not found
     """
-    network: NetworkConfig = findInList(
+    network: NetworkConfig = findInListOfDicts(
         cast(Any, supportedNetworks), "name", networkName
     )
     if network is None:

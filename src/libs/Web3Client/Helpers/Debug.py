@@ -18,9 +18,7 @@ def printTxInfo(client: Web3Client, txHash: HexStr) -> None:
     print(">>> TX IS ON THE BLOCKCHAIN :-)")
     pprint.pprint(tx_receipt)
     print(">>> ETH SPENT")
-    print(
-        Web3.fromWei(tx_receipt["effectiveGasPrice"] * tx_receipt["gasUsed"], "ether")
-    )
+    print(Web3Client.getGasSpentInEth(tx_receipt))
 
 
 def pprintAttributeDict(attributeDict: AttributeDict[str, Any]) -> None:
