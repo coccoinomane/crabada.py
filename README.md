@@ -20,11 +20,11 @@ Reinforce-specific features:
 1. Make sure you have Python 3.9 or later installed.
 1. Install dependencies: `pip install -r requirements.txt`.
 1. Copy _.env.example_ in _.env_.
-1. Configure _.env_.
-1. `cd` in the root folder of the project (the same where this readme is)
-1. Run any of the scripts in the _bin_ folder.
+1. Configure _.env_; the bot will only consider the teams you add there.
+3. `cd` in the root folder of the project (the same where this readme is)
+4. Run any of the scripts in the _bin_ folder.
 
-Please note that the bot will only consider the teams that you have registered in _.env_.
+**IMPORTANT**: If you run on a webserver, make sure your .env is not in a public folder, otherwise your private key will be accessible via browser!
 
 # Mining scripts
 
