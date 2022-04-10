@@ -1,25 +1,42 @@
-from typing import Tuple, cast
+from typing import Tuple, cast, List
 from src.common.clients import makeCraClient, makeTusClient
 from src.common.config import donatePercentage, donateFrequency
 from web3.types import TxReceipt, Wei, Nonce
 from src.common.constants import eoas
-from random import randint
 from src.helpers.rewards import getTusAndCraRewardsFromTxReceipt
+import os
 
 
-def shouldDonate() -> bool:
+claimsLogFilepath = "storage/logs/app/claims.log"
+"""
+Buffer file containing the user's recent claims.
+
+Each line of the file contains the TUS and CRA rewards
+claimed by the user during a closeGame or settleGame
+transaction.
+
+The file will be deleted after each donation.
+"""
+
+
+def userWantsToDonate() -> bool:
     """
-    Determine whether the bot should attempt to send a donation.
-
-    The donation will never be sent unless the user explicitly
-    set the DONATE parameter. And even in this case, the donation
-    will happen once every ten times, to save gas.
+    Return True if the user agreed to donate to
+    the project
     """
-    return (
-        donatePercentage is not None
-        and donatePercentage > 0.01
-        and rollDice(donateFrequency) == 1  # every ten times
-    )
+    return donatePercentage is not None and donatePercentage > 0.01
+
+
+def shouldDonate(claims: List[List[float]], donateFrequency: int) -> bool:
+    """
+    Return True if it is time to donate.
+
+    The principle is simple: we donate only if the user
+    claimed X times since his/her last donation, where
+    X is given by the 'donateFrequency' parameter.
+    """
+
+    return len(claims) > 0 and len(claims) == donateFrequency
 
 
 def maybeDonate(txReceipt: TxReceipt) -> Tuple[TxReceipt, TxReceipt]:
@@ -27,31 +44,42 @@ def maybeDonate(txReceipt: TxReceipt) -> Tuple[TxReceipt, TxReceipt]:
     If the user expressed the desire to donate to the
     project, do so.
 
-    Returns the amount of the donation as a (TUS, CRA)
-    tuple, or (None, None) if no donation has taken
-    place.
+    In order to save gas, we donate only once every X times,
+    where X is given by the parameter 'donateFrequency'.
+
+    Returns the TUS and CRA transactions as a tuple, or
+    (None, None) if donation has not taken place.
     """
-    if not shouldDonate():
-        return None
 
-    return donate(txReceipt, donatePercentage, donateFrequency)
+    if not userWantsToDonate():
+        return (None, None)
+
+    # Log the rewards that the user just claimed
+    rewards = getTusAndCraRewardsFromTxReceipt(txReceipt)
+    logClaim(rewards)
+
+    # Determine whether it is time to donate
+    claims = getClaimsFromLog()
+    if not shouldDonate(claims, donateFrequency):
+        return (None, None)
+
+    # Reset the timer, and donate
+    deleteClaimsLog()
+    return donate(claims, donatePercentage)
 
 
-def donate(
-    txReceipt: TxReceipt, percentage: float, multiplier: int = 1
-) -> Tuple[TxReceipt, TxReceipt]:
+def donate(claims: List[List[float]], percentage: float) -> Tuple[TxReceipt, TxReceipt]:
     """
     Donate a percentage of the TUS and CRA rewards;
     return a tuple with the transaction receipts.
     """
 
-    # Donation percentage has to be between 0% and 100%
     percentage = max(0, min(100, percentage))
 
     if not percentage:
         return (None, None)
 
-    (tusDonation, craDonation) = getDonationAmounts(txReceipt, percentage, multiplier)
+    (tusDonation, craDonation) = getDonationAmounts(claims, percentage)
 
     # Initialize clients
     tusClient = makeTusClient()
@@ -64,6 +92,8 @@ def donate(
     txTus = tusClient.transfer(eoas["project"], tusDonation, nonce)
     tusReceipt = tusClient.getTransactionReceipt(txTus)
 
+    # TODO: Continue only if the first tx went through (status == 1)
+
     # Update nonce
     nonce = cast(Nonce, nonce + 1)
 
@@ -74,27 +104,50 @@ def donate(
     return (tusReceipt, craReceipt)
 
 
-def getDonationAmounts(
-    txReceipt: TxReceipt, percentage: float, multiplier: int = 1
-) -> Tuple[Wei, Wei]:
+def getDonationAmounts(claims: List[List[float]], percentage: float) -> Tuple[Wei, Wei]:
     """
-    Given a transaction receipt with TUS and CRA rewards (e.g. a
-    closeGame or settleGame tx), return the amount to be donated.
+    Given the list of the recent rewards claimed by the user,
+    return the amount to be donated, based on the donation
+    percentage choosed by the user
     """
 
     if percentage > 100:
         raise Exception(f"Donation is higher than rewards [percentage={percentage}]")
 
-    (tusReward, craReward) = getTusAndCraRewardsFromTxReceipt(txReceipt)
+    tusTotalRewards = sum([line[0] for line in claims])
+    craTotalRewards = sum([line[1] for line in claims])
 
-    tusDonation = int(percentage * tusReward / 100 * multiplier)
-    craDonation = int(percentage * craReward / 100 * multiplier)
+    tusDonation = int(percentage * tusTotalRewards / 100)
+    craDonation = int(percentage * craTotalRewards / 100)
 
     return (cast(Wei, tusDonation), cast(Wei, craDonation))
 
 
-def rollDice(nSides: int) -> int:
+def logClaim(rewards: Tuple[float, float]) -> None:
     """
-    Get a random integer between 1 and nSides
+    Append a line to the claims file.
     """
-    return randint(1, nSides)
+    with open(claimsLogFilepath, "a+") as file:
+        file.write("%10.5f %10.5f\n" % rewards)
+
+
+def getClaimsFromLog() -> List[List[float]]:
+    """
+    Fetch all the rewards that the user claimed since the
+    last donation
+    """
+    claims: List[List[float]] = []
+
+    with open(claimsLogFilepath, "r") as file:
+        claims = [[float(x) for x in line.split()] for line in file]
+
+    return claims
+
+
+def deleteClaimsLog() -> None:
+    """
+    Delete the claims file; raises an exception if
+    the file is not found
+    """
+
+    os.remove(claimsLogFilepath)
