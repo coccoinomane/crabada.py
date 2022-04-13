@@ -9,5 +9,5 @@ tokens: dict[str, Address] = {
 
 # Lower-case externally owned addresses
 eoas: dict[str, Address] = {
-    "project": cast(Address, "0x5818a5f1ff6df3b7f5dad8ac66e100cce9e33e8e")
+    "project": cast(Address, "0xb697fAC04e7c16f164ff64355D5dCd9247aC5434")
 }

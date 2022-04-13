@@ -1,54 +1,44 @@
+from pprint import pprint
 from sys import argv
-from typing import Tuple, cast
+from typing import Tuple
 from web3.types import TxReceipt, Wei
-from eth_typing import HexStr
-from src.helpers.donate import donate, getDonationAmounts
+from src.helpers.donate import donate, getDonationAmounts, shouldDonate
 from src.helpers.general import indexInList, secondOrNone, thirdOrNone
 from src.common.clients import makeAvalancheClient
 from src.helpers.rewards import getTusAndCraRewardsFromTxReceipt
 from src.libs.Web3Client.Web3Client import Web3Client
 from src.helpers.price import weiToCra, weiToTus
 from src.libs.Web3Client.helpers.debug import pprintAttributeDict
+from src.tests.donate import mocks
+from src.common.config import donateFrequency, donatePercentage
 
 # VARS
 client = makeAvalancheClient()
 
 doSend = indexInList(argv, "--send", doPop=True) is not None
-percentage = int(secondOrNone(argv) or 1)
-tx = cast(
-    HexStr,
-    (
-        thirdOrNone(argv)
-        or "0x143fbb963df559bacb1245a39ad586da80b68629906792e928787f467fa09ed8"
-    ),
-)
-txReceipt = client.getTransactionReceipt(tx)
+n = int(secondOrNone(argv) or "0")  # create n fake claims
+percentage = int(thirdOrNone(argv) or donatePercentage)
 
-multiplier = 1
+claims = mocks.getMiningClaims(n)
+recentClaims = claims[-donateFrequency:]
 
 # TEST FUNCTIONS
-def testGetRewards() -> None:
-    (tusReward, craReward) = getTusAndCraRewardsFromTxReceipt(txReceipt)
-    print(">>> TUS REWARD")
-    print(weiToTus(tusReward))
-    print(">>> CRA REWARD")
-    print(weiToCra(craReward))
-
-
 def testGetDonationAmounts() -> Tuple[Wei, Wei]:
-    (tusToBeDonated, craToBeDonated) = getDonationAmounts(
-        txReceipt, percentage, multiplier
-    )
-    print(">>> TUS TO BE DONATED")
-    print(weiToTus(tusToBeDonated))
-    print(">>> CRA TO BE DONATED")
-    print(weiToCra(craToBeDonated))
-    return (tusToBeDonated, craToBeDonated)
+    print(f">>> RECENT CLAIMS ({len(recentClaims)})")
+    pprint(recentClaims)
+    print(">>> DONATION AMOUNTS IN WEI")
+    tusAmount, craAmount = getDonationAmounts(recentClaims, percentage)
+    print(tusAmount, craAmount)
+    print(">>> DONATION AMOUNTS IN ETH")
+    print(weiToTus(tusAmount), weiToCra(craAmount))
+    print(">>> SHOULD DONATE?")
+    print(shouldDonate(claims, donateFrequency))
+    return (tusAmount, craAmount)
 
 
 def testDonate() -> Tuple[TxReceipt, TxReceipt]:
     print(">>> DOING DONATION...")
-    (tusReceipt, craReceipt) = donate(txReceipt, percentage, multiplier)
+    (tusReceipt, craReceipt) = donate(recentClaims, percentage)
     if not tusReceipt or not craReceipt:
         print(">>> ERROR: EMPTY RESULT")
         print("Maybe you set a percentage of 0?")
@@ -75,7 +65,6 @@ def testDonatedAmount(
 
 
 # EXECUTE
-testGetRewards()
 (tusToBeDonated, craToBeDonated) = testGetDonationAmounts()
 if doSend:
     (tusReceipt, craReceipt) = testDonate()

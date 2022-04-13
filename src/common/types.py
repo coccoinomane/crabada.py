@@ -1,4 +1,4 @@
-from typing import Literal, NewType, TypedDict, List
+from typing import Literal, NewType, Tuple, TypedDict, List
 from eth_typing import Address
 from web3.types import Wei
 
