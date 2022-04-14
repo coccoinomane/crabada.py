@@ -5,7 +5,6 @@ Settle all loots of a given user
 from src.common.logger import logger
 from src.common.txLogger import txLogger, logTx
 from src.helpers.instantMessage import sendIM
-from src.helpers.sms import sendSms
 from src.common.clients import makeCrabadaWeb3Client
 from src.helpers.mines import (
     fetchOpenLoots,
@@ -48,7 +47,6 @@ def closeLoots(user: User) -> int:
         logTx(txReceipt)
         if txReceipt["status"] != 1:
             logger.error(f"Error closing loot {gameId}")
-            sendSms(f"Crabada: Error closing loot {gameId}")
             sendIM(f"Error closing Loot {gameId}")
         else:
             nClosedLoots += 1

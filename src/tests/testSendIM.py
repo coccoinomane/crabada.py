@@ -1,5 +1,3 @@
-"""Code from https://www.twilio.com/docs/sms/quickstart/python#install-python-and-the-twilio-helper-library"""
-
 from src.helpers.instantMessage import sendIM
 from pprint import pprint
 

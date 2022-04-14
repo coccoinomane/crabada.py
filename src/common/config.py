@@ -55,14 +55,3 @@ telegram: Dict[str, Any] = {
     "apiKey": getenv("TELEGRAM_API_KEY"),
     "chatId": getenv("TELEGRAM_CHAT_ID"),
 }
-
-notifications: Dict[str, Any] = {
-    "sms": {
-        "enable": True if "1" == getenv("NOTIFICATION_SMS", "0") else False,
-        "from": getenv("NOTIFICATION_SMS_FROM"),
-        "to": getenv("NOTIFICATION_SMS_TO"),
-    },
-    "instantMessage": {
-        "enable": True if "1" == str(getenv("NOTIFICATION_IM", "0")) else False,
-    },
-}

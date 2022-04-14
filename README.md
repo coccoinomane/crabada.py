@@ -18,7 +18,7 @@ You can do it in two ways:
 - Self-reinforce from inventory.
 - Run the bot without human supervision.
 - Manage multiple teams at the same time.
-- Telegram and SMS notifications.
+- Telegram notifications.
 
 # Quick start
 
