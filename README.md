@@ -1,5 +1,14 @@
 Scripts to interact with [Crabada](https://www.crabada.com)'s smart contracts 🦀
 
+# Donate ❤️
+
+Building and maintaining the bot requires time and passion: please consider expressing your gratitude by donating a few TUS :-)
+
+You can do it in two ways:
+
+- Automatically tip a small part of your snib-snib rewards, using the `DONATE_PERCENTAGE` variable in _.env_. For more details, see the instructions in _.env.example_.
+- Send your love to the project's wallet `0xb697fAC04e7c16f164ff64355D5dCd9247aC5434`.
+
 # Features
 
 - Automatically send crabs mining.
@@ -168,7 +177,6 @@ If everything worked fine, you should receive a Telegram message on your newly c
 
 # To do
 
-* Donate mechanism
 * Web3Client: Make a separate project
 * Web3Client: Allow override of nonce, gas, etc, at the contract function level
 * Merge mines.py and reinforce.py helpers in Mine class

@@ -41,7 +41,7 @@ def testDonate() -> Tuple[TxReceipt, TxReceipt]:
     (tusReceipt, craReceipt) = donate(recentClaims, percentage)
     if not tusReceipt or not craReceipt:
         print(">>> ERROR: EMPTY RESULT")
-        print("Maybe you set a percentage of 0?")
+        print("Maybe you have zero claims or set a percentage of 0?")
         exit(1)
     print(">>> TUS DONATED TX & GAS SPENT")
     pprintAttributeDict(tusReceipt)

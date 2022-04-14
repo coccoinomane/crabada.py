@@ -8,9 +8,9 @@ from src.common.types import (
     ConfigTeam,
     ConfigUser,
 )
-from src.common.dotenv import getenv, parseInt
+from src.common.dotenv import getenv, parseInt, parsePercentage
 from typing import Any, Dict, List
-from src.helpers.config import parseDonatePercentage, parseTeamConfig, parseUserConfig
+from src.helpers.config import parseTeamConfig, parseUserConfig
 
 #################
 # Users config
@@ -38,7 +38,7 @@ if not users:
 
 nodeUri = getenv("WEB3_NODE_URI")
 reinforceDelayInSeconds = parseInt("REINFORCE_DELAY_IN_SECONDS", 30)
-donatePercentage = parseDonatePercentage()
+donatePercentage = parsePercentage("DONATE_PERCENTAGE")
 donateFrequency = parseInt("DONATE_FREQUENCY", 10)
 
 ##################
