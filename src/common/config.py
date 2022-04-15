@@ -8,7 +8,7 @@ from src.common.types import (
     ConfigTeam,
     ConfigUser,
 )
-from src.common.dotenv import getenv, parseInt, parsePercentage
+from src.common.dotenv import getenv, parseBool, parseInt, parsePercentage
 from typing import Any, Dict, List
 from src.helpers.config import parseTeamConfig, parseUserConfig
 
@@ -45,13 +45,14 @@ donateFrequency = parseInt("DONATE_FREQUENCY", 10)
 # Notifications
 ##################
 
-twilio: Dict[str, Any] = {
-    "accountSid": getenv("TWILIO_ACCOUNT_SID"),
-    "authToken": getenv("TWILIO_AUTH_TOKEN"),
-}
-
 telegram: Dict[str, Any] = {
-    "enable": True if "1" == getenv("TELEGRAM_ENABLE", "1") else False,
+    "enable": parseBool("TELEGRAM_ENABLE", False),
     "apiKey": getenv("TELEGRAM_API_KEY"),
     "chatId": getenv("TELEGRAM_CHAT_ID"),
+}
+
+notifications: Dict[str, Any] = {
+    "instantMessage": {
+        "enable": parseBool("NOTIFICATION_IM", False),
+    },
 }

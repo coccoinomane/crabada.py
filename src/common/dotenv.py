@@ -15,6 +15,31 @@ def getenv(key: str, default: Any = "") -> str:
     return os.getenv(key, default)
 
 
+def parseBool(key: str, default: bool = None) -> int:
+    """
+    Get an env variable and return False or True based on its value;
+    return the default value if the variable is not found.
+
+    Rules:
+    - a string/number with the value of '1' will be cast to True
+    - a string with the value 'true' or 'True' will be cast to True.
+    - a string with the value 't' or 'T' will be cast to True.
+    - anything else will be cast to False
+    """
+    value = getenv(key, None)
+    if value is None:
+        return default
+
+    # Remove trailing comments and trim spaces
+    value = value.split("#")[0].strip()
+
+    # 'true', 'True' and '1' all mean True
+    if value.lower() == "true" or value.lower() == "t" or value == "1":
+        return True
+
+    return False
+
+
 def parseInt(key: str, default: int = None) -> int:
     """
     Get an env variable and cast it to integer; return the

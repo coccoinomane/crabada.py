@@ -1,4 +1,4 @@
-from src.common.config import users, donatePercentage, nodeUri
+from src.common.config import users, donatePercentage, nodeUri, notifications, telegram
 from pprint import pprint
 
 # VARS
@@ -11,6 +11,10 @@ def test() -> None:
     print(nodeUri)
     print(">>> DONATE PERCENT")
     print(donatePercentage)
+    print(">>> NOTIFICATIONS")
+    print(notifications)
+    print(">>> TELEGRAM")
+    print(telegram)
 
 
 # EXECUTE
