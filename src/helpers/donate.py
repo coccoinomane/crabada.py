@@ -4,6 +4,7 @@ from src.common.clients import makeAvalancheClient, makeCraClient, makeTusClient
 from src.common.config import donatePercentage, donateFrequency
 from web3.types import TxReceipt, Wei, Nonce
 from src.common.constants import eoas
+from src.helpers.instantMessage import sendIM
 from src.helpers.rewards import getTusAndCraRewardsFromTxReceipt
 from src.helpers.price import tusToWei, craToWei, weiToCra, weiToTus
 import os
@@ -54,6 +55,8 @@ def maybeDonate(txReceipt: TxReceipt) -> Tuple[TxReceipt, TxReceipt]:
     (None, None) if donation has not taken place.
     """
     if not userWantsToDonate():
+        logger.warning(getDonateMessage())
+        sendIM(getDonateMessage())
         return (None, None)
 
     # Log the rewards that the user just claimed
@@ -172,3 +175,22 @@ def deleteClaimsLog() -> None:
         os.remove(claimsLogFilepath)
     except FileNotFoundError:
         pass
+
+
+def getDonateMessage() -> str:
+    return """
+🦀  🦀  🦀
+
+Building this bot requires time and passion.
+Please consider expressing your gratitude
+by donating a small % of your rewards :-)
+
+To donate, write DONATE_PERCENTAGE=3%
+in your .env file; this message will
+disappear regardless of the amount that
+you donate 🙂
+
+Thank you!
+
+🙏  ❤️  🙏
+"""

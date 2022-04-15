@@ -2,12 +2,9 @@ Scripts to interact with [Crabada](https://www.crabada.com)'s smart contracts �
 
 # Donate ❤️
 
-Building and maintaining the bot requires time and passion: please consider expressing your gratitude by donating a few TUS :-)
+Building and maintaining the bot requires time and passion: please consider expressing your gratitude by donating a small part of your rewards :-)
 
-You can do it in two ways:
-
-- Automatically tip a small part of your snib-snib rewards, using the `DONATE_PERCENTAGE` variable in _.env_. For more details, see the instructions in _.env.example_.
-- Send your love to the project's wallet `0xb697fAC04e7c16f164ff64355D5dCd9247aC5434`.
+To donate, set the `DONATE_PERCENTAGE` parameter to a small value, for example `DONATE_PERCENTAGE=3%`; for more details, feel free to have a look in _.env.example_.
 
 # Features
 
