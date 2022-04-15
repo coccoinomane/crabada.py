@@ -8,7 +8,7 @@ from src.common.types import (
     ConfigTeam,
     ConfigUser,
 )
-from src.common.dotenv import getenv, parseInt
+from src.common.dotenv import getenv, parseBool, parseInt, parsePercentage
 from typing import Any, Dict, List
 from src.helpers.config import parseTeamConfig, parseUserConfig
 
@@ -38,33 +38,21 @@ if not users:
 
 nodeUri = getenv("WEB3_NODE_URI")
 reinforceDelayInSeconds = parseInt("REINFORCE_DELAY_IN_SECONDS", 30)
-
-# Gas
-defaultGas = getenv("DEFAULT_GAS", "200000")  # units
-defaultGasPrice = getenv("DEFAULT_GAS_PRICE", "25")  # gwei
+donatePercentage = parsePercentage("DONATE_PERCENTAGE", 0)
+donateFrequency = parseInt("DONATE_FREQUENCY", 10)
 
 ##################
 # Notifications
 ##################
 
-twilio: Dict[str, Any] = {
-    "accountSid": getenv("TWILIO_ACCOUNT_SID"),
-    "authToken": getenv("TWILIO_AUTH_TOKEN"),
-}
-
 telegram: Dict[str, Any] = {
-    "enable": True if "1" == getenv("TELEGRAM_ENABLE", "1") else False,
+    "enable": parseBool("TELEGRAM_ENABLE", False),
     "apiKey": getenv("TELEGRAM_API_KEY"),
     "chatId": getenv("TELEGRAM_CHAT_ID"),
 }
 
 notifications: Dict[str, Any] = {
-    "sms": {
-        "enable": True if "1" == getenv("NOTIFICATION_SMS", "0") else False,
-        "from": getenv("NOTIFICATION_SMS_FROM"),
-        "to": getenv("NOTIFICATION_SMS_TO"),
-    },
     "instantMessage": {
-        "enable": True if "1" == str(getenv("NOTIFICATION_IM", "0")) else False,
+        "enable": parseBool("NOTIFICATION_IM", False),
     },
 }

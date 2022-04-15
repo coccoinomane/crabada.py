@@ -49,8 +49,23 @@ def nthOrLastOrNone(list: List[Any], n: int) -> Any:
     return list[n] if len(list) > n else list[-1]
 
 
-def findInList(l: List[dict[str, Any]], key: str, value: Any) -> Any:
+def findInListOfDicts(l: List[dict[str, Any]], key: str, value: Any) -> Any:
     """
-    Search a list of dictionaries for a specific one
+    Return the first dictionary in the list that has the
+    given key value
     """
     return firstOrNone([item for item in l if item[key] == value])
+
+
+def indexInList(l: List[Any], value: Any, doPop: bool = False) -> int:
+    """
+    Wrapper to the list.index(value) method which returns None
+    if the value is not found, instead of raising an exception.
+    """
+    try:
+        i = l.index(value)
+        if doPop:
+            l.pop(i)
+        return i
+    except ValueError:
+        return None

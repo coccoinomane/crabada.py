@@ -1,8 +1,9 @@
-from typing import Literal, NewType, TypedDict, List
+from typing import Literal, NewType, Tuple, TypedDict, List
 from eth_typing import Address
 from web3.types import Wei
 
 Tus = NewType("Tus", float)
+Cra = NewType("Cra", float)
 
 """
 Task assigned to a team

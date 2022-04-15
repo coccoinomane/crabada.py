@@ -1,6 +1,5 @@
-from __future__ import annotations
 import json
-from typing import Any, Tuple, Union
+from typing import Any, List, Tuple, cast
 from eth_account import Account
 from eth_account.signers.local import LocalAccount
 from eth_typing import Address
@@ -9,8 +8,9 @@ from eth_account.datastructures import SignedTransaction
 from web3.contract import ContractFunction
 from web3.types import BlockData, Nonce, TxParams, TxReceipt, TxData
 from eth_typing.encoding import HexStr
-from src.libs.Web3Client.exceptions import MissingParameter, TransactionTooExpensive
+from src.libs.Web3Client.exceptions import TransactionTooExpensive
 from web3.contract import Contract
+from web3.types import Middleware
 
 
 class Web3Client:
@@ -18,19 +18,27 @@ class Web3Client:
     Client to interact with a blockchain, with smart contract
     support.
 
-    The client is a wrapper the Web3 library intended to make it
+    The client is a wrapper intended to make the Web3 library
     easier to use.
+
+    There are two ways to use the client:
+    1. CUSTOM: Extend the Web3Client class to support different types of blockchains
+       and smart contracts.
+    2. AUTOMATIC: Use the 'make' methods in Web3ClientFactory.py to create
+       clients pre-configured for different blockchains and different
+       contracts.
 
     Attributes
     ----------------------
-    nodeUri: str = None | RPC node to use, set via
+    nodeUri: str | RPC node to use
     chainId: int = None | ID of the chain
-    txType: int = None | Type of transaction
+    txType: int = 2 | Type of transaction
     privateKey: str = None | Private key to use (optional)
-    maxPriorityFeePerGasInGwei: float | Miner's tip (optional, default is 1)
-    upperLimitForBaseFeeInGwei: float | Raise an exception if baseFee is larger than this (optional, default is no limit)
-    contractAddress: Address | Address of smart contract (optional)
+    maxPriorityFeePerGasInGwei: float = 1 | Miner's tip (optional, default is 1)
+    upperLimitForBaseFeeInGwei: float = inf | Raise an exception if baseFee is larger than this (optional, default is no limit)
+    contractAddress: Address = None | Address of smart contract (optional)
     abi: dict[str, Any] = None | ABI of smart contract; to generate from a JSON file, use static method getContractAbiFromFile() (optional)
+    middlewares: List[Middleware] = [] | Ordered list of web3.py middlewares to use (optional, default is no middlewares)
 
 
     Derived attributes
@@ -38,8 +46,7 @@ class Web3Client:
     w3: Web3 = None | Web3.py client
     account: LocalAccount = None | Account object for the user
     userAddress: Address = None | Address of the user
-    contract: Contract = None | Web3.py contract
-    contractChecksumAddress: str = None | Check-summmed contract address
+    contract: Contract = None | Contract object of web3.py
 
     TODO: Add support for pre-EIP-1559 transactions
     """
@@ -48,32 +55,60 @@ class Web3Client:
         self,
         nodeUri: str,
         chainId: int = None,
-        txType: Union[int, HexStr] = 2,
+        txType: int = 2,
         privateKey: str = None,
         maxPriorityFeePerGasInGwei: float = 1,
         upperLimitForBaseFeeInGwei: float = float("inf"),
         contractAddress: Address = None,
         abi: dict[str, Any] = None,
+        middlewares: List[Middleware] = [],
     ) -> None:
         # Set attributes
-        self.nodeUri: str = nodeUri
         self.chainId: int = chainId
-        self.txType: Union[int, HexStr] = txType
-        self.privateKey: str = privateKey
+        self.txType: int = txType
         self.maxPriorityFeePerGasInGwei: float = maxPriorityFeePerGasInGwei
         self.upperLimitForBaseFeeInGwei: float = upperLimitForBaseFeeInGwei
-        self.contractAddress: Address = contractAddress
-        self.abi: dict[str, Any] = abi
         # Initialize web3.py provider
-        self.w3 = self.getProvider(nodeUri)
+        if nodeUri:
+            self.setProvider(nodeUri)
+        # User account
+        if privateKey:
+            self.setAccount(privateKey)
         # Initialize the contract
-        if self.contractAddress and self.abi:
-            self.contract = self.getContract(contractAddress, self.w3, abi=self.abi)
-            self.contractChecksumAddress = Web3.toChecksumAddress(self.contractAddress)
-        # Derived values
-        if self.privateKey:
-            self.account: LocalAccount = Account.from_key(self.privateKey)
-            self.userAddress: Address = self.account.address
+        # TODO: we should be able to load an ABI without a specific address.
+        # This might be useful to access the ABI decoding functions of web3.
+        # For example, to read events from a tx only the ABI is needed, you
+        # do not need the token address.
+        if contractAddress and abi:
+            self.setContract(contractAddress, abi)
+        # Add web3.py middlewares
+        if middlewares:
+            self.setMiddlewares(middlewares)
+
+    ####################
+    # Setters
+    ####################
+
+    def setProvider(self, nodeUri: str) -> None:
+        self.nodeUri: str = nodeUri
+        self.w3 = self.getProvider(nodeUri)
+
+    def setAccount(self, privateKey: str) -> None:
+        self.privateKey: str = privateKey
+        self.account: LocalAccount = Account.from_key(privateKey)
+        self.userAddress: Address = self.account.address
+
+    def setContract(self, contractAddress: Address, abi: dict[str, Any]) -> None:
+        self.contractAddress: Address = cast(
+            Address, Web3.toChecksumAddress(contractAddress)
+        )
+        self.abi: dict[str, Any] = abi
+        self.contract = self.getContract(contractAddress, self.w3, abi=abi)
+
+    def setMiddlewares(self, middlewares: List[Middleware]) -> None:
+        self.middlewares: List[Middleware] = middlewares
+        for (i, m) in enumerate(middlewares):
+            self.w3.middleware_onion.inject(m, layer=i)
 
     ####################
     # Build Tx
@@ -332,3 +367,13 @@ class Web3Client:
             return Web3(Web3.WebsocketProvider(nodeUri))
         else:
             return Web3()
+
+    @staticmethod
+    def getGasSpentInEth(txReceipt: TxReceipt) -> float:
+        """
+        Given the transaction receipt, return the ETH that
+        was spent in gas to process the transaction
+        """
+        return float(
+            Web3.fromWei(txReceipt["effectiveGasPrice"] * txReceipt["gasUsed"], "ether")
+        )

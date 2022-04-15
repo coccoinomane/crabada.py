@@ -16,7 +16,7 @@ client = Web3Client(
 # TEST FUNCTIONS
 def test() -> None:
     print(">>> CHECKSUM ADDRESS")
-    print(">>> " + client.contractChecksumAddress)
+    print(client.contractAddress)
     print(">>> ABI")
     pprint(client.abi)
     print(">>> CONTRACT VARS")
