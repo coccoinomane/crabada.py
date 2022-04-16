@@ -51,7 +51,8 @@ def parseUserConfig(userNumber: int, teams: List[ConfigTeam]) -> ConfigUser:
     """
     userPrefix = f"USER_{userNumber}"
     address = cast(Address, getenv(f"{userPrefix}_ADDRESS"))
-    reinforcementMaxPriceInTus = parseFloat(f"{userPrefix}_REINFORCEMENT_MAX_PRICE", 0)
+    reinforcementMaxPriceInTus = parseFloat(
+        f"{userPrefix}_REINFORCEMENT_MAX_PRICE", 0)
     if not reinforcementMaxPriceInTus:  # for backward compatibility
         reinforcementMaxPriceInTus = parseFloat(
             f"{userPrefix}_MAX_PRICE_TO_REINFORCE", 0
@@ -66,6 +67,12 @@ def parseUserConfig(userNumber: int, teams: List[ConfigTeam]) -> ConfigUser:
         ),
         "reinforcementMaxGasInGwei": parseFloat(
             f"{userPrefix}_REINFORCEMENT_MAX_GAS", float("inf")
+        ),
+        "mineMaxGasInGwei": parseFloat(
+            f"{userPrefix}_MINE_MAX_GAS", float("inf")
+        ),
+        "closeMineMaxGasInGwei": parseFloat(
+            f"{userPrefix}_CLOSE_MINE_MAX_GAS", float("inf")
         ),
         "teams": [t for t in teams if t["userAddress"] == address],
     }
@@ -96,7 +103,8 @@ def validateUserConfig(user: ConfigUser, userNumber: int) -> None:
     user's config
     """
     if not user["address"]:
-        raise MissingConfig(f"User {userNumber} has no ADDRESS parameter given")
+        raise MissingConfig(
+            f"User {userNumber} has no ADDRESS parameter given")
     maxPrice = user.get("reinforcementMaxPriceInTus")
     if not maxPrice or maxPrice <= 0:
         raise MissingConfig(
