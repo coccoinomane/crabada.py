@@ -17,7 +17,7 @@ class HighestMp(ReinforceStrategy):
 
     def query(self, game: Game) -> dict[str, Any]:
         return {
-            "limit": 200,
+            "limit": 100,
             "orderBy": "price",
             "order": "asc",
         }
