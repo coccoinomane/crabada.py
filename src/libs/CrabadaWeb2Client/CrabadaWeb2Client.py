@@ -46,7 +46,9 @@ class CrabadaWeb2Client:
 
     def getMine_Raw(self, mineId: int, params: dict[str, Any] = {}) -> Any:
         url = self.baseUri + "/mine/" + str(mineId)
-        return requests.request("GET", url, params=params).json()
+        return requests.request(
+            "GET", url, headers=self.browserHeaders, params=params
+        ).json()
 
     def listMines(self, params: dict[str, Any] = {}) -> List[Game]:
         """
