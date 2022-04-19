@@ -17,11 +17,13 @@ def sendTeamsMining(user: User) -> int:
 
     Returns the opened mines
     """
-    client = makeCrabadaWeb3Client()
+    client = makeCrabadaWeb3Client(
+        upperLimitForBaseFeeInGwei=user.config["mineMaxGasInGwei"])
     availableTeams = fetchAvailableTeamsForTask(user, "mine")
 
     if not availableTeams:
-        logger.info("No available teams to send mining for user " + str(user.address))
+        logger.info(
+            "No available teams to send mining for user " + str(user.address))
         return 0
 
     # Send the teams
