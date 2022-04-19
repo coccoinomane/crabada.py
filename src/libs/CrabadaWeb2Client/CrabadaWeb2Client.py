@@ -203,7 +203,9 @@ class CrabadaWeb2Client:
         }
         actualParams = defaultParams | params
         # type: ignore
-        return requests.request("GET", url, headers=self.browserHeaders, params=actualParams).json()
+        return requests.request(
+            "GET", url, headers=self.browserHeaders, params=actualParams
+        ).json()
 
     def listCrabsFromInventory(
         self, userAddress: Address, params: dict[str, Any] = {}
