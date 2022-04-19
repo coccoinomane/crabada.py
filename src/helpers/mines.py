@@ -6,7 +6,7 @@ from typing import List
 from src.helpers.dates import getPrettySeconds
 from time import time
 from src.common.clients import makeCrabadaWeb2Client
-from src.helpers.general import firstOrNone
+from src.helpers.general import firstOrNone, findInListOfDicts
 from src.libs.CrabadaWeb2Client.types import Game, GameProcess
 from src.models.User import User
 
@@ -33,7 +33,7 @@ def mineCanBeSettled(mine: Game) -> bool:
     return (
         attackIsOver(mine)
         and not mineIsSettled(mine)  # can't settle if already settled
-        and getElapsedTime(mine) > 3600  # can't settle before one hour since start
+        and getElapsedTimeSinceAttack(mine) > 3600  # can't settle before one hour since attack
     )
 
 
@@ -95,7 +95,7 @@ def mineIsWaitToSettle(mine: Game) -> bool:
     return (
         attackIsOver(mine)
         and not mineIsSettled(mine)  # can't settle if already settled
-        and getElapsedTime(mine) <= 3600  # can't settle before one hour since start
+        and getElapsedTimeSinceAttack(mine) <= 3600  # can't settle before one hour since attack
     )
 
 
@@ -158,7 +158,7 @@ def getRemainingTimeBeforeSettle(mine: Game) -> int:
     The output makes sense only if the attack sequence is over,
     which you can check via attackIsOver()
     """
-    return max(0, 3600 - getElapsedTime(mine))
+    return max(0, 3600 - getElapsedTimeSinceAttack(mine))
 
 
 def getRemainingTimeBeforeSettleFormatted(mine: Game) -> str:
@@ -245,3 +245,29 @@ def fetchOpenLoots(user: User) -> List[Game]:
     )
 
     return [g for g in openLoots if g["attack_team_id"] in teamIds]
+
+
+def getAttackAction(mine: Game) -> GameProcess:
+    """
+    Return attack action performed on the mine, together
+    with its execution time
+    """
+    return findInListOfDicts(mine["process"], "action", "attack")
+
+
+def getElapsedTimeSinceAttack(game: Game) -> int:
+    """
+    Seconds since the first attack (loot) of the given game
+    """
+    return int(time() - getAttackAction(game)["transaction_time"])
+
+
+def getNextMineToSettle(games: List[Game]) -> Game:
+    """
+    Given a list of games, return the mine that is looted and
+    next to settle; returns None if there are no unfinished games.
+
+    By finished we mean past the first hour after attack.
+    """
+    waitingMines = [g for g in games if mineIsWaitToSettle(g)]
+    return firstOrNone(sorted(waitingMines, key=lambda g: getRemainingTimeBeforeSettle(g)))
