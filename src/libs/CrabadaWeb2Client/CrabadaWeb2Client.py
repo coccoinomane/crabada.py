@@ -105,7 +105,7 @@ class CrabadaWeb2Client:
 
     def listMines_Raw(self, params: dict[str, Any] = {}) -> Any:
         url = self.baseUri + "/mines"
-        defaultParams = {"limit": 8, "page": 1, "status": "open"}
+        defaultParams: dict[str, Any] = {"limit": 5, "page": 1}
         actualParams = defaultParams | params
         response = requests.get(
             url,
@@ -145,7 +145,7 @@ class CrabadaWeb2Client:
 
     def listTeams_Raw(self, userAddress: Address, params: dict[str, Any] = {}) -> Any:
         url = self.baseUri + "/teams"
-        defaultParams = {
+        defaultParams: dict[str, Any] = {
             "limit": 5,
             "page": 1,
         }
@@ -195,14 +195,13 @@ class CrabadaWeb2Client:
 
     def listCrabsForLending_Raw(self, params: dict[str, Any] = {}) -> Any:
         url = self.baseUri + "/crabadas/lending"
-        defaultParams = {
+        defaultParams: dict[str, Any] = {
             "limit": 10,
             "page": 1,
             "orderBy": "price",
             "order": "asc",
         }
         actualParams = defaultParams | params
-        # type: ignore
         return requests.request(
             "GET", url, headers=self.browserHeaders, params=actualParams
         ).json()
