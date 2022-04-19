@@ -17,9 +17,9 @@ class HighestMp(ReinforceStrategy):
 
     def query(self, game: Game) -> dict[str, Any]:
         return {
-            "limit": 100,
-            "orderBy": "price",
-            "order": "asc",
+            "limit": 200,
+            "orderBy": "mine_point",
+            "order": "desc",
         }
 
     def process(self, game: Game, crabs: List[CrabForLending]) -> List[CrabForLending]:
