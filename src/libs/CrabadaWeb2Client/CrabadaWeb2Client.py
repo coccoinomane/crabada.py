@@ -46,9 +46,7 @@ class CrabadaWeb2Client:
 
     def getMine_Raw(self, mineId: int, params: dict[str, Any] = {}) -> Any:
         url = self.baseUri + "/mine/" + str(mineId)
-        return requests.request(
-            "GET", url, headers=self.browserHeaders, params=params
-        ).json()
+        return requests.get(url, headers=self.browserHeaders, params=params).json()
 
     def listMines(self, params: dict[str, Any] = {}) -> List[Game]:
         """
@@ -153,8 +151,8 @@ class CrabadaWeb2Client:
         }
         actualParams = defaultParams | params
         actualParams["user_address"] = userAddress
-        return requests.request(
-            "GET", url, headers=self.browserHeaders, params=actualParams
+        return requests.get(
+            url, headers=self.browserHeaders, params=actualParams
         ).json()
 
     def listCrabsForLending(self, params: dict[str, Any] = {}) -> List[CrabForLending]:
@@ -204,8 +202,8 @@ class CrabadaWeb2Client:
             "order": "asc",
         }
         actualParams = defaultParams | params
-        return requests.request(
-            "GET", url, headers=self.browserHeaders, params=actualParams
+        return requests.get(
+            url, headers=self.browserHeaders, params=actualParams
         ).json()
 
     def listCrabsFromInventory(
@@ -226,6 +224,4 @@ class CrabadaWeb2Client:
     ) -> Any:
         url = self.baseUri + "/crabadas/can-join-team"
         params["user_address"] = userAddress
-        return requests.request(
-            "GET", url, headers=self.browserHeaders, params=params
-        ).json()
+        return requests.get(url, headers=self.browserHeaders, params=params).json()
