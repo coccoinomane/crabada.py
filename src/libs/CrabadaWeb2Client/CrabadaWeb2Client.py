@@ -24,6 +24,8 @@ class CrabadaWeb2Client:
 
     baseUri = "https://idle-api.crabada.com/public/idle"
 
+  
+
     def getMine(self, mineId: int, params: dict[str, Any] = {}) -> Game:
         """Get information from the given mine"""
         res = self.getMine_Raw(mineId, params)
@@ -31,7 +33,21 @@ class CrabadaWeb2Client:
 
     def getMine_Raw(self, mineId: int, params: dict[str, Any] = {}) -> Any:
         url = self.baseUri + "/mine/" + str(mineId)
-        return requests.request("GET", url, params=params).json()
+        headers = {
+            'authority': 'idle-api.crabada.com',
+            'accept': 'application/json, text/plain, */*',
+            'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8',
+            'cache-control': 'no-cache',
+            'origin': 'https://play.crabada.com',
+            'pragma': 'no-cache',
+            'referer': 'https://play.crabada.com/',
+            'sec-fetch-dest': 'empty',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-site': 'same-site',
+            'sec-gpc': '1',
+            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.79 Safari/537.36',
+         }
+        return requests.request("GET", url, headers=headers, params=params).json()
 
     def listMines(self, params: dict[str, Any] = {}) -> List[Game]:
         """
@@ -95,7 +111,21 @@ class CrabadaWeb2Client:
             "page": 1,
         }
         actualParams = defaultParams | params
-        return requests.request("GET", url, params=actualParams).json()
+        headers = {
+            'authority': 'idle-api.crabada.com',
+            'accept': 'application/json, text/plain, */*',
+            'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8',
+            'cache-control': 'no-cache',
+            'origin': 'https://play.crabada.com',
+            'pragma': 'no-cache',
+            'referer': 'https://play.crabada.com/',
+            'sec-fetch-dest': 'empty',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-site': 'same-site',
+            'sec-gpc': '1',
+            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.79 Safari/537.36',
+         }
+        return requests.request("GET", url, headers=headers, params=actualParams).json()
 
     def getTeam(self) -> None:
         raise Exception("The team route does not exit on the server!")
@@ -183,7 +213,21 @@ class CrabadaWeb2Client:
             "order": "asc",
         }
         actualParams = defaultParams | params
-        return requests.request("GET", url, params=actualParams).json()  # type: ignore
+        headers = {
+            'authority': 'idle-api.crabada.com',
+            'accept': 'application/json, text/plain, */*',
+            'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8',
+            'cache-control': 'no-cache',
+            'origin': 'https://play.crabada.com',
+            'pragma': 'no-cache',
+            'referer': 'https://play.crabada.com/',
+            'sec-fetch-dest': 'empty',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-site': 'same-site',
+            'sec-gpc': '1',
+            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.79 Safari/537.36',
+        }
+        return requests.request("GET", url, headers=headers, params=actualParams).json()  # type: ignore
 
     def listCrabsFromInventory(
         self, userAddress: Address, params: dict[str, Any] = {}
@@ -203,4 +247,18 @@ class CrabadaWeb2Client:
     ) -> Any:
         url = self.baseUri + "/crabadas/can-join-team"
         params["user_address"] = userAddress
-        return requests.request("GET", url, params=params).json()
+        headers = {
+            'authority': 'idle-api.crabada.com',
+            'accept': 'application/json, text/plain, */*',
+            'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8',
+            'cache-control': 'no-cache',
+            'origin': 'https://play.crabada.com',
+            'pragma': 'no-cache',
+            'referer': 'https://play.crabada.com/',
+            'sec-fetch-dest': 'empty',
+            'sec-fetch-mode': 'cors',
+            'sec-fetch-site': 'same-site',
+            'sec-gpc': '1',
+            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.79 Safari/537.36',
+        }
+        return requests.request("GET", url, headers=headers, params=params).json()
