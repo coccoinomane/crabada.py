@@ -17,13 +17,14 @@ class HighestMp(ReinforceStrategy):
 
     def query(self, game: Game) -> dict[str, Any]:
         return {
-            "limit": 200,
+            "limit": 100,
             "orderBy": "price",
             "order": "asc",
         }
 
     def process(self, game: Game, crabs: List[CrabForLending]) -> List[CrabForLending]:
-        affordableCrabs = [c for c in crabs if weiToTus(c["price"]) < self.maxPrice1]
+        affordableCrabs = [c for c in crabs if weiToTus(
+            c["price"]) < self.maxPrice1]
         return sorted(affordableCrabs, key=lambda c: (-c["mine_point"], c["price"]))
 
     def pick(self, game: Game, crabs: List[CrabForLending]) -> CrabForLending:
