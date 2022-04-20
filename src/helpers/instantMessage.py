@@ -5,7 +5,7 @@ import requests
 import json
 
 
-def sendIM(body: str, forceSend: bool = False) -> bool:
+def sendIM(body: str, forceSend: bool = False, disableNotifications: bool = True) -> bool:
     """Send an notification message to the service configured in .env; won't send
     anything if notifications are disabled, unless forceSend is True"""
 
@@ -16,7 +16,7 @@ def sendIM(body: str, forceSend: bool = False) -> bool:
     try:
         if telegram["enable"]:
             notification_result = sendTelegramMessage(
-                body=body, apiKey=telegram["apiKey"], chatId=telegram["chatId"]
+                body=body, apiKey=telegram["apiKey"], chatId=telegram["chatId"], disableNotifications=disableNotifications
             )
 
         # NOTE <add more IM services here>
@@ -28,7 +28,7 @@ def sendIM(body: str, forceSend: bool = False) -> bool:
     return notification_result
 
 
-def sendTelegramMessage(body: str, apiKey: str, chatId: str) -> bool:
+def sendTelegramMessage(body: str, apiKey: str, chatId: str, disableNotifications: bool = True) -> bool:
     """Send a telegram message using rest api"""
     headers = {"Content-Type": "application/json"}
 
@@ -36,7 +36,7 @@ def sendTelegramMessage(body: str, apiKey: str, chatId: str) -> bool:
         "chat_id": chatId,
         "text": body,
         "parse_mode": "HTML",
-        "disable_notification": True,
+        "disable_notification": disableNotifications,
     }
     data = json.dumps(data_dict)
 
