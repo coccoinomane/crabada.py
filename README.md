@@ -89,7 +89,7 @@ Choose the strategy to use with the `USER_X_TEAM_Y_REINFORCE_STRATEGY` parameter
 | `CheapestCrab`             | Cheapest crab | Get a chance at mining revenge | |
 | `HighestBpFromInventory`   | Highest-BP from the inventory | Use with a fallback strat | @yigitest |
 | `HighestMpFromInventory`   | Highest-MP from the inventory | Use with a fallback strat | @yigitest |
-| `FromInventory`            | First available crab in the inventory | Use with a fallback strat | @yigitest |
+| `FirstFromInventory`            | First available crab in the inventory | Use with a fallback strat | @yigitest |
 
 ### - Fallback strategies
 
