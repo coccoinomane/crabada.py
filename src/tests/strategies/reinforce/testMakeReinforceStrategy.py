@@ -39,8 +39,8 @@ def test() -> None:
         print(strategy.__class__.__name__)
     except Exception as e:
         print("ERROR RAISED: " + e.__class__.__name__ + ": " + str(e))
-    print(">>> REINFORCEMENT CRAB THAT WILL BE PICKED")
-    print(reinforcementToPick)
+    print(">>> REINFORCEMENT_TO_PICK SETTING")
+    print(f"{reinforcementToPick}")
     print(">>> REINFORCEMENT CRAB")
     try:
         print(strategy.getCrab("MINING"))

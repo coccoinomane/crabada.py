@@ -30,7 +30,7 @@ Reinforce-specific features:
 3. `cd` in the root folder of the project (the same where this readme is)
 4. Run any of the scripts in the _bin_ folder.
 
-**IMPORTANT**: If you run on a webserver, make sure your .env is not in a public folder, otherwise your private key will be accessible via browser!
+**IMPORTANT**: Do not run the bot on a webserver! If you must do it, keep your _.env_ outside the public folder at all costs, otherwise your private key might be accessible via browser! For good measure, also restrict its permissions: `chmod 700 .env`.
 
 # Mining scripts
 
@@ -89,7 +89,7 @@ Choose the strategy to use with the `USER_X_TEAM_Y_REINFORCE_STRATEGY` parameter
 | `CheapestCrab`             | Cheapest crab | Get a chance at mining revenge | |
 | `HighestBpFromInventory`   | Highest-BP from the inventory | Use with a fallback strat | @yigitest |
 | `HighestMpFromInventory`   | Highest-MP from the inventory | Use with a fallback strat | @yigitest |
-| `FromInventory`            | First available crab in the inventory | Use with a fallback strat | @yigitest |
+| `FirstFromInventory`            | First available crab in the inventory | Use with a fallback strat | @yigitest |
 
 ### - Fallback strategies
 
