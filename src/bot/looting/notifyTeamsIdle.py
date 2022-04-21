@@ -1,5 +1,5 @@
 """
-Send a user's available teams mining
+Notify a user where they have available looting teams sitting idle
 """
 
 from src.common.logger import logger
@@ -13,10 +13,10 @@ from web3.exceptions import ContractLogicError
 
 def notifyTeamsIdle(user: User) -> int:
     """
-    Send mining the available teams with the 'mine' task
+    Send a notification to the user when they have available teams with the 'loot' task sitting idle
     Notify the idle teams to the user
 
-    Returns the opened mines
+    Returns the number of idle teams
     """
     client = makeCrabadaWeb3Client(
         upperLimitForBaseFeeInGwei=user.config["mineMaxGasInGwei"]
@@ -27,13 +27,17 @@ def notifyTeamsIdle(user: User) -> int:
         logger.info("No available teams to send looting for user " + str(user.address))
         return 0
 
-    # Send the teams
+    # Loop through available looting teams
     nIdleTeams = 0
     for t in availableTeams:
 
-        # Send team
+        # Send a notification of the idle team
         teamId = t["team_id"]
         logger.info(f"Team {teamId} is sitting idle! Go start the loot... 🦀")
         sendIM(f"Team {teamId} is sitting idle! Go start the loot... 🦀", forceSend=True, disableNotifications=False);
 
     return nIdleTeams
+
+
+Toucan
+Translate
