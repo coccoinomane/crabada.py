@@ -157,12 +157,12 @@ If you manage multiple teams and your _.env_ is becoming a mess, consider **grou
 
 ```bash
 # Mining group
-USER_1_GROUP_1="1111, 3333, 5555"
+USER_1_GROUP_1_TEAMS="1111, 3333, 5555"
 USER_1_GROUP_1_TASK="mine"
 USER_1_GROUP_1_REINFORCE_STRATEGY="HighestMp"
 
 # Looting group
-USER_1_GROUP_2="2222, 4444, 6666"
+USER_1_GROUP_2_TEAMS="2222, 4444, 6666"
 USER_1_GROUP_2_TASK="loot"
 USER_1_GROUP_2_REINFORCE_STRATEGY="HighestBp"
 ```
