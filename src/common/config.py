@@ -10,7 +10,12 @@ from src.common.types import (
 )
 from src.common.dotenv import getenv, parseBool, parseInt, parsePercentage
 from typing import Any, Dict, List
-from src.helpers.config import parseTeamConfig, parseUserConfig
+from src.helpers.config import (
+    parseGroupOfTeamsConfigs,
+    parseNonGroupedTeamConfig,
+    parseUserConfig,
+    validateUsersConfigs,
+)
 
 #################
 # Users config
@@ -19,18 +24,22 @@ from src.helpers.config import parseTeamConfig, parseUserConfig
 users: List[ConfigUser] = []
 userNumber = 1
 while getenv(f"USER_{userNumber}_PRIVATE_KEY"):
-    # Parse config of user's teams
     teams: List[ConfigTeam] = []
+    # Parse teams that are not grouped
     teamNumber = 1
     while getenv(f"USER_{userNumber}_TEAM_{teamNumber}"):
-        teams.append(parseTeamConfig(teamNumber, userNumber))
+        teams.append(parseNonGroupedTeamConfig(teamNumber, userNumber))
         teamNumber += 1
+    # Parse teams in groups
+    groupNumber = 1
+    while getenv(f"USER_{userNumber}_GROUP_{groupNumber}_TEAMS"):
+        teams += parseGroupOfTeamsConfigs(groupNumber, userNumber)
+        groupNumber += 1
     # Parse other configs of user
     users.append(parseUserConfig(userNumber, teams))
     userNumber += 1
 
-if not users:
-    raise MissingConfig("Could not find user private key in config")
+validateUsersConfigs(users)
 
 ##################
 # General options
