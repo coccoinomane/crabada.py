@@ -65,6 +65,9 @@ def reinforceDefense(user: User) -> int:
         except (ContractLogicError, TransactionTooExpensive) as e:
             logger.warning(f"Error reinforcing mine {mineId}: {e}")
             sendIM(f"Error reinforcing mine {mineId}: {e}")
+            # Wait some time to avoid renting the same crab for different teams
+            if len(reinforceableMines) > 1:
+                sleep(reinforceDelayInSeconds)
             continue
 
         # Report
