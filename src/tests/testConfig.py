@@ -6,6 +6,8 @@ from pprint import pprint
 # TEST FUNCTIONS
 def test() -> None:
     pprint(">>> USERS & TEAMS")
+    for user in users:
+        del user["privateKey"]  # type: ignore
     pprint(users)
     print(">>> NODE URI")
     print(nodeUri)
