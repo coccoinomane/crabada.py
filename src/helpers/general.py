@@ -1,4 +1,5 @@
 from typing import Any, List
+from collections import Counter
 
 
 def firstOrNone(list: List[Any]) -> Any:
@@ -69,3 +70,12 @@ def indexInList(l: List[Any], value: Any, doPop: bool = False) -> int:
         return i
     except ValueError:
         return None
+
+
+def duplicatesInList(l: List[Any]) -> List[Any]:
+    """
+    Return duplicate elements in the given list
+
+    Source: https://stackoverflow.com/a/9835819/2972183
+    """
+    return [item for item, count in Counter(l).items() if count > 1]
