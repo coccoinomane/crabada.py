@@ -4,7 +4,9 @@ from the environment
 """
 
 import typing
+import datetime as dt
 from web3 import Web3
+from src.helpers.dates import isNowInTimePeriod
 from src.common.exceptions import InvalidConfig, MissingConfig
 from src.common.types import (
     ConfigTeam,
@@ -23,12 +25,15 @@ def parseTeamConfig(teamNumber: int, userNumber: int) -> ConfigTeam:
     """
     userPrefix = f"USER_{userNumber}"
     teamPrefix = f"{userPrefix}_TEAM_{teamNumber}"
-
+    
+    # Are we in the mining period (typically overnight)?
+    allMiningPeriod = isNowInTimePeriod(dt.time(parseInt(f"{userPrefix}_ALL_MINE_TIME_START_HOUR"),00), dt.time(parseInt(f"{userPrefix}_ALL_MINE_TIME_STOP_HOUR"),00), dt.datetime.now().time())
+    
     teamConfig: ConfigTeam = {
         "id": parseInt(teamPrefix),
         "userAddress": cast(Address, getenv(f"{userPrefix}_ADDRESS")),
         "battlePoints": parseInt(f"{teamPrefix}_BATTLE_POINTS"),
-        "task": cast(TeamTask, getenv(f"{teamPrefix}_TASK", "mine")),
+        "task": cast(TeamTask, "mine" if allMiningPeriod else getenv(f"{teamPrefix}_TASK", "mine")),
         "lootStrategies": parseListOfStrings(
             f"{teamPrefix}_LOOT_STRATEGY", ["LowestBp"]
         ),
@@ -39,7 +44,7 @@ def parseTeamConfig(teamNumber: int, userNumber: int) -> ConfigTeam:
     }
 
     validateTeamConfig(teamConfig, teamNumber, userNumber)
-
+    
     return teamConfig
 
 
@@ -71,6 +76,8 @@ def parseUserConfig(userNumber: int, teams: List[ConfigTeam]) -> ConfigUser:
         "closeMineMaxGasInGwei": parseFloat(
             f"{userPrefix}_CLOSE_MINE_MAX_GAS", float("inf")
         ),
+        "allMineTimeStart": getenv(f"{userPrefix}_ALL_MINE_TIME_START_HOUR"),
+        "allMineTimeEnd": getenv(f"{userPrefix}_ALL_MINE_TIME_STOP_HOUR"),
         "teams": [t for t in teams if t["userAddress"] == address],
     }
 
