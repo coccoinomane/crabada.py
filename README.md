@@ -30,7 +30,7 @@ Reinforce-specific features:
 3. `cd` in the root folder of the project (the same where this readme is)
 4. Run any of the scripts in the _bin_ folder.
 
-**IMPORTANT**: If you run on a webserver, make sure your .env is not in a public folder, otherwise your private key will be accessible via browser!
+**IMPORTANT**: Do not run the bot on a webserver! If you must do it, keep your _.env_ outside the public folder at all costs, otherwise your private key might be accessible via browser! For good measure, also restrict its permissions: `chmod 700 .env`.
 
 # Mining scripts
 
