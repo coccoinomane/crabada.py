@@ -76,8 +76,8 @@ def parseUserConfig(userNumber: int, teams: List[ConfigTeam]) -> ConfigUser:
         "closeMineMaxGasInGwei": parseFloat(
             f"{userPrefix}_CLOSE_MINE_MAX_GAS", float("inf")
         ),
-        "allMineTimeStart": getenv(f"{userPrefix}_ALL_MINE_TIME_START_HOUR"),
-        "allMineTimeEnd": getenv(f"{userPrefix}_ALL_MINE_TIME_STOP_HOUR"),
+        "allMineTimeStart": parseInt(f"{userPrefix}_ALL_MINE_TIME_START_HOUR"),
+        "allMineTimeEnd": parseInt(f"{userPrefix}_ALL_MINE_TIME_STOP_HOUR"),
         "teams": [t for t in teams if t["userAddress"] == address],
     }
 
