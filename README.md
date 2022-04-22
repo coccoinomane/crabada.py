@@ -183,6 +183,10 @@ Then, set your .env file:
 
 If everything worked fine, you should receive a Telegram message on your newly created bot.
 
+Note : Individual types of notifications can be toggled on or off by setting the following to on ("1") or off ("0"):
+NOTIFICATION_SEND, NOTIFICATION_REINFORCE, NOTIFICATION_CLOSE and NOTIFICATION_NOTIFY_IDLE.
+
+
 
 # To do
 
