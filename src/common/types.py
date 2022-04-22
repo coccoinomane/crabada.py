@@ -29,6 +29,7 @@ class ConfigUser(TypedDict):
     reinforcementMaxGasInGwei: float
     mineMaxGasInGwei: float
     closeMineMaxGasInGwei: float
+    closeLootMaxGasInGwei: float
     teams: List[ConfigTeam]
 
 
