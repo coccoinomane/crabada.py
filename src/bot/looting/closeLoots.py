@@ -53,6 +53,6 @@ def closeLoots(user: User) -> int:
             logger.info(f"Loot {gameId} closed correctly")
             if (notifications["instantMessage"]["onClose"]):
                 sendIM(f"Loot {gameId} closed correctly")
-                maybeDonate(txReceipt)
+            maybeDonate(txReceipt)
 
     return nClosedLoots
