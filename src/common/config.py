@@ -38,6 +38,7 @@ if not users:
 
 nodeUri = getenv("WEB3_NODE_URI")
 reinforceDelayInSeconds = parseInt("REINFORCE_DELAY_IN_SECONDS", 30)
+staggeringDelayInMinutes = parseInt("STAGGERING_DELAY_IN_MINUTES", 35)
 donatePercentage = parsePercentage("DONATE_PERCENTAGE", 0)
 donateFrequency = parseInt("DONATE_FREQUENCY", 10)
 

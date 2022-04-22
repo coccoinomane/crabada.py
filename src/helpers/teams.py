@@ -3,6 +3,7 @@ from src.common.types import TeamTask, ConfigTeam
 from src.libs.CrabadaWeb2Client.types import Team
 from src.models.User import User
 from src.common.clients import makeCrabadaWeb2Client
+from src.common.config import staggeringDelayInMinutes
 
 from datetime import datetime
 
@@ -41,7 +42,7 @@ def _filterAvailableTeamsForStaggering(
         prev_team_id = configTeams[team_id]["staggeringPrevTeamId"]
         if prev_team_id == -1:
             available_teams.append(t)
-        elif teamsWithMineTimings.get(prev_team_id, 0) > 30:
+        elif teamsWithMineTimings.get(prev_team_id, 0) > staggeringDelayInMinutes:
             available_teams.append(t)
     return available_teams
 
