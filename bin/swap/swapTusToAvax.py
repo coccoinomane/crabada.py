@@ -3,7 +3,7 @@
 script to swap TUS to avax via pangolin
 
 Usage:
-    python3 -m bin.swap.swapTusToAvax <amount of tus>
+    python3 -m bin.swap.swapTusToAvax <ur address> <amount of tus>
 
 """
 
