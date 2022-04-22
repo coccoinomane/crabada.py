@@ -54,5 +54,9 @@ telegram: Dict[str, Any] = {
 notifications: Dict[str, Any] = {
     "instantMessage": {
         "enable": parseBool("NOTIFICATION_IM", False),
+        "onSendingTeam": parseBool("NOTIFICATION_SEND", False),
+        "onReinforce": parseBool("NOTIFICATION_REINFORCE", False),
+        "onClose": parseBool("NOTIFICATION_CLOSE", False),
+        "onNotifyIdle": parseBool("NOTIFICATION_NOTIFY_IDLE", False),
     },
 }

@@ -1,7 +1,7 @@
 """
 Settle all loots of a given user
 """
-
+from src.common.config import notifications
 from src.common.logger import logger
 from src.common.txLogger import txLogger, logTx
 from src.helpers.instantMessage import sendIM
@@ -51,7 +51,8 @@ def closeLoots(user: User) -> int:
         else:
             nClosedLoots += 1
             logger.info(f"Loot {gameId} closed correctly")
-            sendIM(f"Loot {gameId} closed correctly")
-            maybeDonate(txReceipt)
+            if (notifications["instantMessage"]["onClose"]):
+                sendIM(f"Loot {gameId} closed correctly")
+                maybeDonate(txReceipt)
 
     return nClosedLoots
