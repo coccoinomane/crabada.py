@@ -76,13 +76,12 @@ def reinforceDefense(user: User) -> int:
         logTx(txReceipt)
         if txReceipt["status"] != 1:
             logger.error(f"Error reinforcing mine {mineId}")
-            sendIM(f"Error reinforcing mine {mineId} : {crabInfoMsg}.")
+            sendIM(f"Error reinforcing mine {mineId}: {crabInfoMsg}.")
         else:
             nBorrowedReinforments += 1
             logger.info(f"Mine {mineId} reinforced correctly")
             if (notifications["instantMessage"]["onReinforce"]):
-                sendIM(crabInfoMsg)
-                sendIM(f"Loot {mineId} reinforced correctly")
+                sendIM(f"Mine {mineId} reinforced correctly. {crabInfoMsg.replace('Borrowing', 'Borrowed')}")
                 
         # Wait some time to avoid renting the same crab for different teams
         if len(reinforceableMines) > 1:
