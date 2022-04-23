@@ -1,6 +1,10 @@
+from eth_typing import ChecksumAddress
 from src.common.txLogger import logTx
-from src.libs.PangolinRouterWeb3Client.PangolinRouterWeb3Client import (
+from src.libs.RouterWeb3Client.PangolinRouterWeb3Client import (
     PangolinRouterWeb3Client,
+)
+from src.libs.RouterWeb3Client.TraderJoeRouterWeb3Client import (
+    TraderJoeRouterWeb3Client,
 )
 from src.models.User import User
 from src.common.config import nodeUri, users
@@ -13,22 +17,49 @@ TUS_TO_AVAX_PATH = [
     Web3.toChecksumAddress("0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"),
 ]
 
+CRA_TO_AVAX_PATH = [
+    Web3.toChecksumAddress("0xA32608e873F9DdEF944B24798db69d80Bbb4d1ed"),
+    Web3.toChecksumAddress("0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"),
+]
 
-def swapTusToAvax(user: User, tus: float) -> int:
+
+def swapTokenToAvaxPangolin(
+    user: User, amtIn: float, path: list[ChecksumAddress]
+) -> None:
     """
-    tus here is in wei
+    amtIn here is in wei
     """
     client = PangolinRouterWeb3Client(
         nodeUri=nodeUri,
         privateKey=users[0]["privateKey"],
         upperLimitForBaseFeeInGwei=user.config["mineMaxGasInGwei"],
     )
-    amtsOut = client.getAmountsOut(tus, TUS_TO_AVAX_PATH)
+    amtsOut = client.getAmountsOut(amtIn, path)
     amtOut = amtsOut[len(amtsOut) - 1]
     # account for slippage
     amtOutMin = int(amtOut / 100 * 99.5)
-    txHash = client.swapExactTokensForAvax(tus, amtOutMin, TUS_TO_AVAX_PATH)
+    txHash = client.swapExactTokensForAvax(amtIn, amtOutMin, path)
     txLogger.info(txHash)
     txReceipt = client.getTransactionReceipt(txHash)
     logTx(txReceipt)
-    return 1
+
+
+def swapTokenToAvaxTraderJoe(
+    user: User, amtIn: float, path: list[ChecksumAddress]
+) -> None:
+    """
+    amtIn here is in wei
+    """
+    client = TraderJoeRouterWeb3Client(
+        nodeUri=nodeUri,
+        privateKey=users[0]["privateKey"],
+        upperLimitForBaseFeeInGwei=user.config["mineMaxGasInGwei"],
+    )
+    amtsOut = client.getAmountsOut(amtIn, path)
+    amtOut = amtsOut[len(amtsOut) - 1]
+    # account for slippage
+    amtOutMin = int(amtOut / 100 * 99.5)
+    txHash = client.swapExactTokensForAvax(amtIn, amtOutMin, path)
+    txLogger.info(txHash)
+    txReceipt = client.getTransactionReceipt(txHash)
+    logTx(txReceipt)

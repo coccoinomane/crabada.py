@@ -13,18 +13,18 @@ import os
 import time
 
 
-class PangolinRouterWeb3Client(AvalancheCWeb3Client):
+class TraderJoeRouterWeb3Client(AvalancheCWeb3Client):
     """
-     Interact with a pangolin router
+     Interact with a traderjoe router
 
      The contract resides on the Avalanche blockchain; here's
      the URL on Snowtrace:
-    https://snowtrace.io/address/0xe54ca86531e17ef3616d22ca28b0d458b6c89106#code
+    https://snowtrace.io/address/0x60aE616a2155Ee3d9A68541Ba4544862310933d4
     """
 
-    contractAddress = cast(Address, "0xE54Ca86531e17Ef3616d22Ca28b0D458b6C89106")
+    contractAddress = cast(Address, "0x60aE616a2155Ee3d9A68541Ba4544862310933d4")
     abiDir = os.path.dirname(os.path.realpath(__file__)) + "/contracts"
-    abi = Web3Client.getContractAbiFromFile(abiDir + "/pangolinRouterAbi.json")
+    abi = Web3Client.getContractAbiFromFile(abiDir + "/traderJoeRouterAbi.json")
 
     def __init__(
         self,
@@ -41,11 +41,6 @@ class PangolinRouterWeb3Client(AvalancheCWeb3Client):
             contractAddress=self.contractAddress,
             abi=self.abi,
         )
-
-    def testClient(
-        self,
-    ) -> None:
-        print("g")
 
     def getAmountsOut(self, amtIn: int, path: list[str]) -> list[int]:
         return self.contract.functions.getAmountsOut(amtIn, path).call()
