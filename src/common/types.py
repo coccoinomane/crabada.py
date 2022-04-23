@@ -12,13 +12,15 @@ TeamTask = Literal["loot", "mine"]
 
 
 class ConfigTeam(TypedDict):
-    id: int
+    id: int  # team id in Crabada
     userAddress: Address
     battlePoints: int
     task: TeamTask
     lootStrategies: List[str]
     reinforceStrategies: List[str]
     reinforcementToPick: int
+    teamNumber: int  # internal team number (if in group, relative to group)
+    groupNumber: int  # internal group number (0 if team not in a group)
 
 
 class ConfigUser(TypedDict):
