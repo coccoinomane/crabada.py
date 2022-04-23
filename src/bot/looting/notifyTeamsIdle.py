@@ -22,6 +22,6 @@ def notifyTeamsIdle(user: User) -> int:
     # Notify user
     msg = f"You have teams sitting idle, go loot 🦀 [ids={', '.join(ids)}]"
     logger.info(msg)
-    sendIM(msg, silent=False)
+    sendIM(msg, forceSend=True, silent=False)
 
     return len(ids)
