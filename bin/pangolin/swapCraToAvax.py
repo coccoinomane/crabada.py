@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-script to swap CRA to avax via traderjoe
+script to swap CRA to avax via pangolin
 
 Usage:
-    python3 -m bin.traderjoe.swapCraToAvax <ur address> <amount of CRA>
+    python3 -m bin.pangolin.swapCraToAvax <ur address> <amount of CRA>
 
 """
 
@@ -15,7 +15,7 @@ from src.helpers.general import secondOrNone, thirdOrNone
 from src.models.User import User
 from sys import argv
 from src.common.logger import logger
-from src.swap import CRA_TO_AVAX_PATH, swapTokenToAvaxTraderJoe
+from src.swap import CRA_TO_AVAX_PATH, swapTokenToAvaxPangolin
 
 userAddress = secondOrNone(argv)
 craAmount = thirdOrNone(argv)
@@ -29,4 +29,4 @@ if not craAmount:
 
 craAmountInWei = Web3.toWei(craAmount, "ether")
 
-swapTokenToAvaxTraderJoe(User(userAddress), craAmountInWei, CRA_TO_AVAX_PATH)
+swapTokenToAvaxPangolin(User(userAddress), craAmountInWei, CRA_TO_AVAX_PATH)
