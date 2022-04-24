@@ -21,7 +21,8 @@ def closeLoots(user: User) -> int:
     the number of closed loots.
     """
     client = makeCrabadaWeb3Client(
-        upperLimitForBaseFeeInGwei=user.config["closeLootMaxGasInGwei"])
+        upperLimitForBaseFeeInGwei=user.config["closeLootMaxGasInGwei"]
+    )
     settleableMines = [g for g in fetchOpenLoots(user) if mineCanBeSettled(g)]
 
     if not settleableMines:
