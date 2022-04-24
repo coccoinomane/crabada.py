@@ -4,7 +4,7 @@ import requests
 import json
 
 
-def sendIM(body: str, forceSend: bool = False, silent: bool = False) -> bool:
+def sendIM(body: str, forceSend: bool = False, silent: bool = True) -> bool:
     """
     Send an instant message to the services configured in .env;
     so far only Telegram is supported.
