@@ -24,13 +24,19 @@ Reinforce-specific features:
 # Quick start
 
 1. Make sure you have Python 3.9 or later installed.
-1. Install dependencies: `pip install -r requirements.txt`.
-1. Copy _.env.example_ in _.env_.
-1. Configure _.env_; the bot will only consider the teams you add there.
-3. `cd` in the root folder of the project (the same where this readme is)
-4. Run any of the scripts in the _bin_ folder.
+2. Install dependencies: `pip install -r requirements.txt`.
+3. Copy _.env.example_ in _.env_.
+4. Configure _.env_; the bot will only consider the teams you add there.
+5. `cd` in the root folder of the project (the same where this readme is)
+6. Run any of the scripts in the _bin_ folder, or, to set an automatic job, see the "Run without human supervision" section of this README.
 
 **IMPORTANT**: Do not run the bot on a webserver! If you must do it, keep your _.env_ outside the public folder at all costs, otherwise your private key might be accessible via browser! For good measure, also restrict its permissions: `chmod 700 .env`.
+
+# It doesn't work!
+
+If you have issues, click on the "[Discussions](https://github.com/coccoinomane/crabada.py/discussions/)" tab and write your problem in the search bar.
+
+If you do not find a solution, consider posting a new message there 🙂
 
 # Mining scripts
 
