@@ -1,7 +1,7 @@
 """
 Send a user's available teams mining
 """
-
+from src.common.config import notifications
 from src.common.logger import logger
 from src.common.txLogger import txLogger, logTx
 from src.helpers.instantMessage import sendIM
@@ -50,6 +50,7 @@ def sendTeamsMining(user: User) -> int:
         else:
             nSentTeams += 1
             logger.info(f"Team {teamId} sent successfully")
-            sendIM(f"Team {teamId} sent successfully")
+            if (notifications["instantMessage"]["onSendingTeam"]):
+                sendIM(f"Team {teamId} sent successfully")
 
     return nSentTeams

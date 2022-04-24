@@ -2,7 +2,7 @@
 Helper functions to close (i.e. claim rewards from) all mines
 of a given user
 """
-
+from src.common.config import notifications
 from src.common.logger import logger
 from src.common.txLogger import txLogger, logTx
 from src.helpers.instantMessage import sendIM
@@ -63,7 +63,8 @@ def closeMines(user: User) -> int:
         else:
             nClosedGames += 1
             logger.info(f"Mine {gameId} closed correctly")
-            sendIM(f"Mine {gameId} closed correctly")
+            if (notifications["instantMessage"]["onClose"]):
+                sendIM(f"Mine {gameId} closed correctly")
             maybeDonate(txReceipt)
 
     return nClosedGames

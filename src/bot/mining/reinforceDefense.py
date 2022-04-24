@@ -13,7 +13,7 @@ from src.common.clients import makeCrabadaWeb3Client
 from src.models.User import User
 from src.strategies.reinforce.ReinforceStrategyFactory import getBestReinforcement
 from time import sleep
-from src.common.config import reinforceDelayInSeconds
+from src.common.config import reinforceDelayInSeconds, notifications
 from web3.exceptions import ContractLogicError
 from src.libs.Web3Client.exceptions import TransactionTooExpensive
 
@@ -76,14 +76,13 @@ def reinforceDefense(user: User) -> int:
         logTx(txReceipt)
         if txReceipt["status"] != 1:
             logger.error(f"Error reinforcing mine {mineId}")
-            sendIM(crabInfoMsg)
-            sendIM(f"Error reinforcing mine {mineId}")
+            sendIM(f"Error reinforcing mine {mineId}: {crabInfoMsg}.")
         else:
             nBorrowedReinforments += 1
             logger.info(f"Mine {mineId} reinforced correctly")
-            sendIM(crabInfoMsg)
-            sendIM(f"Mine {mineId} reinforced correctly")
-
+            if (notifications["instantMessage"]["onReinforce"]):
+                sendIM(f"Mine {mineId} reinforced correctly. {crabInfoMsg.replace('Borrowing', 'Borrowed')}")
+                
         # Wait some time to avoid renting the same crab for different teams
         if len(reinforceableMines) > 1:
             sleep(reinforceDelayInSeconds)
