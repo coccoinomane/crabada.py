@@ -3,21 +3,19 @@ Helper functions to reinforce all loots of a given user
 """
 
 from web3.main import Web3
-from src.common.exceptions import (
-    NoSuitableReinforcementFound,
-    ReinforcementTooExpensive,
-)
+from src.common.exceptions import NoSuitableReinforcementFound
 from src.common.logger import logger
 from src.common.txLogger import txLogger, logTx
 from src.helpers.instantMessage import sendIM
 from src.helpers.mines import fetchOpenLoots
 from src.helpers.reinforce import looterCanReinforce
-from src.helpers.sms import sendSms
-from src.common.clients import crabadaWeb3Client
+from src.common.clients import makeCrabadaWeb3Client
 from src.models.User import User
 from src.strategies.reinforce.ReinforceStrategyFactory import getBestReinforcement
 from time import sleep
 from src.common.config import reinforceDelayInSeconds
+from web3.exceptions import ContractLogicError
+from src.libs.Web3Client.exceptions import TransactionTooExpensive
 
 
 def reinforceAttack(user: User) -> int:
@@ -27,6 +25,12 @@ def reinforceAttack(user: User) -> int:
     number of borrowed reinforcements.
     """
 
+    # Client with gas control
+    client = makeCrabadaWeb3Client(
+        upperLimitForBaseFeeInGwei=user.config["reinforcementMaxGasInGwei"]
+    )
+
+    # User's loots that can be reinforced
     reinforceableMines = [m for m in fetchOpenLoots(user) if looterCanReinforce(m)]
 
     if not reinforceableMines:
@@ -40,13 +44,10 @@ def reinforceAttack(user: User) -> int:
         # Find best reinforcement crab to borrow
         mineId = mine["game_id"]
         maxPrice = user.config["reinforcementMaxPriceInTus"]
-        strategyName = user.getTeamConfig(mine["attack_team_id"]).get(
-            "reinforceStrategyName"
-        )
         try:
             crab = getBestReinforcement(user, mine, maxPrice)
-        except (ReinforcementTooExpensive, NoSuitableReinforcementFound) as e:
-            logger.warning(str(e))
+        except NoSuitableReinforcementFound as e:
+            logger.warning(f"{e.__class__.__name__}: {e}")
             continue
 
         # Some strategies might return no reinforcement
@@ -55,16 +56,25 @@ def reinforceAttack(user: User) -> int:
 
         crabId = crab["crabada_id"]
         price = crab["price"]
-        crabInfoMsg = f"Borrowing crab {crabId} for mine {mineId} at {Web3.fromWei(price, 'ether')} TUS... [strategy={strategyName}, BP={crab['battle_point']}, MP={crab['mine_point']}]"
+        crabInfoMsg = f"Borrowing crab {crabId} for mine {mineId} at {Web3.fromWei(price, 'ether')} TUS... [BP={crab['battle_point']}, MP={crab['mine_point']}]"
         logger.info(crabInfoMsg)  # TODO: also send to Telegram, asynchronously
 
         # Borrow the crab
-        txHash = crabadaWeb3Client.reinforceAttack(mineId, crabId, price)
+        try:
+            txHash = client.reinforceAttack(mineId, crabId, price)
+        except (ContractLogicError, TransactionTooExpensive) as e:
+            logger.warning(f"Error reinforcing loot {mineId}: {e}")
+            sendIM(f"Error reinforcing loot {mineId}: {e}")
+            # Wait some time to avoid renting the same crab for different teams
+            if len(reinforceableMines) > 1:
+                sleep(reinforceDelayInSeconds)
+            continue
+
+        # Report
         txLogger.info(txHash)
-        txReceipt = crabadaWeb3Client.getTransactionReceipt(txHash)
+        txReceipt = client.getTransactionReceipt(txHash)
         logTx(txReceipt)
         if txReceipt["status"] != 1:
-            sendSms(f"Crabada: Error reinforcing loot {mineId}")
             logger.error(f"Error reinforcing loot {mineId}")
             sendIM(crabInfoMsg)
             sendIM(f"Error reinforcing loot {mineId}")

@@ -1,6 +1,7 @@
 from __future__ import annotations
 from abc import abstractmethod
-from typing import List, Tuple, cast
+from src.common.logger import logger
+from typing import Any, List, Tuple, cast
 from src.common.exceptions import (
     ReinforcementTooExpensive,
     NoSuitableReinforcementFound,
@@ -58,26 +59,13 @@ class ReinforceStrategy(Strategy):
         self.maxPrice2: Tus = maxPrice2 if maxPrice2 else self.maxPrice1
         return self
 
-    def isApplicable(self) -> Tuple[bool, str]:
-        """
-        The strategy can be applied only if the mine can
-        be reinforced
-        """
-        isApplicable = minerCanReinforce(self.game) or looterCanReinforce(self.game)
-        return (
-            isApplicable,
-            ""
-            if isApplicable
-            else f"Game cannot be reinforced [mine_id = {self.game['game_id']}, round = {self.game['round']}, winner_team_id = {self.game['winner_team_id']}]",
-        )
-
     @abstractmethod
-    def query(self, game: Game) -> List[CrabForLending]:
+    def query(self, game: Game) -> dict[str, Any]:
         """
         Query for the Crabada endpoint that will fetch the available
         crabs for lending, from which we will pick our reinforcement.
         """
-        return []
+        return {}
 
     def process(self, game: Game, crabs: List[CrabForLending]) -> List[CrabForLending]:
         """
@@ -100,7 +88,7 @@ class ReinforceStrategy(Strategy):
         """
         return firstOrNone(crabs)
 
-    def query2(self, game: Game) -> List[CrabForLending]:
+    def query2(self, game: Game) -> dict[str, Any]:
         """
         Optionally specify a separate query for the second reinforcement
         """
@@ -145,22 +133,22 @@ class ReinforceStrategy(Strategy):
         elif status == 2:  # second reinforcement
             return self.getCrab2()
 
-    def handleNoSuitableCrabFound(self, crab: CrabForLending) -> None:
+    def handleNoSuitableCrabFound(self) -> None:
         """
-        By default, raise an exception if the strategy is unable to find
-        a suitable crab
+        By default, log a message if the strategy is unable to find
+        a suitable crab.
         """
-        raise NoSuitableReinforcementFound(
-            f"Could not find a suitable reinforcement [strategy={self.__class__.__name__}]"
+        logger.info(
+            f"Strategy '{self.__class__.__name__}' could not find a suitable reinforcement for team {self.teamConfig['id']}"
         )
 
     def handlePriceTooHigh(self, crab: CrabForLending, maxPrice: Tus) -> None:
         """
-        By default, raise an exception if the price of the given crab is
+        By default, log a message if the price of the given crab is
         higher than the strategy's max price
         """
-        raise ReinforcementTooExpensive(
-            f"Crab's price is higher than max {maxPrice} TUS [price={weiToTus(crab['price'])}, strategy={self.__class__.__name__}]"
+        logger.info(
+            f"Crab's price is higher than max {maxPrice} TUS [price={weiToTus(crab['price'])}, strategy={self.__class__.__name__}, team={self.teamConfig['id']}]"
         )
 
     def getCrab1(self) -> CrabForLending:
@@ -181,9 +169,11 @@ class ReinforceStrategy(Strategy):
 
         # Handle special cases
         if not crab:
-            self.handleNoSuitableCrabFound(crab)
+            self.handleNoSuitableCrabFound()
+            return None
         elif crab["price"] > tusToWei(self.maxPrice1):
             self.handlePriceTooHigh(crab, self.maxPrice1)
+            return None
 
         return crab
 
@@ -205,8 +195,23 @@ class ReinforceStrategy(Strategy):
 
         # Handle special cases
         if not crab:
-            self.handleNoSuitableCrabFound(crab)
+            self.handleNoSuitableCrabFound()
+            return None
         elif crab["price"] > tusToWei(self.maxPrice2):
             self.handlePriceTooHigh(crab, self.maxPrice2)
+            return None
 
         return crab
+
+    def isApplicable(self) -> Tuple[bool, str]:
+        """
+        The strategy can be applied only if the mine can
+        be reinforced
+        """
+        isApplicable = minerCanReinforce(self.game) or looterCanReinforce(self.game)
+        return (
+            isApplicable,
+            ""
+            if isApplicable
+            else f"Game cannot be reinforced [mine_id = {self.game['game_id']}, round = {self.game['round']}, winner_team_id = {self.game['winner_team_id']}]",
+        )

@@ -1,11 +1,13 @@
-from typing import Literal
+from typing import Literal, cast
+from eth_typing import Address
 from src.helpers.mines import (
     attackIsOver,
     mineHasBeenAttacked,
     mineIsOpen,
     mineIsSettled,
 )
-from src.libs.CrabadaWeb2Client.types import Game
+from src.libs.CrabadaWeb2Client.types import CrabForLending, CrabFromInventory, Game
+from web3.types import Wei
 
 
 def minerCanReinforce(mine: Game) -> bool:
@@ -118,3 +120,26 @@ def looterCanReinforceForTheSecondTime(mine: Game) -> bool:
         and not mineIsSettled(mine)
         and mine["round"] == 3
     )
+
+
+def convertCrabFromInventory(crab: CrabFromInventory) -> CrabForLending:
+    """
+    Given a crab from the user's inventory, convert it to a crab
+    suitable to be borrowed.
+
+    This is just an interface function needed to use crabs from inventory
+    in reinforce strategies, as if they were crabs from the tavern.
+    """
+    crabForLending = cast(CrabForLending, crab)
+
+    # Price is important, it is required by the contract
+    # and we may use it for ordering and stuff...
+    crabForLending["price"] = cast(Wei, 0)
+
+    # Others not so much...
+    crabForLending["lender"] = cast(Address, "")
+    crabForLending["is_being_borrowed"] = 0
+    crabForLending["borrower"] = cast(Address, "")
+    crabForLending["game_id"] = 0
+
+    return crabForLending

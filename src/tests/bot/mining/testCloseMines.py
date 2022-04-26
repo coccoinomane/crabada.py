@@ -5,10 +5,10 @@ from src.models.User import User
 # VARS
 
 # TEST FUNCTIONS
-def testCloseMines() -> None:
+def test() -> None:
     nFinished = closeMines(User(users[0]["address"]))
     print(f"CLOSED {nFinished} LOOTING MINES")
 
 
 # EXECUTE
-testCloseMines()
+test()

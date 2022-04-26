@@ -5,7 +5,7 @@ Helper functions to handle Crabada mines / games
 from typing import List
 from src.helpers.dates import getPrettySeconds
 from time import time
-from src.common.clients import crabadaWeb2Client
+from src.common.clients import makeCrabadaWeb2Client
 from src.helpers.general import firstOrNone
 from src.libs.CrabadaWeb2Client.types import Game, GameProcess
 from src.models.User import User
@@ -222,7 +222,7 @@ def fetchOpenMines(user: User) -> List[Game]:
     if not teamIds:
         return []
 
-    openGames = crabadaWeb2Client.listMines(
+    openGames = makeCrabadaWeb2Client().listMines(
         {"limit": len(teamIds) * 2, "status": "open", "user_address": user.address}
     )
 
@@ -240,7 +240,7 @@ def fetchOpenLoots(user: User) -> List[Game]:
     if not teamIds:
         return []
 
-    openLoots = crabadaWeb2Client.listMines(
+    openLoots = makeCrabadaWeb2Client().listMines(
         {"limit": len(teamIds) * 2, "status": "open", "looter_address": user.address}
     )
 

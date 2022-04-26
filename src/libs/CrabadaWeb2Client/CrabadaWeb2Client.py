@@ -1,9 +1,15 @@
-from typing import Any, List, Tuple
+from typing import Any, List, cast
 from eth_typing import Address
 import requests
 from src.helpers.general import firstOrNone, secondOrNone
+from web3.types import Wei
 
-from src.libs.CrabadaWeb2Client.types import CrabForLending, Game, Team
+from src.libs.CrabadaWeb2Client.types import (
+    CrabForLending,
+    Game,
+    Team,
+    CrabFromInventory,
+)
 
 
 class CrabadaWeb2Client:
@@ -19,6 +25,21 @@ class CrabadaWeb2Client:
     # baseUri = 'https://idle-api.crabada.com/public/idle'
     baseUri = "https://idle-game-subnet-test-api.crabada.com/public/idle"
 
+    browserHeaders = {
+        "authority": "idle-api.crabada.com",
+        "accept": "application/json, text/plain, */*",
+        "accept-language": "en-GB,en-US;q=0.9,en;q=0.8",
+        "cache-control": "no-cache",
+        "origin": "https://play.crabada.com",
+        "pragma": "no-cache",
+        "referer": "https://play.crabada.com/",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-site": "same-site",
+        "sec-gpc": "1",
+        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.79 Safari/537.36",
+    }
+
     def getMine(self, mineId: int, params: dict[str, Any] = {}) -> Game:
         """Get information from the given mine"""
         res = self.getMine_Raw(mineId, params)
@@ -26,7 +47,7 @@ class CrabadaWeb2Client:
 
     def getMine_Raw(self, mineId: int, params: dict[str, Any] = {}) -> Any:
         url = self.baseUri + "/mine/" + str(mineId)
-        return requests.request("GET", url, params=params).json()
+        return requests.get(url, headers=self.browserHeaders, params=params).json()
 
     def listMines(self, params: dict[str, Any] = {}) -> List[Game]:
         """
@@ -85,12 +106,14 @@ class CrabadaWeb2Client:
 
     def listMines_Raw(self, params: dict[str, Any] = {}) -> Any:
         url = self.baseUri + "/mines"
-        defaultParams = {
-            "limit": 5,
-            "page": 1,
-        }
+        defaultParams: dict[str, Any] = {"limit": 5, "page": 1}
         actualParams = defaultParams | params
-        return requests.request("GET", url, params=actualParams).json()
+        response = requests.get(
+            url,
+            headers=self.browserHeaders,
+            params=actualParams,
+        )
+        return response.json()
 
     def getTeam(self) -> None:
         raise Exception("The team route does not exit on the server!")
@@ -123,13 +146,15 @@ class CrabadaWeb2Client:
 
     def listTeams_Raw(self, userAddress: Address, params: dict[str, Any] = {}) -> Any:
         url = self.baseUri + "/teams"
-        defaultParams = {
+        defaultParams: dict[str, Any] = {
             "limit": 5,
             "page": 1,
         }
         actualParams = defaultParams | params
         actualParams["user_address"] = userAddress
-        return requests.request("GET", url, params=actualParams).json()
+        return requests.get(
+            url, headers=self.browserHeaders, params=actualParams
+        ).json()
 
     def listCrabsForLending(self, params: dict[str, Any] = {}) -> List[CrabForLending]:
         """
@@ -171,12 +196,33 @@ class CrabadaWeb2Client:
 
     def listCrabsForLending_Raw(self, params: dict[str, Any] = {}) -> Any:
         url = self.baseUri + "/crabadas/lending"
-        defaultParams = {
+        defaultParams: dict[str, Any] = {
             "limit": 10,
             "page": 1,
             "orderBy": "price",
             "order": "asc",
         }
         actualParams = defaultParams | params
-        # type: ignore
-        return requests.request("GET", url, params=actualParams).json()
+        return requests.get(
+            url, headers=self.browserHeaders, params=actualParams
+        ).json()
+
+    def listCrabsFromInventory(
+        self, userAddress: Address, params: dict[str, Any] = {}
+    ) -> List[CrabFromInventory]:
+        """
+        Get all crabs available as reinforcements from the user's
+        own inventory.
+        """
+        res = self.listCrabsFromInventory_Raw(userAddress, params)
+        try:
+            return res["result"]["data"] or []
+        except:
+            return []
+
+    def listCrabsFromInventory_Raw(
+        self, userAddress: Address, params: dict[str, Any] = {}
+    ) -> Any:
+        url = self.baseUri + "/crabadas/can-join-team"
+        params["user_address"] = userAddress
+        return requests.get(url, headers=self.browserHeaders, params=params).json()

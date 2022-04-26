@@ -32,6 +32,16 @@ class Strategy(ABC):
         """
         return self
 
+    def mayReturnNone(self) -> bool:
+        """
+        Return true if is it ok for the strategy to return no
+        result in some (or all) cases.
+
+        The caller can decide to raise an exception if this is
+        false.
+        """
+        return False
+
     def raiseIfNotApplicable(self) -> None:
         """
         Raise error if the strategy is not applicable

@@ -5,9 +5,8 @@ of a given user
 
 from src.common.logger import logger
 from src.common.txLogger import txLogger, logTx
-from src.helpers.sms import sendSms
 from src.helpers.instantMessage import sendIM
-from src.common.clients import crabadaWeb3Client
+from src.common.clients import makeCrabadaWeb3Client
 from src.helpers.mines import (
     fetchOpenMines,
     getNextMineToFinish,
@@ -15,6 +14,8 @@ from src.helpers.mines import (
     mineIsFinished,
 )
 from src.models.User import User
+from web3.exceptions import ContractLogicError
+from src.helpers.donate import maybeDonate
 
 
 def closeMines(user: User) -> int:
@@ -22,7 +23,9 @@ def closeMines(user: User) -> int:
     Close all open mining games whose end time is due; return
     the number of closed games.
     """
-
+    client = makeCrabadaWeb3Client(
+        upperLimitForBaseFeeInGwei=user.config["closeMineMaxGasInGwei"]
+    )
     openGames = fetchOpenMines(user)
     finishedGames = [g for g in openGames if mineIsFinished(g)]
 
@@ -39,19 +42,28 @@ def closeMines(user: User) -> int:
 
     # Close the finished games
     for g in finishedGames:
+
+        # Close mine
         gameId = g["game_id"]
         logger.info(f"Closing mine {gameId}...")
-        txHash = crabadaWeb3Client.closeGame(gameId)
+        try:
+            txHash = client.closeGame(gameId)
+        except ContractLogicError as e:
+            logger.warning(f"Error closing mine {gameId}: {e}")
+            sendIM(f"Error closing mine {gameId}: {e}")
+            continue
+
+        # Report
         txLogger.info(txHash)
-        txReceipt = crabadaWeb3Client.getTransactionReceipt(txHash)
+        txReceipt = client.getTransactionReceipt(txHash)
         logTx(txReceipt)
         if txReceipt["status"] != 1:
             logger.error(f"Error closing mine {gameId}")
-            sendSms(f"Crabada: Error closing mine {gameId}")
             sendIM(f"Error closing mine {gameId}")
         else:
             nClosedGames += 1
             logger.info(f"Mine {gameId} closed correctly")
             sendIM(f"Mine {gameId} closed correctly")
+            maybeDonate(txReceipt)
 
     return nClosedGames

@@ -1,25 +1,42 @@
-Scripts to interact with [Crabada](play.crabada.com)'s smart contracts 🦀
+Scripts to interact with [Crabada](https://www.crabada.com)'s smart contracts 🦀
+
+# Donate ❤️
+
+Building and maintaining the bot requires time and passion: please consider expressing your gratitude by donating a small part of your rewards :-)
+
+To donate, set the `DONATE_PERCENTAGE` parameter to a small value, for example `DONATE_PERCENTAGE=3%`; for more details, feel free to have a look in _.env.example_.
 
 # Features
 
 - Automatically send crabs mining.
 - Automatically reinforce mines & loots.
 - Automatically claim rewards for mines & loots.
-- Choose between several reinforcement strategies.
 - Run the bot without human supervision.
 - Manage multiple teams at the same time.
-- Telegram and SMS notifications.
+- Telegram notifications.
+
+Reinforce-specific features:
+
+- Choose between several reinforcement strategies.
+- Self-reinforce from inventory.
+- Do not reinforce if gas is too expensive.
 
 # Quick start
 
 1. Make sure you have Python 3.9 or later installed.
-1. Install dependencies: `pip install -r requirements.txt`.
-1. Copy _.env.example_ in _.env_.
-1. Configure _.env_.
-1. `cd` in the root folder of the project (the same where this readme is)
-1. Run any of the scripts in the _bin_ folder.
+2. Install dependencies: `pip install -r requirements.txt`.
+3. Copy _.env.example_ in _.env_.
+4. Configure _.env_; the bot will only consider the teams you add there.
+5. `cd` in the root folder of the project (the same where this readme is)
+6. Run any of the scripts in the _bin_ folder, or, to set an automatic job, see the "Run without human supervision" section of this README.
 
-Please note that the bot will only consider the teams that you have registered in _.env_.
+**IMPORTANT**: Do not run the bot on a webserver! If you must do it, keep your _.env_ outside the public folder at all costs, otherwise your private key might be accessible via browser! For good measure, also restrict its permissions: `chmod 700 .env`.
+
+# It doesn't work!
+
+If you have issues, click on the "[Discussions](https://github.com/coccoinomane/crabada.py/discussions/)" tab and write your problem in the search bar.
+
+If you do not find a solution, consider posting a new message there 🙂
 
 # Mining scripts
 
@@ -32,7 +49,7 @@ Please note that the bot will only consider the teams that you have registered i
 - Run `python -m bin.looting.reinforceAttack <your address>` to reinforce all attacking teams with a crab from the tavern, using the reinforcement strategy specified in the .env file.
 - Run `python -m bin.looting.closeLoots <your address>` to settle and claim rewards on loots that can be settled.
 
-### What about attacking? 🤔
+### - What about attacking? 🤔
 
 The bot can only help looters with automatic reinforcement & settling.
 
@@ -44,7 +61,7 @@ In order to run the bot without human supervision, you'll need to set a cron job
 
 I would recommend to do it on a remote server, for example on Vultr, AWS or Google Cloud; if you can't be bothered, you can also do it on your computer: just make sure you keep the computer turned on all the time.
 
-### Linux & Mac instructions
+### - Linux & Mac instructions
 
 Follow these instructions to send all available teams mining & to collect rewards for you:
 
@@ -62,18 +79,101 @@ Follow these instructions to send all available teams mining & to collect reward
    2,12,22,32,42,52 * * * * cd $HOME/crabada.py && python -m bin.mining.reinforceDefense <your address>
    ```
 
+# Reinforce Strategies
+
+Crabada can be played in different ways, especially when it comes to reinforcing.
+
+Choose the strategy to use with the `USER_X_TEAM_Y_REINFORCE_STRATEGY` parameter in *.env*:
+
+| Name | Description | Notes | Credits |
+| ---  | ---         | ---   | ---     |
+| `NoReinforce`              | Do not reinforce | Useful to spare gas | |
+| `HighestBp`                | Highest-BP low-cost crab | Good for looting on a budget | |
+| `HighestMp`                | Highest-MP low-cost crab | Good for mining on a budget | |
+| `HighestBpHighCost`        | Highest-BP crab | Use with high max price | @coinmasterlisting |
+| `HighestMpHighCost`        | Highest-MP crab | Use with high max price | @coinmasterlisting |
+| `CheapestCrab`             | Cheapest crab | Get a chance at mining revenge | |
+| `HighestBpFromInventory`   | Highest-BP from the inventory | Use with a fallback strat | @yigitest |
+| `HighestMpFromInventory`   | Highest-MP from the inventory | Use with a fallback strat | @yigitest |
+| `FirstFromInventory`            | First available crab in the inventory | Use with a fallback strat | @yigitest |
+
+### - Fallback strategies
+
+Sometimes a strategy will not be able to find a suitable crab. For example, a high-cost strategy might return a crab that is too expensive for the user, or an inventory strategy might fail because there are no free crabs in the user's inventory.
+
+To account for these cases, you can specify multiple strategies as comma-separated values. For example, if you specify:
+
+```bash
+USER_X_TEAM_Y_REINFORCE_STRATEGY="HighestBpFromInventory, HighestBpHighCost, HighestBp"
+```
+
+Then, the bot will:
+
+1. Attempt to self-reinforce with a high-BP crab from the user's inventory.
+2. If there are no free crabs in the inventory, attempt to borrow the highest-BP crab in the tavern.
+3. If the highest-BP crab is too expensive, attempt to borrow the highest-BP among the cheapest crabs in the tavern.
+
+### - Avoid the competition
+
+The `Highest` non-inventory strategies support the optional parameter `REINFORCEMENT_TO_PICK`. Set it to 2, 3, 4 to pick the 2nd, 3rd, 4th-best crab, and so on. Since most bots will compete for the first crab, setting this parameter to a higher-than-1 value can reduce the risk of a reverted transaction. Use this strategy if you constantly fail to get the first crab.
+
+**Important**: No matter which strategy you choose, the bot will never borrow a crab that is more expensive than `REINFORCEMENT_MAX_PRICE`.
+
+### - Create your own strategy
+
+Creating a strategy is very simple:
+
+1. Duplicate a strategy you like and pick a class name.
+2. Customize the three methods in the class: `query()`, `process()` and `pick()`. 
+3. Make sure your strategy never borrows crabs more expensive than `USER_X_REINFORCEMENT_MAX_PRICE`.
+4. Add the strategy name to the list in the file *ReinforceStrategyFactory.py*
+5. Configure _.env_ to use your new strategy via the `USER_X_TEAM_Y_REINFORCE_STRATEGY` parameter.
+
+To **test the strategy** withouth sending transactions, use the *testMakeReinforceStrategy.py* script.
+
+### - Gas control
+
+Use the `USER_X_REINFORCEMENT_MAX_GAS` parameter to set the maximum you are willing to spend for gas when reinforcing, in gwei.
+
+If Avalanche's base fee is higher than that, the bot will not reinforce.
+
+As a reference, when the base fee is 100 gwei, you will roughly spend 0.02 AVAX to reinforce.
 
 # Support for multiple teams
 
-The bot can handle multiple teams, you just need to register their IDs in the .env file:
+The bot can handle multiple teams, you just need to register their IDs and strategies in the .env file:
 
 ```bash
+# Team 1
 USER_1_TEAM_1="1111"
+USER_1_TEAM_1_TASK="mine"
+USER_1_TEAM_1_REINFORCE_STRATEGY="HighestMp"
+
+# Team 2
 USER_1_TEAM_2="2222"
-USER_1_TEAM_3="3333"
+USER_1_TEAM_2_TASK="loot"
+USER_1_TEAM_2_REINFORCE_STRATEGY="HighestBp"
 ```
 
 Then, you can run any of the scripts described above and they will apply to all of the registered teams.
+
+### - Team grouping
+
+If you manage multiple teams and your _.env_ is becoming a mess, consider **grouping your teams** in the following way:
+
+```bash
+# Mining group
+USER_1_GROUP_1_TEAMS="1111, 3333, 5555"
+USER_1_GROUP_1_TASK="mine"
+USER_1_GROUP_1_REINFORCE_STRATEGY="HighestMp"
+
+# Looting group
+USER_1_GROUP_2_TEAMS="2222, 4444, 6666"
+USER_1_GROUP_2_TASK="loot"
+USER_1_GROUP_2_REINFORCE_STRATEGY="HighestBp"
+```
+
+The above example will register 3 mining teams with the `HighestMp` strategy and 3 looting teams with the `HighestBp` strategy.
 
 # System requirements
 
@@ -110,9 +210,8 @@ If everything worked fine, you should receive a Telegram message on your newly c
 
 # To do
 
-* Donate mechanism
-* Test `closeLoots` fix
-* Avoid losing gas on failed reinforce
+* Web3Client: Make a separate project
+* Web3Client: Allow override of nonce, gas, etc, at the contract function level
 * Merge mines.py and reinforce.py helpers in Mine class
 * Use a virtual environment to manage dependencies
 * Simplify notification mess (src/bot/mining/reinforceDefense.py)
@@ -121,6 +220,5 @@ If everything worked fine, you should receive a Telegram message on your newly c
 # Might do
 
 * Use cron library to schedule scripts
-* Gas control: Stop if wallet has less than X ETH + set daily gas limit
 * Use web3 default variable WEB3_PROVIDER_URI instead of WEB3_NODE_URI
 * Use @property to define classattributes > https://realpython.com/python-property/
