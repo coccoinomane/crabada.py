@@ -18,7 +18,7 @@ class CrabadaWeb3Client(SwimmerNetworkWeb3Client):
     https://testnet-explorer.swimmer.network/address/0x801B5Bb19e9052dB964b94ed5b4d6730D8FcCA25/transactions
     """
 
-    contractAddress = cast(Address, "0x82a85407bd612f52577909f4a58bfc6873f14da8")
+    contractAddress = cast(Address, "0x88586dF1EB949E2b7b9A8b7DB468aF2251908465")
     abiDir = os.path.dirname(os.path.realpath(__file__)) + "/contracts"
     abi = Web3Client.getContractAbiFromFile(abiDir + "/IdleGameAbi.json")
 

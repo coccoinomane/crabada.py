@@ -1,22 +1,35 @@
-from __future__ import annotations
+from typing import Any
+from eth_typing import Address, HexStr
 from src.libs.Web3Client.Web3Client import Web3Client
 from web3.middleware import geth_poa_middleware
 
 
 class SwimmerNetworkWeb3Client(Web3Client):
     """
-    Client to interact with the Avalanche blockchain and
+    Client to interact with the Swimmer blockchain and
     its smart contracts.
     """
 
-    chainId: int = 73771
-    gasLimit: int = 400000  # sensible value for Avalanche
-    maxPriorityFeePerGasInGwei: int = 2  # TODO: fine tune
+    chainId = 73771
+    txType = 1
 
-    def setNodeUri(self, nodeUri: str = None) -> SwimmerNetworkWeb3Client:
-        """
-        Inject the POA middleware
-        """
-        super().setNodeUri(nodeUri)
+    def __init__(
+        self,
+        nodeUri: str,
+        privateKey: str = None,
+        maxPriorityFeePerGasInGwei: float = 1,
+        upperLimitForBaseFeeInGwei: float = float("inf"),
+        contractAddress: Address = None,
+        abi: dict[str, Any] = None,
+    ) -> None:
+        super().__init__(
+            nodeUri=nodeUri,
+            privateKey=privateKey,
+            chainId=self.chainId,
+            txType=self.txType,
+            maxPriorityFeePerGasInGwei=maxPriorityFeePerGasInGwei,
+            upperLimitForBaseFeeInGwei=upperLimitForBaseFeeInGwei,
+            contractAddress=contractAddress,
+            abi=abi,
+        )
         self.w3.middleware_onion.inject(geth_poa_middleware, layer=0)
-        return self

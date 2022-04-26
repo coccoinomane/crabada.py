@@ -140,26 +140,28 @@ class Web3Client:
             "from": self.userAddress,
         }
 
-        # Miner's tip
-        maxPriorityFeePerGasInGwei = (
-            maxPriorityFeePerGasInGwei or self.maxPriorityFeePerGasInGwei
-        )
-        tx["maxPriorityFeePerGas"] = Web3.toWei(maxPriorityFeePerGasInGwei, "gwei")
+        tx["gasPrice"] = Web3.toWei(4200000000000, "wei")
 
-        # Estimate the maximum price per unit of gas
-        (maxFeePerGasInGwei, baseFeeInGwei) = self.estimateMaxFeePerGasInGwei(
-            maxPriorityFeePerGasInGwei
-        )
-        tx["maxFeePerGas"] = Web3.toWei(maxFeePerGasInGwei, "gwei")
+        # # Miner's tip
+        # maxPriorityFeePerGasInGwei = (
+        #     maxPriorityFeePerGasInGwei or self.maxPriorityFeePerGasInGwei
+        # )
+        # tx["maxPriorityFeePerGas"] = Web3.toWei(maxPriorityFeePerGasInGwei, "gwei")
 
-        # Raise an exception if the fee is too high
-        if (
-            self.upperLimitForBaseFeeInGwei is not None
-            and baseFeeInGwei > self.upperLimitForBaseFeeInGwei
-        ):
-            raise TransactionTooExpensive(
-                f"Gas too expensive [baseFee={baseFeeInGwei} gwei, max={self.upperLimitForBaseFeeInGwei} gwei]"
-            )
+        # # Estimate the maximum price per unit of gas
+        # (maxFeePerGasInGwei, baseFeeInGwei) = self.estimateMaxFeePerGasInGwei(
+        #     maxPriorityFeePerGasInGwei
+        # )
+        # tx["maxFeePerGas"] = Web3.toWei(maxFeePerGasInGwei, "gwei")
+
+        # # Raise an exception if the fee is too high
+        # if (
+        #     self.upperLimitForBaseFeeInGwei is not None
+        #     and baseFeeInGwei > self.upperLimitForBaseFeeInGwei
+        # ):
+        #     raise TransactionTooExpensive(
+        #         f"Gas too expensive [baseFee={baseFeeInGwei} gwei, max={self.upperLimitForBaseFeeInGwei} gwei]"
+        #     )
 
         # If not explicitly given, fetch the nonce on chain
         tx["nonce"] = self.getNonce() if nonce is None else nonce
