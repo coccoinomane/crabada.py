@@ -134,11 +134,16 @@ To **test the strategy** withouth sending transactions, use the *testMakeReinfor
 
 ### - Gas control
 
-Use the `USER_X_REINFORCEMENT_MAX_GAS` parameter to set the maximum you are willing to spend for gas when reinforcing, in gwei.
+Use the following parameters to set the maximum you are willing to spend for gas, in gwei:
 
-If Avalanche's base fee is higher than that, the bot will not reinforce.
+- `USER_X_REINFORCEMENT_MAX_GAS` to reinforce,
+- `USER_X_MINE_MAX_GAS` to send a team mining,
+- `USER_X_CLOSE_MINE_MAX_GAS` to close a mine, and
+- `USER_X_CLOSE_LOOT_MAX_GAS` to settle a loot.
 
-As a reference, when the base fee is 100 gwei, you will roughly spend 0.02 AVAX to reinforce.
+If Avalanche's base fee is higher than that, the bot will not perform the action.
+
+As a reference, when the base fee is 100 gwei, you will roughly spend 0.02 AVAX to reinforce or start a mine, and about half of that for the other actions.
 
 # Support for multiple teams
 
