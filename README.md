@@ -48,6 +48,7 @@ If you do not find a solution, consider posting a new message there 🙂
 
 - Run `python -m bin.looting.reinforceAttack <your address>` to reinforce all attacking teams with a crab from the tavern, using the reinforcement strategy specified in the .env file.
 - Run `python -m bin.looting.closeLoots <your address>` to settle and claim rewards on loots that can be settled.
+- Run `python -m bin.looting.notifyTeamsIdle <your address>` to notify when the looting teams are sitting idle and they are waiting to be manually sent to loot
 
 ### - What about attacking? 🤔
 
