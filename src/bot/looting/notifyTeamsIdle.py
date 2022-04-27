@@ -1,7 +1,3 @@
-"""
-Notify a user where they have available looting teams sitting idle
-"""
-
 from src.common.logger import logger
 from src.helpers.instantMessage import sendIM
 from src.helpers.teams import fetchAvailableTeamsForTask
