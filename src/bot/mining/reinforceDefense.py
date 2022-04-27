@@ -4,8 +4,7 @@ Helper functions to reinforce all mines of a given user
 
 from web3.main import Web3
 from src.common.exceptions import NoSuitableReinforcementFound
-from src.common.logger import logger
-from src.common.txLogger import txLogger, logTx
+from src.common.logger import logger, logTx
 from src.helpers.mines import fetchOpenMines
 from src.helpers.reinforce import minerCanReinforce
 from src.helpers.instantMessage import sendIM
@@ -71,7 +70,6 @@ def reinforceDefense(user: User) -> int:
             continue
 
         # Report
-        txLogger.info(txHash)
         txReceipt = client.getTransactionReceipt(txHash)
         logTx(txReceipt)
         if txReceipt["status"] != 1:
