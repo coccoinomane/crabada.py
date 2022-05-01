@@ -4,7 +4,7 @@ For more advanced uses, see https://realpython.com/python-logging/"""
 
 import logging
 import logging.handlers
-from src.common.dotenv import getenv
+from src.common.dotenv import getenv, parseBool
 
 # Create a custom logger
 logger = logging.getLogger(__name__)
@@ -26,4 +26,7 @@ f_handler.setFormatter(f_format)
 
 # Add handlers to the logger
 logger.addHandler(c_handler)
-logger.addHandler(f_handler)
+
+enable_file_handler = parseBool("LOGGER_FILE_HANDLER", True)
+if enable_file_handler:
+    logger.addHandler(f_handler)

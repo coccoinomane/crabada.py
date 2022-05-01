@@ -11,6 +11,7 @@ from eth_typing.encoding import HexStr
 from web3.main import Web3
 from web3.types import TxReceipt
 from src.common.logger import f_handler, c_handler
+from src.common.dotenv import parseBool
 
 # Create a custom logger
 txLogger = logging.getLogger(__name__)
@@ -27,9 +28,12 @@ tx_format = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(messag
 tx_handler.setFormatter(tx_format)
 
 # Add handlers to the logger
-txLogger.addHandler(tx_handler)
-txLogger.addHandler(f_handler)
 txLogger.addHandler(c_handler)
+
+enable_file_handler = parseBool("LOGGER_FILE_HANDLER", True)
+if enable_file_handler:
+    txLogger.addHandler(tx_handler)
+    txLogger.addHandler(f_handler)
 
 
 def logTx(txReceipt: TxReceipt) -> None:

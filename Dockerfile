@@ -30,6 +30,8 @@ ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV DEBIAN_FRONTEND noninteractive
 
+ENV LOGGER_FILE_HANDLER=0
+
 COPY --from=builder /root/.local /root/.local
 COPY ./src /app/src
 COPY ./bin /app/bin
