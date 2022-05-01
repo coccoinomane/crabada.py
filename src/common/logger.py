@@ -47,15 +47,24 @@ def logTx(txReceipt: TxReceipt) -> None:
 
 
 def formatAttributeDict(
-    attributeDict: Union[TxReceipt, AttributeDict[str, Any]], indent: int = 4
+    attributeDict: Union[TxReceipt, AttributeDict[str, Any]],
+    indent: int = 4,
+    nestLevel: int = 0,
 ) -> str:
     """
     Web3 often returns AttributeDict instead of simple Dictionaries;
     this function return a pretty string with the AttributeDict content
     """
-    output = "{"
+    prefix = nestLevel * indent * " "
+    output = prefix + "{\n"
     for key, value in attributeDict.items():
-        output += " " * indent + f"{key} -> {pformat(value, indent=indent)}"
-    output += "}"
+        if isinstance(value, AttributeDict):
+            output += prefix + formatAttributeDict(value, indent, nestLevel + 1)
+            output += "\n"
+        else:
+            output += prefix + " " * indent
+            output += f"{key} -> {pformat(value, indent=indent)}"
+            output += "\n"
+    output += prefix + "}"
 
     return output
