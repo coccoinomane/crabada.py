@@ -16,7 +16,7 @@ def _minutesElapsedSinceMiningStart(team: Team):
         )
         return int(timedelta.total_seconds() // 60)
     except:
-        return 0
+        return 10000  # TODO a bigint default value.
 
 
 def _fetchTeamsWithElapsedTime(user: User) -> Dict[int, int]:
@@ -49,6 +49,7 @@ def _getMinimumElapsedTime(
             value = allTeamsWithMineTimings.get(team_id, minimumElapsedTime)
             if value < minimumElapsedTime:
                 minimumElapsedTime = value
+    logger.debug(f"StaggeringGroups - _getMinimumElapsedTime: {minimumElapsedTime}")
     return minimumElapsedTime
 
 
@@ -121,7 +122,5 @@ def filterAvailableTeamsForStaggering(user: User, teams: List[Team]) -> List[Tea
             # keep team_id's in a set for faster finds.
             filteredTeamIdSet.add(team["team_id"])
         else:
-            logger.debug(
-                f"Team {team['team_id']} is filtered out by StaggeringGroups filter."
-            )
+            logger.debug(f"StaggeringGroups - Team {team['team_id']} is filtered out.")
     return filteredTeams
