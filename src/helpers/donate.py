@@ -1,5 +1,6 @@
 from typing import Tuple, cast, List
 from src.common.logger import logger
+from src.common.dotenv import getenv
 from src.common.clients import makeAvalancheClient, makeCraClient, makeTusClient
 from src.common.config import donatePercentage, donateFrequency
 from web3.types import TxReceipt, Wei, Nonce
@@ -10,7 +11,11 @@ from src.helpers.price import tusToWei, craToWei, weiToCra, weiToTus
 import os
 
 
-claimsLogFilepath = "storage/logs/app/claims.log"
+claimsLogFilepath = os.path.join(
+    getenv("STORAGE_FOLDER", "storage"), "logs/app", "claims.log"
+)
+os.makedirs(os.path.dirname(claimsLogFilepath), exist_ok=True)
+
 """
 Log file containing the user's recent claims.
 

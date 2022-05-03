@@ -2,19 +2,22 @@
 
 For more advanced uses, see https://realpython.com/python-logging/"""
 
+import os
 import logging
 import logging.handlers
-from src.common.dotenv import getenv, parseBool
+from .dotenv import getenv
 
 # Create a custom logger
 logger = logging.getLogger(__name__)
 logger.setLevel(getenv("DEBUG_LEVEL", "WARNING"))
 
+logFilepath = os.path.join(getenv("STORAGE_FOLDER", "storage"), "logs/app", "app.log")
+os.makedirs(os.path.dirname(logFilepath), exist_ok=True)
+
 # Create handlers
 c_handler = logging.StreamHandler()
-f_handler = logging.handlers.TimedRotatingFileHandler(
-    "storage/logs/app/app.log", "midnight"
-)
+f_handler = logging.handlers.TimedRotatingFileHandler(logFilepath, "midnight")
+
 c_handler.setLevel(getenv("DEBUG_LEVEL", "WARNING"))
 f_handler.setLevel(getenv("DEBUG_LEVEL", "WARNING"))
 
@@ -26,7 +29,4 @@ f_handler.setFormatter(f_format)
 
 # Add handlers to the logger
 logger.addHandler(c_handler)
-
-enable_file_handler = parseBool("LOGGER_FILE_HANDLER", True)
-if enable_file_handler:
-    logger.addHandler(f_handler)
+logger.addHandler(f_handler)
