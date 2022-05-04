@@ -105,6 +105,8 @@ def parseTeamConfig(
             f"{teamPrefix}_REINFORCE_STRATEGY", ["HighestBp"]
         ),
         "reinforcementToPick": parseInt(f"{teamPrefix}_REINFORCEMENT_TO_PICK", 1),
+        "teamNumber": teamNumber,
+        "groupNumber": groupNumber,
     }
 
     validateTeamConfig(teamConfig, teamNumber, userPrefix)
