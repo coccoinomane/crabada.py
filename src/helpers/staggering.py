@@ -8,8 +8,11 @@ from datetime import datetime
 from typing import List, Dict, Set
 
 
-def _minutesElapsedSinceMiningStart(team: Team):
-    """returns time elapsed since given teams last mining start date"""
+def _minutesElapsedSinceMiningStart(team: Team) -> int:
+    """
+    Returns time in minutes elapsed since given team's last
+    mining start date
+    """
     try:
         timedelta = datetime.utcnow() - datetime.utcfromtimestamp(
             team["mine_start_time"]
@@ -20,8 +23,12 @@ def _minutesElapsedSinceMiningStart(team: Team):
 
 
 def _fetchTeamsWithElapsedTime(user: User) -> Dict[int, int]:
-    """returns a dictionary of team_ids and mining elapsed times.
-    fetches all teams of given user, and calculates the elapsed time from the last mining operation start date."""
+    """
+    Returns a dictionary of team_ids and mining elapsed times.
+
+    Fetches all teams of given user, and calculates the elapsed
+    time from the last mining operation start date.
+    """
     try:
         allTeams = makeCrabadaWeb2Client().listTeams(
             user.address, {"limit": 100, "page": 1}
@@ -39,9 +46,13 @@ def _getMinimumElapsedTime(
     staggeringGroup: StaggeringGroup,
     allTeamsWithMineTimings: Dict[int, int],
     exceptTeamId: int,
-):
-    """Finds minimum elapsed time since last mining expedition (for given staggering-group).
-    If there is no team currently mining returns a big-enough default value (currently 1000 minutes).
+) -> int:
+    """
+    Finds minimum elapsed time since last mining expedition (for
+    given staggering-group).
+
+    If there is no team currently mining, returns a big-enough
+    default value (currently 10000 minutes).
     """
     minimumElapsedTime = 10000  # TODO a bigint default value.
     for team_id in staggeringGroup:
@@ -97,7 +108,10 @@ def _checkTeamForUniqueGroups(
 
 
 def filterAvailableTeamsForStaggering(user: User, teams: List[Team]) -> List[Team]:
-
+    """
+    Given a list of teams, return only those that are ready to
+    be sent according to the staggering schedule
+    """
     staggeringGroups = user.getStaggeringGroups()
     staggeringDelayinMinutes = user.getStaggeringDelayInMinutes()
 
