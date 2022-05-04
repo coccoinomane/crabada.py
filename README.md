@@ -34,9 +34,9 @@ Reinforce-specific features:
 
 # It doesn't work!
 
-If you have issues, click on the "[Discussions](https://github.com/coccoinomane/crabada.py/discussions/)" tab and write your problem in the search bar.
-
-If you do not find a solution, consider posting a new message there 🙂
+1. Please check if your issue is listed in the [Common issues page](https://github.com/coccoinomane/crabada.py/wiki/Common-issues).
+2. If not, please search in the [Discussions section](https://github.com/coccoinomane/crabada.py/discussions/).
+3. If even that does not help, consider [asking the community](https://github.com/coccoinomane/crabada.py/discussions/new) 🙂
 
 # Mining scripts
 
