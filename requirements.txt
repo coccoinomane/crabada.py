@@ -3,3 +3,4 @@ requests==2.26.*
 types-requests==2.26.*
 web3==5.25.*
 eth-typing==2.2.*
+boto3==1.22.*
