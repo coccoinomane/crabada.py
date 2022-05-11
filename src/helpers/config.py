@@ -25,6 +25,7 @@ from typing import List, cast, Set
 from eth_typing import Address
 
 from src.helpers.general import duplicatesInList, flattenList
+from src.helpers.privatekey import get_private_key
 
 
 def parseGroupOfTeamsConfigs(groupNumber: int, userNumber: int) -> List[ConfigTeam]:
@@ -142,7 +143,7 @@ def parseUserConfig(userNumber: int, teams: List[ConfigTeam]) -> ConfigUser:
 
     userConfig: ConfigUser = {
         "address": address,
-        "privateKey": getenv(f"{userPrefix}_PRIVATE_KEY"),
+        "privateKey": get_private_key(f"{userPrefix}"),
         "reinforcementMaxPriceInTus": cast(Tus, reinforcementMaxPriceInTus),
         "reinforcementMaxPriceInTusWei": Web3.toWei(
             reinforcementMaxPriceInTus, "ether"
