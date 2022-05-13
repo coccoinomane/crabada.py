@@ -4,6 +4,8 @@ Private key retirval
 
 import os
 from src.helpers.aws import SecretsManager
+from src.helpers.vault import VaultSecretsManager
+
 
 def get_private_key(userPrefix: str) -> str:
     keyname = "%s_PRIVATE_KEY"%userPrefix
@@ -16,4 +18,14 @@ def get_private_key(userPrefix: str) -> str:
             private_key = os.getenv(keyname)
         finally:
             return private_key
+    elif os.getenv("VAULT_TOKEN") and os.getenv("VAULT_URL"):
+        try:
+            vm = VaultSecretsManager()
+            private_key = vm[keyname]
+        except KeyError:
+            private_key = os.getenv(keyname)
+        finally:
+            return private_key
+    else:
+        return os.getenv(keyname)
     return None
