@@ -35,7 +35,7 @@ class Web3Client:
     chainId: int = None | ID of the chain
     txType: int = 2 | Type of transaction
     privateKey: str = None | Private key to use (optional)
-    maxPriorityFeePerGasInGwei: float = 1 | Miner's tip (optional, default is 1)
+    maxPriorityFeePerGasInGwei: float = 1 | Miner's tip, relevant only for type-2 transactions (optional, default is 1)
     upperLimitForBaseFeeInGwei: float = inf | Raise an exception if baseFee is larger than this (optional, default is no limit)
     contractAddress: Address = None | Address of smart contract (optional)
     abi: dict[str, Any] = None | ABI of smart contract; to generate from a JSON file, use static method getContractAbiFromFile() (optional)
@@ -48,8 +48,6 @@ class Web3Client:
     account: LocalAccount = None | Account object for the user
     userAddress: Address = None | Address of the user
     contract: Contract = None | Contract object of web3.py
-
-    TODO: Add support for pre-EIP-1559 transactions
     """
 
     def __init__(
@@ -122,16 +120,15 @@ class Web3Client:
         maxPriorityFeePerGasInGwei: float = None,
     ) -> TxParams:
         """
-        Build a basic transaction with type, nonce, chain ID and gas;
-        before invoking this method you need to have specified a chainId and
-        called setNodeUri().
+        Build a basic transaction with type, nonce, chain ID and gas
 
         - If not given, the nonce will be computed on chain
         - If not given, the gas limit will be estimated on chain using gas_estimate()
-        - If not given, the miner's tip (maxPriorityFeePerGas) will be set to
-          self.maxPriorityFeePerGasInGwei
-        - The gas price is estimated according to the usual formula
-          maxMaxFeePerGas = 2 * baseFee + maxPriorityFeePerGas.
+        - For type-2 transactions, if not given, the miner's tip (maxPriorityFeePerGas)
+          will be set to self.maxPriorityFeePerGasInGwei
+        - For type-2 transactions, the max gas fee is estimated according to the usual
+          formula maxMaxFeePerGas = 2 * baseFee + maxPriorityFeePerGas.
+        - For type-1 transactions, the gasPrice is estimated on-chain using eth_gasPrice.
         """
 
         # Properties that you are not likely to change
@@ -141,32 +138,32 @@ class Web3Client:
             "from": self.userAddress,
         }
 
-        self.w3.eth.set_gas_price_strategy(rpc.rpc_gas_price_strategy)
+        # Compute gas fee based on the transaction type
+        gasFeeInGwei: float = None
 
-        gas_price = self.w3.eth.generate_gas_price()
+        # Pre EIP-1599, we only have gasPrice
+        if self.txType == 1:
+            self.w3.eth.set_gas_price_strategy(rpc.rpc_gas_price_strategy)
+            tx["gasPrice"] = self.w3.eth.generate_gas_price()
+            gasFeeInGwei = float(Web3.fromWei(tx["gasPrice"], "gwei"))
 
-        tx["gasPrice"] = gas_price
+        # Post EIP-1599, we have both the miner's tip and the max fee.
+        elif self.txType == 2:
 
-        # # Miner's tip
-        # maxPriorityFeePerGasInGwei = (
-        #     maxPriorityFeePerGasInGwei or self.maxPriorityFeePerGasInGwei
-        # )
-        # tx["maxPriorityFeePerGas"] = Web3.toWei(maxPriorityFeePerGasInGwei, "gwei")
+            # The miner tip is user-provided
+            maxPriorityFeePerGasInGwei = (
+                maxPriorityFeePerGasInGwei or self.maxPriorityFeePerGasInGwei
+            )
+            tx["maxPriorityFeePerGas"] = Web3.toWei(maxPriorityFeePerGasInGwei, "gwei")
 
-        # # Estimate the maximum price per unit of gas
-        # (maxFeePerGasInGwei, baseFeeInGwei) = self.estimateMaxFeePerGasInGwei(
-        #     maxPriorityFeePerGasInGwei
-        # )
-        # tx["maxFeePerGas"] = Web3.toWei(maxFeePerGasInGwei, "gwei")
+            # The max fee is estimated from the miner tip & block base fee
+            (maxFeePerGasInGwei, gasFeeInGwei) = self.estimateMaxFeePerGasInGwei(
+                maxPriorityFeePerGasInGwei
+            )
+            tx["maxFeePerGas"] = Web3.toWei(maxFeePerGasInGwei, "gwei")
 
-        # # Raise an exception if the fee is too high
-        # if (
-        #     self.upperLimitForBaseFeeInGwei is not None
-        #     and baseFeeInGwei > self.upperLimitForBaseFeeInGwei
-        # ):
-        #     raise TransactionTooExpensive(
-        #         f"Gas too expensive [baseFee={baseFeeInGwei} gwei, max={self.upperLimitForBaseFeeInGwei} gwei]"
-        #     )
+        # Raise an exception if the fee is too high
+        self.raiseIfGasFeeTooHigh(gasFeeInGwei)
 
         # If not explicitly given, fetch the nonce on chain
         tx["nonce"] = self.getNonce() if nonce is None else nonce
@@ -282,20 +279,15 @@ class Web3Client:
     #     filter = event.createFilter(fromBlock='latest' ...)
 
     ####################
-    # Utils
+    # Gas
     ####################
-
-    def getNonce(self, address: Address = None) -> Nonce:
-        if not address:
-            address = self.userAddress
-        return self.w3.eth.get_transaction_count(address)
 
     def estimateMaxFeePerGasInGwei(
         self, maxPriorityFeePerGasInGwei: float
     ) -> Tuple[float, float]:
         """
-        Estimate the maxFeePerGas parameter using the formula
-        2 * baseFee + maxPriorityFeePerGas.
+        For Type-2 transactions (post EIP-1559), estimate the maxFeePerGas
+        parameter using the formula 2 * baseFee + maxPriorityFeePerGas.
 
         This is the same formula used by web3 and here
         https://ethereum.stackexchange.com/a/113373/89782
@@ -305,11 +297,44 @@ class Web3Client:
         Returns both the estimate (in gwei) and the baseFee
         (also in gwei).
         """
-
-        latest_block = self.w3.eth.get_block("latest")
-        baseFeeInWei = latest_block["baseFeePerGas"]
+        latestBlock = self.w3.eth.get_block("latest")
+        baseFeeInWei = latestBlock["baseFeePerGas"]
         baseFeeInGwei = float(Web3.fromWei(baseFeeInWei, "gwei"))
         return (2 * baseFeeInGwei + maxPriorityFeePerGasInGwei, baseFeeInGwei)
+
+    def estimateGasPriceInGwei(self) -> float:
+        """
+        For Type-1 transactions (pre EIP-1559), estimate the gasPrice
+        parameter by asking it directly to the node.
+
+        Docs: https://web3py.readthedocs.io/en/stable/gas_price.html
+        """
+        self.w3.eth.set_gas_price_strategy(rpc.rpc_gas_price_strategy)
+        return float(Web3.fromWei(self.w3.eth.generate_gas_price(), "gwei"))
+
+    def raiseIfGasFeeTooHigh(self, gasFeeInGwei: float) -> None:
+        """
+        Raise an exception if the given gas fee in Gwei is too high.
+
+        For Type-1 transactions, pass the gasPrice; for Type-2,
+        pass the baseFee.
+        """
+        if (
+            self.upperLimitForBaseFeeInGwei is not None
+            and gasFeeInGwei > self.upperLimitForBaseFeeInGwei
+        ):
+            raise TransactionTooExpensive(
+                f"Gas too expensive [fee={gasFeeInGwei} gwei, max={self.upperLimitForBaseFeeInGwei} gwei]"
+            )
+
+    ####################
+    # Utils
+    ####################
+
+    def getNonce(self, address: Address = None) -> Nonce:
+        if not address:
+            address = self.userAddress
+        return self.w3.eth.get_transaction_count(address)
 
     def getLatestBlock(self) -> BlockData:
         """
