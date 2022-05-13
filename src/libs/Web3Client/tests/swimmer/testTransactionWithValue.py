@@ -2,12 +2,12 @@ from sys import argv
 from typing import cast
 from eth_typing import Address
 from src.common.config import nodeUri, users
-from src.libs.Web3Client.AvalancheCWeb3Client import AvalancheCWeb3Client
+from src.libs.Web3Client.SwimmerNetworkWeb3Client import SwimmerNetworkWeb3Client
 from src.libs.Web3Client.helpers.debug import printTxInfo
 from pprint import pprint
 
 # VARS
-client = AvalancheCWeb3Client(
+client = SwimmerNetworkWeb3Client(
     nodeUri=nodeUri,
     privateKey=users[0]["privateKey"],
 )

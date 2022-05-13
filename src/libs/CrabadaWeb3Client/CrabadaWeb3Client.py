@@ -12,8 +12,8 @@ class CrabadaWeb3Client(SwimmerNetworkWeb3Client):
     """
     Interact with a smart contract of the game Crabada
 
-    The contract resides on the Swimmer subnet blockchain; here's
-    the URL on Subnet explorer:
+    The contract resides on the Swimmer Network subnet blockchain;
+    here's the URL on Subnet explorer:
     https://subnets.avax.network/swimmer/mainnet/explorer/address/0x9ab9e81Be39b73de3CCd9408862b1Fc6D2144d2B
     """
 

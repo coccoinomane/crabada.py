@@ -6,8 +6,8 @@ from web3.middleware import geth_poa_middleware
 
 class SwimmerNetworkWeb3Client(Web3Client):
     """
-    Client to interact with the Swimmer blockchain and
-    its smart contracts.
+    Client to interact with the Swimmer Network (subnet of Avalanche)
+    and its smart contracts.
     """
 
     chainId = 73772
