@@ -25,11 +25,12 @@ def getTusAndCraRewardsFromTxReceipt(txReceipt: TxReceipt) -> Tuple[Wei, Wei]:
         makeSwimmerCraClient().contract.events.Transfer().processReceipt(txReceipt)
     )
 
+    # TODO: this fails in Swimmer because TUS is not an ERC20 token anymore
     tusAmount: Wei = firstOrNone(
         [
             l["args"]["value"]
             for l in logs
-            if cast(Address, l["address"].lower()) == tokens["TUS"]
+            if cast(Address, l["address"].lower()) == tokens["SwimmerNetwork"]["WTUS"]
         ]
     )
 
@@ -37,7 +38,7 @@ def getTusAndCraRewardsFromTxReceipt(txReceipt: TxReceipt) -> Tuple[Wei, Wei]:
         [
             l["args"]["value"]
             for l in logs
-            if cast(Address, l["address"].lower()) == tokens["CRA"]
+            if cast(Address, l["address"].lower()) == tokens["SwimmerNetwork"]["CRA"]
         ]
     )
 

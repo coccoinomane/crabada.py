@@ -25,7 +25,7 @@ def test() -> None:
     tusAmount, craAmount = getDonationAmounts(recentClaims, donatePercentage)
     print(tusAmount, craAmount)
     print(">>> DONATION AMOUNTS IN ETH")
-    print(weiToTus(tusAmount), weiToCra(craAmount))
+    print("None" if tusAmount == None else weiToTus(tusAmount), weiToCra(craAmount))
     print(">>> SHOULD DONATE?")
     print(shouldDonate(claims, donateFrequency))
 

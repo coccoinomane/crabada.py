@@ -1,11 +1,8 @@
-from pprint import pprint
 from sys import argv
-from typing import Tuple, cast
-from web3.types import TxReceipt, Wei
+from typing import cast
 from src.helpers.general import secondOrNone
 from src.common.clients import makeSwimmerNetworkClient
 from src.helpers.rewards import getTusAndCraRewardsFromTxReceipt
-from src.libs.Web3Client.Web3Client import Web3Client
 from src.helpers.price import weiToCra, weiToTus
 from eth_typing.encoding import HexStr
 
@@ -23,9 +20,9 @@ client = makeSwimmerNetworkClient()
 def test() -> None:
     txReceipt = client.getTransactionReceipt(txHash)
     (tusDonated, craDonated) = getTusAndCraRewardsFromTxReceipt(txReceipt)
-    print(">>> TUS DONATED")
-    print(weiToTus(tusDonated))
-    print(">>> CRA DONATED")
+    print(">>> TUS REWARD")
+    print("None" if tusDonated == None else weiToTus(tusDonated))
+    print(">>> CRA REWARD")
     print(weiToCra(craDonated))
 
 
