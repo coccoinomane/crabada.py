@@ -1,4 +1,4 @@
-from typing import Literal, NewType, Tuple, TypedDict, List
+from typing import Literal, NewType, Tuple, TypedDict, List, Set
 from eth_typing import Address
 from web3.types import Wei
 
@@ -23,6 +23,10 @@ class ConfigTeam(TypedDict):
     groupNumber: int  # internal group number (0 if team not in a group)
 
 
+# Typing helper for staggering groups.
+StaggeringGroup = Set[int]
+
+
 class ConfigUser(TypedDict):
     address: Address
     privateKey: str
@@ -31,7 +35,10 @@ class ConfigUser(TypedDict):
     reinforcementMaxGasInGwei: float
     mineMaxGasInGwei: float
     closeMineMaxGasInGwei: float
+    closeLootMaxGasInGwei: float
     teams: List[ConfigTeam]
+    staggeringGroups: List[StaggeringGroup]
+    staggeringDelayInMinutes: int
 
 
 class ConfigContract(TypedDict):
