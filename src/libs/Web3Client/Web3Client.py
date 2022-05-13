@@ -11,6 +11,7 @@ from eth_typing.encoding import HexStr
 from src.libs.Web3Client.exceptions import TransactionTooExpensive
 from web3.contract import Contract
 from web3.types import Middleware
+from web3.gas_strategies import rpc
 
 
 class Web3Client:
@@ -140,7 +141,11 @@ class Web3Client:
             "from": self.userAddress,
         }
 
-        tx["gasPrice"] = Web3.toWei(4200000000000, "wei")
+        self.w3.eth.set_gas_price_strategy(rpc.rpc_gas_price_strategy)
+
+        gas_price = self.w3.eth.generate_gas_price()
+
+        tx["gasPrice"] = gas_price
 
         # # Miner's tip
         # maxPriorityFeePerGasInGwei = (

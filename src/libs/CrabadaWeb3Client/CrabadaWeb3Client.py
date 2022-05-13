@@ -12,13 +12,12 @@ class CrabadaWeb3Client(SwimmerNetworkWeb3Client):
     """
     Interact with a smart contract of the game Crabada
 
-    The contract resides on the Avalanche blockchain; here's
-    the URL on Snowtrace:
-    https://snowtrace.io/address/0x82a85407bd612f52577909f4a58bfc6873f14da8#tokentxns
-    https://testnet-explorer.swimmer.network/address/0x801B5Bb19e9052dB964b94ed5b4d6730D8FcCA25/transactions
+    The contract resides on the Swimmer subnet blockchain; here's
+    the URL on Subnet explorer:
+    https://subnets.avax.network/swimmer/mainnet/explorer/address/0x9ab9e81Be39b73de3CCd9408862b1Fc6D2144d2B
     """
 
-    contractAddress = cast(Address, "0x88586dF1EB949E2b7b9A8b7DB468aF2251908465")
+    contractAddress = cast(Address, "0x9ab9e81Be39b73de3CCd9408862b1Fc6D2144d2B")
     abiDir = os.path.dirname(os.path.realpath(__file__)) + "/contracts"
     abi = Web3Client.getContractAbiFromFile(abiDir + "/IdleGameAbi.json")
 

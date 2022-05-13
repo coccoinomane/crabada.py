@@ -10,7 +10,7 @@ class SwimmerNetworkWeb3Client(Web3Client):
     its smart contracts.
     """
 
-    chainId = 73771
+    chainId = 73772
     txType = 1
 
     def __init__(
