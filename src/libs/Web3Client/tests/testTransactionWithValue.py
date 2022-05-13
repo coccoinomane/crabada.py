@@ -30,9 +30,7 @@ def testSign() -> None:
 
 
 def testSend() -> None:
-    tx = client.buildTransactionWithValue(to, valueInEth)
-    signedTx = client.signTransaction(tx)
-    txHash = client.sendSignedTransaction(signedTx)
+    txHash = client.sendEth(to, valueInEth)
     printTxInfo(client, txHash)
 
 

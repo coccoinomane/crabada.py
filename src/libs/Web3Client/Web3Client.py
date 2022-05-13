@@ -259,6 +259,22 @@ class Web3Client:
         """
         return self.w3.eth.get_transaction(txHash)
 
+    def sendEth(
+        self,
+        to: Address,
+        valueInEth: float,
+        nonce: Nonce = None,
+        gasLimit: int = None,
+        maxPriorityFeePerGasInGwei: int = None,
+    ) -> HexStr:
+        """
+        Send ETH to the given addresss
+        """
+        tx = self.buildTransactionWithValue(
+            to, valueInEth, nonce, gasLimit, maxPriorityFeePerGasInGwei
+        )
+        return self.signAndSendTransaction(tx)
+
     ####################
     # Watch
     ####################
