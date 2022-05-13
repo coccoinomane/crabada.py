@@ -1,6 +1,9 @@
 from typing import Tuple, cast, List
 from src.common.logger import logger
-from src.common.clients import makeAvalancheClient, makeCraClient, makeTusClient
+from src.common.clients import (
+    makeSwimmerCraClient,
+    makeSwimmerNetworkClient,
+)
 from src.common.config import donatePercentage, donateFrequency
 from web3.types import TxReceipt, Wei, Nonce
 from src.common.constants import eoas
@@ -97,27 +100,28 @@ def donate(
     (tusDonation, craDonation) = getDonationAmounts(recentClaims, percentage)
 
     # Initialize nonce and receipts
-    nonce = makeAvalancheClient().getNonce()
+    nonce = makeSwimmerNetworkClient().getNonce()
     tusReceipt, craReceipt = None, None
 
     # Donate TUS
-    if tusDonation:
-        try:
-            tusClient = makeTusClient()
-            txTus = tusClient.transfer(eoas["project"], tusDonation, nonce)
-            tusReceipt = tusClient.getTransactionReceipt(txTus)
-            if tusReceipt["status"] != 1:
-                logger.error(
-                    f"Error from TUS donation [tx={txTus}, status={tusReceipt['status']}"
-                )
-            nonce = cast(Nonce, nonce + 1)
-        except Exception as e:
-            logger.error(f"Could not send TUS donation > {e}")
+    # TODO: On Swimmer, TUS is not a token anymore
+    # if tusDonation:
+    #     try:
+    #         tusClient = makeTusClient()
+    #         txTus = tusClient.transfer(eoas["project"], tusDonation, nonce)
+    #         tusReceipt = tusClient.getTransactionReceipt(txTus)
+    #         if tusReceipt["status"] != 1:
+    #             logger.error(
+    #                 f"Error from TUS donation [tx={txTus}, status={tusReceipt['status']}"
+    #             )
+    #         nonce = cast(Nonce, nonce + 1)
+    #     except Exception as e:
+    #         logger.error(f"Could not send TUS donation > {e}")
 
     # Donate CRA
     if craDonation:
         try:
-            craClient = makeCraClient()
+            craClient = makeSwimmerCraClient()
             txCra = craClient.transfer(eoas["project"], craDonation, nonce)
             craReceipt = craClient.getTransactionReceipt(txCra)
             if craReceipt["status"] != 1:

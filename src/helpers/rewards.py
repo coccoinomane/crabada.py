@@ -1,7 +1,7 @@
 from typing import Iterable, Tuple, cast
 from eth_typing import Address
 from web3.types import TxReceipt, EventData, Wei
-from src.common.clients import makeTusClient
+from src.common.clients import makeSwimmerCraClient
 from src.common.constants import tokens
 from src.helpers.general import firstOrNone
 
@@ -22,7 +22,7 @@ def getTusAndCraRewardsFromTxReceipt(txReceipt: TxReceipt) -> Tuple[Wei, Wei]:
 
     # Return any ERC20 token transfer in the TX
     logs: Iterable[EventData] = (
-        makeTusClient().contract.events.Transfer().processReceipt(txReceipt)
+        makeSwimmerCraClient().contract.events.Transfer().processReceipt(txReceipt)
     )
 
     tusAmount: Wei = firstOrNone(
