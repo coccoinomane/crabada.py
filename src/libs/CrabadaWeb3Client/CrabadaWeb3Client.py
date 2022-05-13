@@ -82,6 +82,7 @@ class CrabadaWeb3Client(SwimmerNetworkWeb3Client):
         """
         tx: TxParams = self.buildContractTransaction(
             self.contract.functions.reinforceDefense(gameId, crabadaId, borrowPrice),
+            valueInWei=borrowPrice,
         )
         return self.signAndSendTransaction(tx)
 
@@ -92,5 +93,6 @@ class CrabadaWeb3Client(SwimmerNetworkWeb3Client):
         """
         tx: TxParams = self.buildContractTransaction(
             self.contract.functions.reinforceAttack(gameId, crabadaId, borrowPrice),
+            valueInWei=borrowPrice,
         )
         return self.signAndSendTransaction(tx)

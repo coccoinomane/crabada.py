@@ -10,7 +10,7 @@ from web3.types import BlockData, Nonce, TxParams, TxReceipt, TxData
 from eth_typing.encoding import HexStr
 from src.libs.Web3Client.exceptions import TransactionTooExpensive
 from web3.contract import Contract
-from web3.types import Middleware
+from web3.types import Middleware, Wei
 from web3.gas_strategies import rpc
 
 
@@ -203,6 +203,7 @@ class Web3Client:
     def buildContractTransaction(
         self,
         contractFunction: ContractFunction,
+        valueInWei: Wei = None,
         nonce: Nonce = None,
         gasLimit: int = None,
         maxPriorityFeePerGasInGwei: int = None,
@@ -218,6 +219,8 @@ class Web3Client:
             gasLimit,
             maxPriorityFeePerGasInGwei,
         )
+        if valueInWei:
+            baseTx["value"] = valueInWei
         return contractFunction.buildTransaction(baseTx)
 
     ####################
