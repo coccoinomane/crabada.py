@@ -9,6 +9,12 @@ from src.helpers.general import firstOrNone
 Anything related to TUS and CRA rewards
 """
 
+tusToCraRatio: int = 81
+"""
+Ratio between the amount of TUS rewarded and the amount
+of CRA rewarded (334.125 divided by 4.125)
+"""
+
 
 def getTusAndCraRewardsFromTxReceipt(txReceipt: TxReceipt) -> Tuple[Wei, Wei]:
     """
@@ -25,15 +31,6 @@ def getTusAndCraRewardsFromTxReceipt(txReceipt: TxReceipt) -> Tuple[Wei, Wei]:
         makeSwimmerCraClient().contract.events.Transfer().processReceipt(txReceipt)
     )
 
-    # TODO: this fails in Swimmer because TUS is not an ERC20 token anymore
-    tusAmount: Wei = firstOrNone(
-        [
-            l["args"]["value"]
-            for l in logs
-            if cast(Address, l["address"].lower()) == tokens["SwimmerNetwork"]["WTUS"]
-        ]
-    )
-
     craAmount: Wei = firstOrNone(
         [
             l["args"]["value"]
@@ -42,4 +39,16 @@ def getTusAndCraRewardsFromTxReceipt(txReceipt: TxReceipt) -> Tuple[Wei, Wei]:
         ]
     )
 
+    tusAmount = inferTusRewardsFromCraRewards(craAmount)
+
     return (tusAmount, craAmount)
+
+
+def inferTusRewardsFromCraRewards(craAmount: Wei) -> Wei:
+    """
+    Given the CRA rewarded in a closeGame or settleGame transaction,
+    return the corresponding TUS rewards
+    """
+    if craAmount == None:
+        return None
+    return Wei(craAmount * tusToCraRatio)
