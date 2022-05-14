@@ -1,10 +1,10 @@
 Scripts to interact with [Crabada](https://www.crabada.com)'s smart contracts 🦀
 
-# Donate ❤️
+# 📣  Swimmer Network subnet
 
-Building and maintaining the bot requires time and passion: please consider expressing your gratitude by donating a small part of your rewards :-)
+The bot now works on the Swimmer Network subnet!
 
-To donate, set the `DONATE_PERCENTAGE` parameter to a small value, for example `DONATE_PERCENTAGE=3%`; for more details, feel free to have a look in _.env.example_.
+Make sure to follow our [migration tutorial](https://github.com/coccoinomane/crabada.py/discussions/104): it takes just a few minutes 🙂
 
 # Features
 
