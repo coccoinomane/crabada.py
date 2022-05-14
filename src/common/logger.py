@@ -4,6 +4,7 @@ Create a logger for app-related events (bugs, info, etc)
 For more advanced uses, see https://realpython.com/python-logging/
 """
 
+import os
 import logging
 import logging.handlers
 from typing import Any, Union
@@ -17,11 +18,13 @@ from pprint import pformat
 logger = logging.getLogger(__name__)
 logger.setLevel(getenv("DEBUG_LEVEL", "WARNING"))
 
+logFilepath = os.path.join(getenv("STORAGE_FOLDER", "storage"), "logs/app", "app.log")
+os.makedirs(os.path.dirname(logFilepath), exist_ok=True)
+
 # Create handlers
 c_handler = logging.StreamHandler()
-f_handler = logging.handlers.TimedRotatingFileHandler(
-    "storage/logs/app/app.log", "midnight"
-)
+f_handler = logging.handlers.TimedRotatingFileHandler(logFilepath, "midnight")
+
 c_handler.setLevel(getenv("DEBUG_LEVEL", "WARNING"))
 f_handler.setLevel(getenv("DEBUG_LEVEL", "WARNING"))
 
