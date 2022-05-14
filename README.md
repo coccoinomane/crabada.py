@@ -8,22 +8,19 @@ Make sure to follow our [migration tutorial](https://github.com/coccoinomane/cra
 
 # Features
 
-- Automatic mining: start mining, reinforce and settle.
-- Automatic looting: reinforce, settle and get notified when teams are idle.
-- No human supervision needed.
+- Completely automatic mining: start, reinforce & settle.
+- Semi-automatic looting: reinforce and settle.
 - Manage multiple teams at the same time.
 - Telegram notifications.
-- Choose between several reinforcement strategies.
-- Self-reinforce from inventory & stagger teams to maximize inventory crabs.
+- Self-reinforce from inventory
 
 # Quick start
 
 1. Make sure you have Python 3.9 or later installed.
 2. Install dependencies: `pip install -r requirements.txt`.
 3. Copy _.env.example_ in _.env_.
-4. Configure _.env_; Crabada.py will only consider the teams you add there.
-5. `cd` in the root folder of the project (the same where this readme is)
-6. Run `python -m bin.mining.run <your address>` to automatically mine, reinforce and settle with all available teams. The command will keep running as long as your computer is turned on.
+4. Configure _.env_. Crabada.py will only consider the teams you add there.
+5. Run `python -m bin.mining.run <your address>` to automatically mine, reinforce and settle with all available teams. The command will keep running as long as your computer is turned on.
 
 **IMPORTANT**: Do not run Crabada.py on a webserver! If you must do it, keep your _.env_ outside the public folder at all costs, otherwise your private key might be accessible via browser! For good measure, also restrict its permissions: `chmod 700 .env`.
 
@@ -33,7 +30,7 @@ Make sure to follow our [migration tutorial](https://github.com/coccoinomane/cra
 - [🎮 Available commands](https://github.com/coccoinomane/crabada.py/wiki/%F0%9F%8E%AE-Available-commands)
 - [🦀 Manage multiple teams](https://github.com/coccoinomane/crabada.py/wiki/%F0%9F%A6%80-Manage-multiple-teams)
 - [📭 Telegram notifications](https://github.com/coccoinomane/crabada.py/wiki/%F0%9F%93%AD-Telegram-notifications)
-- [Reinforce strategies](https://github.com/coccoinomane/crabada.py/wiki/Reinforce-strategies)
+- [💪 Reinforce strategies](https://github.com/coccoinomane/crabada.py/wiki/%F0%9F%92%AA-Reinforce-strategies)
 - [🤖 Automate via cron job](https://github.com/coccoinomane/crabada.py/wiki/%F0%9F%A4%96-Automate-via-cron-job)
 - [🐳 Run with docker](https://github.com/coccoinomane/crabada.py/wiki/%F0%9F%90%B3--Run-with-docker)
 - [ℹ️ Common issues](https://github.com/coccoinomane/crabada.py/wiki/%E2%84%B9%EF%B8%8F-Common-issues)
