@@ -1,8 +1,9 @@
 import json
-from typing import Any, List, Tuple, cast
+from typing import Any, List, Tuple, cast, Union
 from eth_account import Account
 from eth_account.signers.local import LocalAccount
 from eth_typing import Address
+from hexbytes import HexBytes
 from web3 import Web3
 from eth_account.datastructures import SignedTransaction
 from web3.contract import ContractFunction
@@ -185,7 +186,24 @@ class Web3Client:
         maxPriorityFeePerGasInGwei: int = None,
     ) -> TxParams:
         """
-        Build a transaction involving a transfer of value to an address,
+        Build a transaction involving a transfer of value (in ETH) to an address,
+        where the value is expressed in the blockchain token (e.g. ETH or AVAX).
+        """
+        valueInWei = self.w3.toWei(valueInEth, "ether")
+        return self.buildTransactionWithValueInWei(
+            to, valueInWei, nonce, gasLimit, maxPriorityFeePerGasInGwei
+        )
+
+    def buildTransactionWithValueInWei(
+        self,
+        to: Address,
+        valueInWei: Wei,
+        nonce: Nonce = None,
+        gasLimit: int = None,
+        maxPriorityFeePerGasInGwei: int = None,
+    ) -> TxParams:
+        """
+        Build a transaction involving a transfer of value (in Wei) to an address,
         where the value is expressed in the blockchain token (e.g. ETH or AVAX).
         """
         tx = self.buildBaseTransaction(
@@ -195,8 +213,8 @@ class Web3Client:
         )
         extraParams: TxParams = {
             "to": to,
-            "value": self.w3.toWei(valueInEth, "ether"),
-            "gas": self.estimateGasForTransfer(to, valueInEth),  # type: ignore
+            "value": valueInWei,
+            "gas": self.estimateGasForTransfer(to, valueInWei),  # type: ignore
         }
         return tx | extraParams
 
@@ -255,7 +273,7 @@ class Web3Client:
         """
         return self.w3.eth.wait_for_transaction_receipt(txHash)
 
-    def getTransaction(self, txHash: HexStr) -> TxData:
+    def getTransaction(self, txHash: Union[HexStr, HexBytes]) -> TxData:
         """
         Given a transaction hash, get the transaction; will raise error
         if the transaction has not been mined yet.
@@ -271,10 +289,26 @@ class Web3Client:
         maxPriorityFeePerGasInGwei: int = None,
     ) -> HexStr:
         """
-        Send ETH to the given addresss
+        Send ETH to the given address
         """
         tx = self.buildTransactionWithValue(
             to, valueInEth, nonce, gasLimit, maxPriorityFeePerGasInGwei
+        )
+        return self.signAndSendTransaction(tx)
+
+    def sendEthInWei(
+        self,
+        to: Address,
+        valueInWei: Wei,
+        nonce: Nonce = None,
+        gasLimit: int = None,
+        maxPriorityFeePerGasInGwei: int = None,
+    ) -> HexStr:
+        """
+        Send ETH (in Wei) to the given address
+        """
+        tx = self.buildTransactionWithValueInWei(
+            to, valueInWei, nonce, gasLimit, maxPriorityFeePerGasInGwei
         )
         return self.signAndSendTransaction(tx)
 
@@ -367,16 +401,16 @@ class Web3Client:
         """
         return self.w3.eth.get_block("pending")
 
-    def estimateGasForTransfer(self, to: Address, valueInEth: float) -> int:
+    def estimateGasForTransfer(self, to: Address, valueInWei: Wei) -> int:
         """
         Return the gas that would be required to send some ETH
-        to an address
+        (expressed in Wei) to an address
         """
         return self.w3.eth.estimate_gas(
             {
                 "from": self.userAddress,
                 "to": to,
-                "value": self.w3.toWei(valueInEth, "ether"),
+                "value": valueInWei,
             }
         )
 
