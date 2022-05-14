@@ -192,11 +192,11 @@ def getDonateMessage() -> str:
     return """
 🦀  🦀  🦀
 
-Building this bot requires time and passion.
+Building Crabada.py requires time and passion.
 Please consider expressing your gratitude
 by donating a small % of your rewards :-)
 
-To donate, write DONATE_PERCENTAGE=3%
+To donate, write DONATE_PERCENTAGE=5%
 in your .env file; this message will
 disappear regardless of the amount that
 you donate 🙂
