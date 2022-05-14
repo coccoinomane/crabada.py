@@ -19,11 +19,13 @@ client = makeSwimmerNetworkClient()
 # TEST FUNCTION
 def test() -> None:
     txReceipt = client.getTransactionReceipt(txHash)
-    (tusDonated, craDonated) = getTusAndCraRewardsFromTxReceipt(txReceipt)
+    (tusAmount, craAmount) = getTusAndCraRewardsFromTxReceipt(txReceipt)
+    if craAmount == None:
+        print(">>> NO REWARDS!")
     print(">>> TUS REWARD")
-    print("None" if tusDonated == None else weiToTus(tusDonated))
+    print(weiToTus(tusAmount))
     print(">>> CRA REWARD")
-    print(weiToCra(craDonated))
+    print(weiToCra(craAmount))
 
 
 # EXECUTE
