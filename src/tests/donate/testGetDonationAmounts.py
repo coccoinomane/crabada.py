@@ -1,8 +1,5 @@
 from sys import argv
 from src.helpers.donate import (
-    deleteClaimsLog,
-    logClaim,
-    getClaimsFromLog,
     getDonationAmounts,
     shouldDonate,
 )
@@ -21,11 +18,18 @@ recentClaims = claims[-donateFrequency:]
 def test() -> None:
     print(f">>> RECENT CLAIMS ({len(recentClaims)})")
     pprint(recentClaims)
+    print(f">>> TOTAL CLAIMS")
+    accumulator = [0, 0]
+    for c in recentClaims:
+        accumulator[0] += c[0]
+        accumulator[1] += c[1]
+    print(accumulator)
     print(">>> DONATION AMOUNTS IN WEI")
     tusAmount, craAmount = getDonationAmounts(recentClaims, donatePercentage)
     print(tusAmount, craAmount)
-    print(">>> DONATION AMOUNTS IN ETH")
-    print(weiToTus(tusAmount), weiToCra(craAmount))
+    if craAmount:
+        print(">>> DONATION AMOUNTS IN ETH")
+        print(weiToTus(tusAmount), weiToCra(craAmount))
     print(">>> SHOULD DONATE?")
     print(shouldDonate(claims, donateFrequency))
 

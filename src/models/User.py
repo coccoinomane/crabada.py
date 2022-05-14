@@ -4,7 +4,7 @@ from eth_typing import Address
 from web3.types import Wei
 from src.common.config import users
 from src.common.exceptions import UserException
-from src.common.types import ConfigTeam, ConfigUser, Tus, TeamTask
+from src.common.types import ConfigTeam, ConfigUser, StaggeringGroup, Tus, TeamTask
 from src.helpers.general import findInListOfDicts, firstOrNone
 from src.libs.CrabadaWeb2Client.types import Game, TeamStatus
 from src.models.Model import Model
@@ -34,6 +34,12 @@ class User(Model):
         Return the user teams as specified in the configuration
         """
         return self.config["teams"]
+
+    def getStaggeringGroups(self) -> List[StaggeringGroup]:
+        return self.config["staggeringGroups"]
+
+    def getStaggeringDelayInMinutes(self) -> int:
+        return self.config["staggeringDelayInMinutes"]
 
     def getTeamConfigFromMine(self, mine: Game) -> Tuple[ConfigTeam, TeamStatus]:
         """

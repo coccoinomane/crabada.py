@@ -3,7 +3,6 @@ line-length = 88
 
 [tool.mypy]
 check_untyped_defs = true
-disable-error-code = "str-bytes-safe"
 disallow_any_generics = true
 disallow_incomplete_defs = true
 disallow_untyped_defs = true

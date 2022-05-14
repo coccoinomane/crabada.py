@@ -19,7 +19,7 @@ maxPrice = cast(
 reinforcementToPick = int(thirdOrNone(argv) or teamConfig["reinforcementToPick"])
 reinforceStrategies = teamConfig["reinforceStrategies"]
 if fourthOrNone(argv):
-    reinforceStrategies = fourthOrNone(argv).split(",")
+    reinforceStrategies = [x.strip() for x in fourthOrNone(argv).split(",")]
 
 # Get the first mine that can be reinforced
 openMines = makeCrabadaWeb2Client().listOpenMines({"limit": 100})

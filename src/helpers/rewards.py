@@ -1,12 +1,18 @@
 from typing import Iterable, Tuple, cast
 from eth_typing import Address
 from web3.types import TxReceipt, EventData, Wei
-from src.common.clients import makeTusClient
+from src.common.clients import makeSwimmerCraClient
 from src.common.constants import tokens
 from src.helpers.general import firstOrNone
 
 """
 Anything related to TUS and CRA rewards
+"""
+
+tusToCraRatio: int = 81
+"""
+Ratio between the amount of TUS rewarded and the amount
+of CRA rewarded (334.125 divided by 4.125)
 """
 
 
@@ -22,23 +28,27 @@ def getTusAndCraRewardsFromTxReceipt(txReceipt: TxReceipt) -> Tuple[Wei, Wei]:
 
     # Return any ERC20 token transfer in the TX
     logs: Iterable[EventData] = (
-        makeTusClient().contract.events.Transfer().processReceipt(txReceipt)
-    )
-
-    tusAmount: Wei = firstOrNone(
-        [
-            l["args"]["value"]
-            for l in logs
-            if cast(Address, l["address"].lower()) == tokens["TUS"]
-        ]
+        makeSwimmerCraClient().contract.events.Transfer().processReceipt(txReceipt)
     )
 
     craAmount: Wei = firstOrNone(
         [
             l["args"]["value"]
             for l in logs
-            if cast(Address, l["address"].lower()) == tokens["CRA"]
+            if cast(Address, l["address"].lower()) == tokens["SwimmerNetwork"]["CRA"]
         ]
     )
 
+    tusAmount = inferTusRewardsFromCraRewards(craAmount)
+
     return (tusAmount, craAmount)
+
+
+def inferTusRewardsFromCraRewards(craAmount: Wei) -> Wei:
+    """
+    Given the CRA rewarded in a closeGame or settleGame transaction,
+    return the corresponding TUS rewards
+    """
+    if craAmount == None:
+        return None
+    return Wei(craAmount * tusToCraRatio)

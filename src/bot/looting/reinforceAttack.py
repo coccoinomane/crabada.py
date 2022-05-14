@@ -4,8 +4,7 @@ Helper functions to reinforce all loots of a given user
 
 from web3.main import Web3
 from src.common.exceptions import NoSuitableReinforcementFound
-from src.common.logger import logger
-from src.common.txLogger import txLogger, logTx
+from src.common.logger import logger, logTx
 from src.helpers.instantMessage import sendIM
 from src.helpers.mines import fetchOpenLoots
 from src.helpers.reinforce import looterCanReinforce
@@ -65,10 +64,12 @@ def reinforceAttack(user: User) -> int:
         except (ContractLogicError, TransactionTooExpensive) as e:
             logger.warning(f"Error reinforcing loot {mineId}: {e}")
             sendIM(f"Error reinforcing loot {mineId}: {e}")
+            # Wait some time to avoid renting the same crab for different teams
+            if len(reinforceableMines) > 1:
+                sleep(reinforceDelayInSeconds)
             continue
 
         # Report
-        txLogger.info(txHash)
         txReceipt = client.getTransactionReceipt(txHash)
         logTx(txReceipt)
         if txReceipt["status"] != 1:

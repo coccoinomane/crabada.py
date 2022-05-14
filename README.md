@@ -1,10 +1,10 @@
 Scripts to interact with [Crabada](https://www.crabada.com)'s smart contracts 🦀
 
-# Donate ❤️
+# 📣  Swimmer Network subnet
 
-Building and maintaining the bot requires time and passion: please consider expressing your gratitude by donating a small part of your rewards :-)
+The bot now works on the Swimmer Network subnet!
 
-To donate, set the `DONATE_PERCENTAGE` parameter to a small value, for example `DONATE_PERCENTAGE=3%`; for more details, feel free to have a look in _.env.example_.
+Make sure to follow our [migration tutorial](https://github.com/coccoinomane/crabada.py/discussions/104): it takes just a few minutes 🙂
 
 # Features
 
@@ -24,13 +24,19 @@ Reinforce-specific features:
 # Quick start
 
 1. Make sure you have Python 3.9 or later installed.
-1. Install dependencies: `pip install -r requirements.txt`.
-1. Copy _.env.example_ in _.env_.
-1. Configure _.env_; the bot will only consider the teams you add there.
-3. `cd` in the root folder of the project (the same where this readme is)
-4. Run any of the scripts in the _bin_ folder.
+2. Install dependencies: `pip install -r requirements.txt`.
+3. Copy _.env.example_ in _.env_.
+4. Configure _.env_; the bot will only consider the teams you add there.
+5. `cd` in the root folder of the project (the same where this readme is)
+6. Run any of the scripts in the _bin_ folder, or, to set an automatic job, see the "Run without human supervision" section of this README.
 
-**IMPORTANT**: If you run on a webserver, make sure your .env is not in a public folder, otherwise your private key will be accessible via browser!
+**IMPORTANT**: Do not run the bot on a webserver! If you must do it, keep your _.env_ outside the public folder at all costs, otherwise your private key might be accessible via browser! For good measure, also restrict its permissions: `chmod 700 .env`.
+
+# It doesn't work!
+
+1. Please check if your issue is listed in the [Common issues page](https://github.com/coccoinomane/crabada.py/wiki/Common-issues).
+2. If not, please search in the [Discussions section](https://github.com/coccoinomane/crabada.py/discussions/).
+3. If even that does not help, consider [asking the community](https://github.com/coccoinomane/crabada.py/discussions/new) 🙂
 
 # Mining scripts
 
@@ -42,6 +48,7 @@ Reinforce-specific features:
 
 - Run `python -m bin.looting.reinforceAttack <your address>` to reinforce all attacking teams with a crab from the tavern, using the reinforcement strategy specified in the .env file.
 - Run `python -m bin.looting.closeLoots <your address>` to settle and claim rewards on loots that can be settled.
+- Run `python -m bin.looting.notifyTeamsIdle <your address>` to notify when the looting teams are sitting idle and they are waiting to be manually sent to loot
 
 ### - What about attacking? 🤔
 
@@ -89,7 +96,7 @@ Choose the strategy to use with the `USER_X_TEAM_Y_REINFORCE_STRATEGY` parameter
 | `CheapestCrab`             | Cheapest crab | Get a chance at mining revenge | |
 | `HighestBpFromInventory`   | Highest-BP from the inventory | Use with a fallback strat | @yigitest |
 | `HighestMpFromInventory`   | Highest-MP from the inventory | Use with a fallback strat | @yigitest |
-| `FromInventory`            | First available crab in the inventory | Use with a fallback strat | @yigitest |
+| `FirstFromInventory`       | First available crab in the inventory | Use with a fallback strat | @yigitest |
 
 ### - Fallback strategies
 
@@ -127,11 +134,16 @@ To **test the strategy** withouth sending transactions, use the *testMakeReinfor
 
 ### - Gas control
 
-Use the `USER_X_REINFORCEMENT_MAX_GAS` parameter to set the maximum you are willing to spend for gas when reinforcing, in gwei.
+Use the following parameters to set the maximum you are willing to spend for gas, in gwei:
 
-If Avalanche's base fee is higher than that, the bot will not reinforce.
+- `USER_X_REINFORCEMENT_MAX_GAS` to reinforce,
+- `USER_X_MINE_MAX_GAS` to send a team mining,
+- `USER_X_CLOSE_MINE_MAX_GAS` to close a mine, and
+- `USER_X_CLOSE_LOOT_MAX_GAS` to settle a loot.
 
-As a reference, when the base fee is 100 gwei, you will roughly spend 0.02 AVAX to reinforce.
+If Avalanche's base fee is higher than that, the bot will not perform the action.
+
+As a reference, when the base fee is 100 gwei, you will roughly spend 0.02 AVAX to reinforce or start a mine, and about half of that for the other actions.
 
 # Support for multiple teams
 
@@ -150,6 +162,44 @@ USER_1_TEAM_2_REINFORCE_STRATEGY="HighestBp"
 ```
 
 Then, you can run any of the scripts described above and they will apply to all of the registered teams.
+
+### - Team grouping
+
+If you manage multiple teams and your _.env_ is becoming a mess, consider **grouping your teams** in the following way:
+
+```bash
+# Mining group
+USER_1_GROUP_1_TEAMS="1111, 3333, 5555"
+USER_1_GROUP_1_TASK="mine"
+USER_1_GROUP_1_REINFORCE_STRATEGY="HighestMp"
+
+# Looting group
+USER_1_GROUP_2_TEAMS="2222, 4444, 6666"
+USER_1_GROUP_2_TASK="loot"
+USER_1_GROUP_2_REINFORCE_STRATEGY="HighestBp"
+```
+
+The above example will register 3 mining teams with the `HighestMp` strategy and 3 looting teams with the `HighestBp` strategy.
+
+### - Team staggering
+
+When reinforcing from the inventory, it is best to send teams at least 30 minutes apart, in order to make the most out of the [reduced cooldown-time of inventory crabs](https://docs.crabada.com/whitepaper/game-mechanics#activities-and-cooldowns).
+
+You can achieve this by grouping teams in a _stagger group_:
+
+```bash
+USER_1_STAGGER_GROUP_1_TEAMS=2001,2002,2003
+USER_1_STAGGER_DELAY=35 # optional
+```
+
+Teams in a stagger group will not be sent mining unless 35 minutes have passed since the start of the last mining expedition of the group.
+
+Multiple stagger-groups are possible by incrementing the group number:
+
+```bash
+USER_1_STAGGER_GROUP_1_TEAMS = ...
+USER_1_STAGGER_GROUP_2_TEAMS = ...
+```
 
 # System requirements
 
