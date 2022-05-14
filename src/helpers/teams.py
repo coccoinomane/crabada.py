@@ -3,6 +3,7 @@ from src.common.types import TeamTask
 from src.libs.CrabadaWeb2Client.types import Team
 from src.models.User import User
 from src.common.clients import makeCrabadaWeb2Client
+from .staggering import filterAvailableTeamsForStaggering
 
 
 def fetchAvailableTeamsForTask(user: User, task: TeamTask) -> List[Team]:
@@ -23,4 +24,9 @@ def fetchAvailableTeamsForTask(user: User, task: TeamTask) -> List[Team]:
     )
 
     # Intersect teams with the task with available teams
-    return [t for t in availableTeams if t["team_id"] in ids]
+    availableTeams = [t for t in availableTeams if t["team_id"] in ids]
+
+    # Filter teams for staggering-algorithm.
+    availableTeams = filterAvailableTeamsForStaggering(user, availableTeams)
+
+    return availableTeams

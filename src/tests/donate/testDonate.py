@@ -4,7 +4,7 @@ from typing import Tuple
 from web3.types import TxReceipt, Wei
 from src.helpers.donate import donate, getDonationAmounts, shouldDonate
 from src.helpers.general import indexInList, secondOrNone, thirdOrNone
-from src.common.clients import makeAvalancheClient
+from src.common.clients import makeSwimmerNetworkClient
 from src.helpers.rewards import getTusAndCraRewardsFromTxReceipt
 from src.libs.Web3Client.Web3Client import Web3Client
 from src.helpers.price import weiToCra, weiToTus
@@ -13,7 +13,7 @@ from src.tests.donate import mocks
 from src.common.config import donateFrequency, donatePercentage
 
 # VARS
-client = makeAvalancheClient()
+client = makeSwimmerNetworkClient()
 
 doSend = indexInList(argv, "--send", doPop=True) is not None
 n = int(secondOrNone(argv) or "0")  # create n fake claims
@@ -26,6 +26,12 @@ recentClaims = claims[-donateFrequency:]
 def testGetDonationAmounts() -> Tuple[Wei, Wei]:
     print(f">>> RECENT CLAIMS ({len(recentClaims)})")
     pprint(recentClaims)
+    print(f">>> TOTAL CLAIMS")
+    accumulator = [0, 0]
+    for c in recentClaims:
+        accumulator[0] += c[0]
+        accumulator[1] += c[1]
+    print(accumulator)
     print(">>> DONATION AMOUNTS IN WEI")
     tusAmount, craAmount = getDonationAmounts(recentClaims, percentage)
     print(tusAmount, craAmount)
@@ -55,8 +61,9 @@ def testDonate() -> Tuple[TxReceipt, TxReceipt]:
 def testDonatedAmount(
     txReceiptTus: TxReceipt, txReceiptCra: TxReceipt
 ) -> Tuple[Wei, Wei]:
-    (tusDonated, _) = getTusAndCraRewardsFromTxReceipt(txReceiptTus)
     (_, craDonated) = getTusAndCraRewardsFromTxReceipt(txReceiptCra)
+    tusTx = client.getTransaction(tusReceipt["transactionHash"])
+    tusDonated = tusTx["value"]
     print(">>> TUS DONATED")
     print(weiToTus(tusDonated))
     print(">>> CRA DONATED")

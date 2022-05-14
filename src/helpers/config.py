@@ -9,6 +9,7 @@ from web3 import Web3
 from src.common.exceptions import InvalidConfig, MissingConfig
 from src.common.types import (
     ConfigTeam,
+    StaggeringGroup,
     ConfigUser,
     Tus,
     TeamTask,
@@ -20,7 +21,7 @@ from src.common.dotenv import (
     parseListOfInts,
     parseListOfStrings,
 )
-from typing import List, cast
+from typing import List, cast, Set
 from eth_typing import Address
 
 from src.helpers.general import duplicatesInList, flattenList
@@ -113,6 +114,18 @@ def parseTeamConfig(
     return teamConfig
 
 
+def parseStaggeringGroups(userNumber: int) -> List[StaggeringGroup]:
+    staggeringGroups: List[StaggeringGroup] = []
+    groupNumber = 1
+    while getenv(f"USER_{userNumber}_STAGGER_GROUP_{groupNumber}_TEAMS"):
+        teamsIds = set(
+            parseListOfInts(f"USER_{userNumber}_STAGGER_GROUP_{groupNumber}_TEAMS")
+        )
+        staggeringGroups.append(teamsIds)
+        groupNumber += 1
+    return staggeringGroups
+
+
 def parseUserConfig(userNumber: int, teams: List[ConfigTeam]) -> ConfigUser:
     """
     Get the configuration of the given user from the environment
@@ -145,6 +158,8 @@ def parseUserConfig(userNumber: int, teams: List[ConfigTeam]) -> ConfigUser:
             f"{userPrefix}_CLOSE_LOOT_MAX_GAS", float("inf")
         ),
         "teams": [t for t in teams if t["userAddress"] == address],
+        "staggeringGroups": parseStaggeringGroups(userNumber),
+        "staggeringDelayInMinutes": parseInt(f"{userPrefix}_STAGGER_DELAY", 35),
     }
 
     validateUserConfig(userConfig, userNumber)

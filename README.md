@@ -1,10 +1,10 @@
 Scripts to interact with [Crabada](https://www.crabada.com)'s smart contracts 🦀
 
-# Donate ❤️
+# 📣  Swimmer Network subnet
 
-Building and maintaining the bot requires time and passion: please consider expressing your gratitude by donating a small part of your rewards :-)
+The bot now works on the Swimmer Network subnet!
 
-To donate, set the `DONATE_PERCENTAGE` parameter to a small value, for example `DONATE_PERCENTAGE=3%`; for more details, feel free to have a look in _.env.example_.
+Make sure to follow our [migration tutorial](https://github.com/coccoinomane/crabada.py/discussions/104): it takes just a few minutes 🙂
 
 # Features
 
@@ -34,9 +34,9 @@ Reinforce-specific features:
 
 # It doesn't work!
 
-If you have issues, click on the "[Discussions](https://github.com/coccoinomane/crabada.py/discussions/)" tab and write your problem in the search bar.
-
-If you do not find a solution, consider posting a new message there 🙂
+1. Please check if your issue is listed in the [Common issues page](https://github.com/coccoinomane/crabada.py/wiki/Common-issues).
+2. If not, please search in the [Discussions section](https://github.com/coccoinomane/crabada.py/discussions/).
+3. If even that does not help, consider [asking the community](https://github.com/coccoinomane/crabada.py/discussions/new) 🙂
 
 # Mining scripts
 
@@ -96,7 +96,7 @@ Choose the strategy to use with the `USER_X_TEAM_Y_REINFORCE_STRATEGY` parameter
 | `CheapestCrab`             | Cheapest crab | Get a chance at mining revenge | |
 | `HighestBpFromInventory`   | Highest-BP from the inventory | Use with a fallback strat | @yigitest |
 | `HighestMpFromInventory`   | Highest-MP from the inventory | Use with a fallback strat | @yigitest |
-| `FirstFromInventory`            | First available crab in the inventory | Use with a fallback strat | @yigitest |
+| `FirstFromInventory`       | First available crab in the inventory | Use with a fallback strat | @yigitest |
 
 ### - Fallback strategies
 
@@ -180,6 +180,26 @@ USER_1_GROUP_2_REINFORCE_STRATEGY="HighestBp"
 ```
 
 The above example will register 3 mining teams with the `HighestMp` strategy and 3 looting teams with the `HighestBp` strategy.
+
+### - Team staggering
+
+When reinforcing from the inventory, it is best to send teams at least 30 minutes apart, in order to make the most out of the [reduced cooldown-time of inventory crabs](https://docs.crabada.com/whitepaper/game-mechanics#activities-and-cooldowns).
+
+You can achieve this by grouping teams in a _stagger group_:
+
+```bash
+USER_1_STAGGER_GROUP_1_TEAMS=2001,2002,2003
+USER_1_STAGGER_DELAY=35 # optional
+```
+
+Teams in a stagger group will not be sent mining unless 35 minutes have passed since the start of the last mining expedition of the group.
+
+Multiple stagger-groups are possible by incrementing the group number:
+
+```bash
+USER_1_STAGGER_GROUP_1_TEAMS = ...
+USER_1_STAGGER_GROUP_2_TEAMS = ...
+```
 
 # System requirements
 
