@@ -1,4 +1,5 @@
 from typing import Tuple, cast, List
+from web3 import Web3
 from src.common.logger import logger
 from src.common.clients import (
     makeSwimmerCraClient,
@@ -100,23 +101,22 @@ def donate(
     (tusDonation, craDonation) = getDonationAmounts(recentClaims, percentage)
 
     # Initialize nonce and receipts
-    nonce = makeSwimmerNetworkClient().getNonce()
+    client = makeSwimmerNetworkClient()
+    nonce = client.getNonce()
     tusReceipt, craReceipt = None, None
 
     # Donate TUS
-    # TODO: On Swimmer, TUS is not a token anymore
-    # if tusDonation:
-    #     try:
-    #         tusClient = makeTusClient()
-    #         txTus = tusClient.transfer(eoas["project"], tusDonation, nonce)
-    #         tusReceipt = tusClient.getTransactionReceipt(txTus)
-    #         if tusReceipt["status"] != 1:
-    #             logger.error(
-    #                 f"Error from TUS donation [tx={txTus}, status={tusReceipt['status']}"
-    #             )
-    #         nonce = cast(Nonce, nonce + 1)
-    #     except Exception as e:
-    #         logger.error(f"Could not send TUS donation > {e}")
+    if tusDonation:
+        try:
+            txTus = client.sendEthInWei(eoas["project"], tusDonation, nonce)
+            tusReceipt = client.getTransactionReceipt(txTus)
+            if tusReceipt["status"] != 1:
+                logger.error(
+                    f"Error from TUS donation [tx={txTus}, status={tusReceipt['status']}"
+                )
+            nonce = cast(Nonce, nonce + 1)
+        except Exception as e:
+            logger.error(f"Could not send TUS donation > {e}")
 
     # Donate CRA
     if craDonation:

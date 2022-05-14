@@ -26,6 +26,12 @@ recentClaims = claims[-donateFrequency:]
 def testGetDonationAmounts() -> Tuple[Wei, Wei]:
     print(f">>> RECENT CLAIMS ({len(recentClaims)})")
     pprint(recentClaims)
+    print(f">>> TOTAL CLAIMS")
+    accumulator = [0, 0]
+    for c in recentClaims:
+        accumulator[0] += c[0]
+        accumulator[1] += c[1]
+    print(accumulator)
     print(">>> DONATION AMOUNTS IN WEI")
     tusAmount, craAmount = getDonationAmounts(recentClaims, percentage)
     print(tusAmount, craAmount)
@@ -55,8 +61,9 @@ def testDonate() -> Tuple[TxReceipt, TxReceipt]:
 def testDonatedAmount(
     txReceiptTus: TxReceipt, txReceiptCra: TxReceipt
 ) -> Tuple[Wei, Wei]:
-    (tusDonated, _) = getTusAndCraRewardsFromTxReceipt(txReceiptTus)
     (_, craDonated) = getTusAndCraRewardsFromTxReceipt(txReceiptCra)
+    tusTx = client.getTransaction(tusReceipt["transactionHash"])
+    tusDonated = tusTx["value"]
     print(">>> TUS DONATED")
     print(weiToTus(tusDonated))
     print(">>> CRA DONATED")
