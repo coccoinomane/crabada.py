@@ -25,6 +25,7 @@ from typing import List, cast, Set
 from eth_typing import Address
 
 from src.helpers.general import duplicatesInList, flattenList
+from src.libs.CrabadaWeb2Client.types import CrabadaClass
 
 
 def parseGroupOfTeamsConfigs(groupNumber: int, userNumber: int) -> List[ConfigTeam]:
@@ -105,6 +106,7 @@ def parseTeamConfig(
             f"{teamPrefix}_REINFORCE_STRATEGY", ["HighestBp"]
         ),
         "reinforcementToPick": parseInt(f"{teamPrefix}_REINFORCEMENT_TO_PICK", 1),
+        "reinforcementCrabadaClass": CrabadaClass[getenv(f"{teamPrefix}_REINFORCEMENT_CRABADA_CLASS", "ALL")],
         "teamNumber": teamNumber,
         "groupNumber": groupNumber,
     }

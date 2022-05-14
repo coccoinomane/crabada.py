@@ -1,5 +1,5 @@
 from typing import Any
-from src.libs.CrabadaWeb2Client.types import Game
+from src.libs.CrabadaWeb2Client.types import CrabadaClass, Game
 from src.strategies.reinforce.HighestBp import HighestBp
 
 
@@ -14,8 +14,13 @@ class HighestBpHighCost(HighestBp):
     """
 
     def query(self, game: Game) -> dict[str, Any]:
-        return {
+        queryParams = {
             "limit": 100,
             "orderBy": "battle_point",
             "order": "desc",
         }
+
+        if self.teamConfig["reinforcementCrabadaClass"] != CrabadaClass.ALL:
+            queryParams["class_ids[]"] = self.teamConfig["reinforcementCrabadaClass"]
+
+        return queryParams

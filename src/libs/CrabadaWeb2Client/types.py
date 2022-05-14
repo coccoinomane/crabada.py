@@ -1,3 +1,6 @@
+from enum import Enum
+from sqlite3 import ProgrammingError
+from tkinter import SUNKEN
 from typing import Literal, TypedDict, List
 from eth_typing import Address
 from web3.types import Wei
@@ -177,3 +180,14 @@ class CrabFromInventory(TypedDict):
     battle_point: int
     time_point: int
     mine_point: int
+
+class CrabadaClass(Enum):
+    ALL = 0
+    SURGE = 1
+    SUNKEN = 2
+    PRIME =3
+    BULK = 4
+    CRABOID= 5
+    RUINED =6
+    GEM =7
+    ORGANIC =8
