@@ -36,14 +36,14 @@ logger.addHandler(c_handler)
 logger.addHandler(f_handler)
 
 
-def logTx(txReceipt: TxReceipt) -> None:
+def logTx(txReceipt: TxReceipt, denomination: str = "TUS") -> None:
     """Given a tx receipt, print to screen the transaction details
     and its cost"""
     logger.debug(formatAttributeDict(txReceipt))
     ethSpent = Web3.fromWei(
         txReceipt["effectiveGasPrice"] * txReceipt["gasUsed"], "ether"
     )
-    logger.debug("Spent " + str(ethSpent) + " ETH")
+    logger.debug("Spent " + str(ethSpent) + " " + denomination)
 
 
 def formatAttributeDict(
