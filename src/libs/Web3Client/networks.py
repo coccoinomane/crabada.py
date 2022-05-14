@@ -19,6 +19,13 @@ supportedNetworks: List[NetworkConfig] = [
         "chainId": 43114,
         "middlewares": [geth_poa_middleware],
     },
+    # Swimmer Network Avalanche subnet
+    {
+        "name": "SwimmerNetwork",
+        "txType": 1,
+        "chainId": 73772,
+        "middlewares": [geth_poa_middleware],
+    },
 ]
 
 

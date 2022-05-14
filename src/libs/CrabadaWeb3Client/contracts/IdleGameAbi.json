@@ -466,249 +466,6 @@
         "type": "event"
     },
     {
-        "inputs": [],
-        "name": "STEP_DURATION",
-        "outputs": [
-            {
-                "internalType": "uint128",
-                "name": "",
-                "type": "uint128"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "amuletContract",
-        "outputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "attackCooldownDuration",
-        "outputs": [
-            {
-                "internalType": "uint128",
-                "name": "",
-                "type": "uint128"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "attackDuration",
-        "outputs": [
-            {
-                "internalType": "uint128",
-                "name": "",
-                "type": "uint128"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "baseClosenessFactor",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "baseCraReward",
-        "outputs": [
-            {
-                "internalType": "uint128",
-                "name": "",
-                "type": "uint128"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "baseLuckyWinRate",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "baseModifier",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "baseTusReward",
-        "outputs": [
-            {
-                "internalType": "uint128",
-                "name": "",
-                "type": "uint128"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "bonusCraClass",
-        "outputs": [
-            {
-                "internalType": "uint8",
-                "name": "",
-                "type": "uint8"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "name": "bonusRewardClasses",
-        "outputs": [
-            {
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "bonusTimePointDuration",
-        "outputs": [
-            {
-                "internalType": "uint128",
-                "name": "",
-                "type": "uint128"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "bonusTimePointThreshold",
-        "outputs": [
-            {
-                "internalType": "uint128",
-                "name": "",
-                "type": "uint128"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "bonusTusClass",
-        "outputs": [
-            {
-                "internalType": "uint8",
-                "name": "",
-                "type": "uint8"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "classBonusPercent",
-        "outputs": [
-            {
-                "internalType": "uint128",
-                "name": "",
-                "type": "uint128"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "craIncentiveEnable",
-        "outputs": [
-            {
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "name": "crabaInfos",
-        "outputs": [
-            {
-                "internalType": "address",
-                "name": "owner",
-                "type": "address"
-            },
-            {
-                "internalType": "uint128",
-                "name": "lockTo",
-                "type": "uint128"
-            },
-            {
-                "internalType": "uint128",
-                "name": "status",
-                "type": "uint128"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
         "inputs": [
             {
                 "internalType": "address",
@@ -717,155 +474,6 @@
             }
         ],
         "name": "expandTeamCounts",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "expandTeamPrice",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "lendingFeeHolerAddress",
-        "outputs": [
-            {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "lendingFeePercent",
-        "outputs": [
-            {
-                "internalType": "uint128",
-                "name": "",
-                "type": "uint128"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "lendingLockDuration",
-        "outputs": [
-            {
-                "internalType": "uint128",
-                "name": "",
-                "type": "uint128"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "name": "lendingPool",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "lootingCraBaseReward",
-        "outputs": [
-            {
-                "internalType": "uint128",
-                "name": "",
-                "type": "uint128"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "lootingPercent",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "lootingTusBaseReward",
-        "outputs": [
-            {
-                "internalType": "uint128",
-                "name": "",
-                "type": "uint128"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "minerRevengeEnable",
-        "outputs": [
-            {
-                "internalType": "bool",
-                "name": "",
-                "type": "bool"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "miningDuration",
-        "outputs": [
-            {
-                "internalType": "uint128",
-                "name": "",
-                "type": "uint128"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "modifierSetting",
         "outputs": [
             {
                 "internalType": "uint256",
@@ -904,35 +512,9 @@
     },
     {
         "inputs": [],
-        "name": "reinforceLockDuration",
-        "outputs": [
-            {
-                "internalType": "uint128",
-                "name": "",
-                "type": "uint128"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [],
         "name": "renounceOwnership",
         "outputs": [],
         "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [],
-        "name": "rngContract",
-        "outputs": [
-            {
-                "internalType": "contract IRNG",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -966,6 +548,10 @@
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
+    },
+    {
+        "stateMutability": "payable",
+        "type": "receive"
     },
     {
         "inputs": [
@@ -1180,7 +766,7 @@
         ],
         "name": "reinforceAttack",
         "outputs": [],
-        "stateMutability": "nonpayable",
+        "stateMutability": "payable",
         "type": "function"
     },
     {
@@ -1203,7 +789,7 @@
         ],
         "name": "reinforceDefense",
         "outputs": [],
-        "stateMutability": "nonpayable",
+        "stateMutability": "payable",
         "type": "function"
     },
     {
@@ -1230,30 +816,6 @@
         "name": "closeGame",
         "outputs": [],
         "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "crabadaId",
-                "type": "uint256"
-            }
-        ],
-        "name": "getStats",
-        "outputs": [
-            {
-                "internalType": "uint16",
-                "name": "battlePoint",
-                "type": "uint16"
-            },
-            {
-                "internalType": "uint16",
-                "name": "timePoint",
-                "type": "uint16"
-            }
-        ],
-        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -1454,12 +1016,22 @@
         "outputs": [
             {
                 "internalType": "uint16",
-                "name": "attackPoint",
+                "name": "attackBP",
                 "type": "uint16"
             },
             {
                 "internalType": "uint16",
-                "name": "defensePoint",
+                "name": "attackMP",
+                "type": "uint16"
+            },
+            {
+                "internalType": "uint16",
+                "name": "defenseBP",
+                "type": "uint16"
+            },
+            {
+                "internalType": "uint16",
+                "name": "defenseMP",
                 "type": "uint16"
             }
         ],
@@ -1469,22 +1041,54 @@
     {
         "inputs": [
             {
-                "internalType": "uint256",
-                "name": "gameId",
-                "type": "uint256"
+                "internalType": "uint128",
+                "name": "miningCraRewardAmount",
+                "type": "uint128"
+            },
+            {
+                "internalType": "uint128",
+                "name": "miningTusRewardAmount",
+                "type": "uint128"
+            },
+            {
+                "internalType": "uint128",
+                "name": "lootingCraRewardAmount",
+                "type": "uint128"
+            },
+            {
+                "internalType": "uint128",
+                "name": "lootingTusRewardAmount",
+                "type": "uint128"
             }
         ],
-        "name": "getBattleTimePoint",
+        "name": "setReward",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getRewardSettings",
         "outputs": [
             {
-                "internalType": "uint16",
-                "name": "attackPoint",
-                "type": "uint16"
+                "internalType": "uint128",
+                "name": "miningCraRewardAmount",
+                "type": "uint128"
             },
             {
-                "internalType": "uint16",
-                "name": "defensePoint",
-                "type": "uint16"
+                "internalType": "uint128",
+                "name": "miningTusRewardAmount",
+                "type": "uint128"
+            },
+            {
+                "internalType": "uint128",
+                "name": "lootingCraRewardAmount",
+                "type": "uint128"
+            },
+            {
+                "internalType": "uint128",
+                "name": "lootingTusRewardAmount",
+                "type": "uint128"
             }
         ],
         "stateMutability": "view",
@@ -1493,17 +1097,67 @@
     {
         "inputs": [
             {
-                "internalType": "uint256",
-                "name": "crabadaId",
-                "type": "uint256"
+                "internalType": "uint128",
+                "name": "lootingRewardPercent",
+                "type": "uint128"
+            },
+            {
+                "internalType": "uint128",
+                "name": "classBonusReward",
+                "type": "uint128"
             }
         ],
-        "name": "ownerOf",
+        "name": "setPercents",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getPercentSettings",
         "outputs": [
             {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
+                "internalType": "uint256",
+                "name": "lootingRewardPercent",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "classBonusReward",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "setGameDuration",
+        "outputs": [
+            {
+                "internalType": "uint128",
+                "name": "stepDuration",
+                "type": "uint128"
+            },
+            {
+                "internalType": "uint128",
+                "name": "miningCoolDown",
+                "type": "uint128"
+            },
+            {
+                "internalType": "uint128",
+                "name": "lootingCoolDown",
+                "type": "uint128"
+            },
+            {
+                "internalType": "uint128",
+                "name": "dangerousDurationOfMine",
+                "type": "uint128"
+            },
+            {
+                "internalType": "uint128",
+                "name": "fromInventoryCoolDown",
+                "type": "uint128"
             }
         ],
         "stateMutability": "view",
@@ -1513,138 +1167,31 @@
         "inputs": [
             {
                 "internalType": "uint128",
-                "name": "craRewardAmount",
+                "name": "stepDuration",
                 "type": "uint128"
             },
             {
                 "internalType": "uint128",
-                "name": "tusRewardAmount",
-                "type": "uint128"
-            }
-        ],
-        "name": "setRewardMining",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint128",
-                "name": "craRewardAmount",
+                "name": "miningCoolDown",
                 "type": "uint128"
             },
             {
                 "internalType": "uint128",
-                "name": "tusRewardAmount",
+                "name": "lootingCoolDown",
                 "type": "uint128"
-            }
-        ],
-        "name": "setRewardLooting",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "percent",
-                "type": "uint256"
-            }
-        ],
-        "name": "setLootingPercent",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
+            },
             {
                 "internalType": "uint128",
-                "name": "duration",
+                "name": "dangerousDurationOfMine",
                 "type": "uint128"
-            }
-        ],
-        "name": "setStepDuration",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
+            },
             {
                 "internalType": "uint128",
-                "name": "duration",
+                "name": "fromInventoryCoolDown",
                 "type": "uint128"
             }
         ],
-        "name": "setMiningDuration",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint128",
-                "name": "duration",
-                "type": "uint128"
-            }
-        ],
-        "name": "setReinforceLockDuration",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint128",
-                "name": "duration",
-                "type": "uint128"
-            }
-        ],
-        "name": "setAttackCooldownDuration",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "newAddr",
-                "type": "address"
-            }
-        ],
-        "name": "setLendingFeeHolerAddress",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint128",
-                "name": "cooldown",
-                "type": "uint128"
-            }
-        ],
-        "name": "setLendingCooldownDuration",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint32",
-                "name": "percent",
-                "type": "uint32"
-            }
-        ],
-        "name": "setLendingFeePercent",
+        "name": "setGameDuration",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -1683,14 +1230,20 @@
     {
         "inputs": [
             {
-                "internalType": "uint128",
-                "name": "percent",
-                "type": "uint128"
+                "internalType": "uint256",
+                "name": "classId",
+                "type": "uint256"
             }
         ],
-        "name": "setBonusClassPercent",
-        "outputs": [],
-        "stateMutability": "nonpayable",
+        "name": "getBonusRewardClass",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -1699,37 +1252,34 @@
                 "internalType": "uint128",
                 "name": "newThreshold",
                 "type": "uint128"
-            }
-        ],
-        "name": "setBonusTimePointThreshold",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
+            },
             {
                 "internalType": "uint128",
                 "name": "duration",
                 "type": "uint128"
             }
         ],
-        "name": "setBonusTimePointDuration",
+        "name": "setBonusTimePointSettings",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
     },
     {
-        "inputs": [
+        "inputs": [],
+        "name": "getBonusTimePointSettings",
+        "outputs": [
+            {
+                "internalType": "uint128",
+                "name": "threshold",
+                "type": "uint128"
+            },
             {
                 "internalType": "uint128",
                 "name": "duration",
                 "type": "uint128"
             }
         ],
-        "name": "setAttackDuration",
-        "outputs": [],
-        "stateMutability": "nonpayable",
+        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -1804,74 +1354,12 @@
     {
         "inputs": [
             {
-                "internalType": "uint256",
-                "name": "looterBP",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "minerBP",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "minerMP",
-                "type": "uint256"
-            }
-        ],
-        "name": "calculateLuckyWinRate",
-        "outputs": [
-            {
-                "internalType": "uint256",
-                "name": "rate",
-                "type": "uint256"
-            }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "uint256",
-                "name": "_baseLuckyWinRate",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_baseModifier",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_modifierSetting",
-                "type": "uint256"
-            },
-            {
-                "internalType": "uint256",
-                "name": "_baseClosenessFactor",
-                "type": "uint256"
-            },
-            {
                 "internalType": "contract IRNG",
-                "name": "_rngContract",
+                "name": "_rngAddress",
                 "type": "address"
             }
         ],
-        "name": "setMinerRevengeSettings",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "bool",
-                "name": "isEnable",
-                "type": "bool"
-            }
-        ],
-        "name": "enableMinerRevenge",
+        "name": "setRNGContract",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -1892,6 +1380,24 @@
     {
         "inputs": [
             {
+                "internalType": "address[]",
+                "name": "playerAddrs",
+                "type": "address[]"
+            },
+            {
+                "internalType": "uint256[]",
+                "name": "amountOfTeams",
+                "type": "uint256[]"
+            }
+        ],
+        "name": "expandTeamLimitForPlayers",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
                 "internalType": "address",
                 "name": "amuletAddress",
                 "type": "address"
@@ -1905,6 +1411,76 @@
         "name": "setupTeamExpandSetting",
         "outputs": [],
         "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getExpandTeamLimitSettings",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "amuletContract",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "price",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_battleResultCalculator",
+                "type": "address"
+            }
+        ],
+        "name": "setBattleResultCalculator",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getBattleResultCalculator",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "contract ICrabData",
+                "name": "_crabDataContract",
+                "type": "address"
+            }
+        ],
+        "name": "setCrabData",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getCrabData",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     }
 ]

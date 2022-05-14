@@ -7,8 +7,11 @@ from src.common.types import Tus, Cra
 
 def tusToWei(tus: float) -> Wei:
     """
-    Convert TUS to Wei; this is required before making comparisons
-    because the Crabada APIs (both Web2 and Web3) always return Wei.
+    Convert TUS or WTUS to Wei.
+
+    This is required before making comparisons because the
+    Crabada Web2 APIs always return Wei (e.g. for the price of
+    the reinforcement).
 
     The conversion is 1 TUS = 10^18 Wei.
     """
