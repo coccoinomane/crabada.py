@@ -26,6 +26,7 @@ RUN pip install --user -r requirements.txt
 FROM python:3.9 as app
 RUN mkdir /app
 WORKDIR /app
+
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV DEBIAN_FRONTEND noninteractive

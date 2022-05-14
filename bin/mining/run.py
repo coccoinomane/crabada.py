@@ -13,17 +13,18 @@ from src.bot.mining.run import run
 from src.common.dotenv import getenv, parseInt
 from src.models.User import User
 from src.common.logger import logger
-from sys import exit
+from src.helpers.general import secondOrNone
+from sys import exit, argv
 
-# Use USER_1_ADDRESS as userAddress parameter
-userAddress = cast(Address, getenv("USER_1_ADDRESS"))
+# Provide user via CLI, or will use 1st registered user
+userAddress = secondOrNone(argv) or cast(Address, getenv("USER_1_ADDRESS"))
 
-# Like a cronjob definiton
+# Interval between each full cycle of mining, reinforcing
+# and settling, in seconds (like a cronjob definition)
 sleep_timer = parseInt("SLEEP_TIMER", 120)
 
-# We usually can't call sendTeamsMining immediately after closeMines
-# but waiting for full 120 seconds a bit too much.
-# introduced a second sleep parameter for this reason.
+# Interval between closing a mine (closeMines) & opening a new
+# one (sendTeamsMining), in seconds
 sleep_timer_minor = parseInt("SLEEP_TIMER_MINOR", 20)
 
 if not userAddress:
