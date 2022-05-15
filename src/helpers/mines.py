@@ -222,8 +222,12 @@ def fetchOpenMines(user: User) -> List[Game]:
     if not teamIds:
         return []
 
+    # 2022-05-15 quick fix for issue#107
+    # Don't let the limit parameter go above 100 (hard limit of crabada-api)
+    limit = min(len(teamIds) * 2, 100)
+
     openGames = makeCrabadaWeb2Client().listMines(
-        {"limit": len(teamIds) * 2, "status": "open", "user_address": user.address}
+        {"limit": limit, "status": "open", "user_address": user.address}
     )
 
     return [g for g in openGames if g["team_id"] in teamIds]
