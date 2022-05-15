@@ -1,6 +1,11 @@
 from typing import Tuple, cast, List
+from web3 import Web3
 from src.common.logger import logger
-from src.common.clients import makeAvalancheClient, makeCraClient, makeTusClient
+from src.common.clients import (
+    makeSwimmerCraClient,
+    makeSwimmerNetworkClient,
+)
+from src.common.dotenv import getenv
 from src.common.config import donatePercentage, donateFrequency
 from web3.types import TxReceipt, Wei, Nonce
 from src.common.constants import eoas
@@ -10,16 +15,18 @@ from src.helpers.price import tusToWei, craToWei, weiToCra, weiToTus
 import os
 
 
-claimsLogFilepath = "storage/logs/app/claims.log"
-"""
-Log file containing the user's recent claims.
+def getClaimsLogFilepath() -> str:
+    """
+    Return the path of the log file containing the user's
+    recent claims
 
-Each line of the file contains the TUS and CRA rewards
-claimed by the user during the most recent closeGame
-and settleGame transactions.
+    Each line of the file contains the TUS and CRA rewards
+    claimed by the user during the most recent closeGame
+    and settleGame transactions.
 
-The file will be deleted after each donation.
-"""
+    The file will be deleted after each donation.
+    """
+    return os.path.join(getenv("STORAGE_FOLDER", "storage"), "logs/app", "claims.log")
 
 
 def userWantsToDonate() -> bool:
@@ -59,6 +66,10 @@ def maybeDonate(txReceipt: TxReceipt) -> Tuple[TxReceipt, TxReceipt]:
         sendIM(getDonateMessage())
         return (None, None)
 
+    # Make sure the folder with the claim logs exists
+    path = getClaimsLogFilepath()
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+
     # Log the rewards that the user just claimed
     tusRewardInWei, craRewardInWei = getTusAndCraRewardsFromTxReceipt(txReceipt)
     logClaim((weiToTus(tusRewardInWei), weiToCra(craRewardInWei)))
@@ -97,15 +108,15 @@ def donate(
     (tusDonation, craDonation) = getDonationAmounts(recentClaims, percentage)
 
     # Initialize nonce and receipts
-    nonce = makeAvalancheClient().getNonce()
+    client = makeSwimmerNetworkClient()
+    nonce = client.getNonce()
     tusReceipt, craReceipt = None, None
 
     # Donate TUS
     if tusDonation:
         try:
-            tusClient = makeTusClient()
-            txTus = tusClient.transfer(eoas["project"], tusDonation, nonce)
-            tusReceipt = tusClient.getTransactionReceipt(txTus)
+            txTus = client.sendEthInWei(eoas["project"], tusDonation, nonce)
+            tusReceipt = client.getTransactionReceipt(txTus)
             if tusReceipt["status"] != 1:
                 logger.error(
                     f"Error from TUS donation [tx={txTus}, status={tusReceipt['status']}"
@@ -117,7 +128,7 @@ def donate(
     # Donate CRA
     if craDonation:
         try:
-            craClient = makeCraClient()
+            craClient = makeSwimmerCraClient()
             txCra = craClient.transfer(eoas["project"], craDonation, nonce)
             craReceipt = craClient.getTransactionReceipt(txCra)
             if craReceipt["status"] != 1:
@@ -152,7 +163,7 @@ def logClaim(rewards: Tuple[float, float]) -> None:
     """
     Append a line to the claims file
     """
-    with open(claimsLogFilepath, "a+") as file:
+    with open(getClaimsLogFilepath(), "a+") as file:
         file.write("%10.5f %10.5f\n" % rewards)
 
 
@@ -161,7 +172,7 @@ def getClaimsFromLog() -> List[List[float]]:
     Fetch all the reward claims in the file log
     """
     try:
-        with open(claimsLogFilepath, "r") as file:
+        with open(getClaimsLogFilepath(), "r") as file:
             return [[float(x) for x in line.split()] for line in file]
     except FileNotFoundError:
         return []
@@ -172,7 +183,7 @@ def deleteClaimsLog() -> None:
     Delete the claims file
     """
     try:
-        os.remove(claimsLogFilepath)
+        os.remove(getClaimsLogFilepath())
     except FileNotFoundError:
         pass
 
@@ -181,11 +192,11 @@ def getDonateMessage() -> str:
     return """
 🦀  🦀  🦀
 
-Building this bot requires time and passion.
+Building Crabada.py requires time and passion.
 Please consider expressing your gratitude
 by donating a small % of your rewards :-)
 
-To donate, write DONATE_PERCENTAGE=3%
+To donate, write DONATE_PERCENTAGE=5%
 in your .env file; this message will
 disappear regardless of the amount that
 you donate 🙂

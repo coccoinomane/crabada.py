@@ -1,4 +1,13 @@
 .env
-venv/*
-__pycache__
-*.pyc
+.history
+reports/
+.DS_Store
+Desktop.ini
+
+# due to using tox and pytest
+.tox
+.cache
+
+# other
+.vscode/settings.json
+venv/

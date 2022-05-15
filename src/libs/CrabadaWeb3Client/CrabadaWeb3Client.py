@@ -3,21 +3,21 @@ from eth_typing import Address
 from hexbytes import HexBytes
 from web3.types import TxParams, Wei
 from src.libs.Web3Client.Web3Client import Web3Client
-from src.libs.Web3Client.AvalancheCWeb3Client import AvalancheCWeb3Client
+from src.libs.Web3Client.SwimmerNetworkWeb3Client import SwimmerNetworkWeb3Client
 from eth_typing.encoding import HexStr
 import os
 
 
-class CrabadaWeb3Client(AvalancheCWeb3Client):
+class CrabadaWeb3Client(SwimmerNetworkWeb3Client):
     """
     Interact with a smart contract of the game Crabada
 
-    The contract resides on the Avalanche blockchain; here's
-    the URL on Snowtrace:
-    https://snowtrace.io/address/0x82a85407bd612f52577909f4a58bfc6873f14da8#tokentxns
+    The contract resides on the Swimmer Network subnet blockchain;
+    here's the URL on Subnet explorer:
+    https://subnets.avax.network/swimmer/mainnet/explorer/address/0x9ab9e81Be39b73de3CCd9408862b1Fc6D2144d2B
     """
 
-    contractAddress = cast(Address, "0x82a85407bd612f52577909f4a58bfc6873f14da8")
+    contractAddress = cast(Address, "0x9ab9e81Be39b73de3CCd9408862b1Fc6D2144d2B")
     abiDir = os.path.dirname(os.path.realpath(__file__)) + "/contracts"
     abi = Web3Client.getContractAbiFromFile(abiDir + "/IdleGameAbi.json")
 
@@ -82,6 +82,7 @@ class CrabadaWeb3Client(AvalancheCWeb3Client):
         """
         tx: TxParams = self.buildContractTransaction(
             self.contract.functions.reinforceDefense(gameId, crabadaId, borrowPrice),
+            valueInWei=borrowPrice,
         )
         return self.signAndSendTransaction(tx)
 
@@ -92,5 +93,6 @@ class CrabadaWeb3Client(AvalancheCWeb3Client):
         """
         tx: TxParams = self.buildContractTransaction(
             self.contract.functions.reinforceAttack(gameId, crabadaId, borrowPrice),
+            valueInWei=borrowPrice,
         )
         return self.signAndSendTransaction(tx)
