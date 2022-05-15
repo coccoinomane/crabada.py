@@ -224,7 +224,7 @@ def fetchOpenMines(user: User) -> List[Game]:
 
     # 2022-05-15 quick fix for issue#107
     # Don't let the limit parameter go above 100 (hard limit of crabada-api)
-    limit = max(len(teamIds) * 2, 100)
+    limit = min(len(teamIds) * 2, 100)
 
     openGames = makeCrabadaWeb2Client().listMines(
         {"limit": limit, "status": "open", "user_address": user.address}
