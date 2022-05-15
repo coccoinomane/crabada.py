@@ -20,7 +20,8 @@ class HighestMpHighCost(HighestMp):
             "order": "desc",
         }
 
-        if self.teamConfig["reinforcementCrabadaClass"] != CrabadaClass.ALL:
-            queryParams["class_ids[]"] = self.teamConfig["reinforcementCrabadaClass"]
+        crabadaClass = self.teamConfig["reinforcementCrabadaClass"]
+        if crabadaClass != CrabadaClass.ALL:
+            queryParams["class_ids[]"] = crabadaClass.value
 
         return queryParams

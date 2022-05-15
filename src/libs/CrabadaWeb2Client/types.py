@@ -181,13 +181,14 @@ class CrabFromInventory(TypedDict):
     time_point: int
     mine_point: int
 
+
 class CrabadaClass(Enum):
     ALL = 0
     SURGE = 1
     SUNKEN = 2
-    PRIME =3
+    PRIME = 3
     BULK = 4
-    CRABOID= 5
-    RUINED =6
-    GEM =7
-    ORGANIC =8
+    CRABOID = 5
+    RUINED = 6
+    GEM = 7
+    ORGANIC = 8

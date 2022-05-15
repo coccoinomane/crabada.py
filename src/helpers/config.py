@@ -106,7 +106,9 @@ def parseTeamConfig(
             f"{teamPrefix}_REINFORCE_STRATEGY", ["HighestBp"]
         ),
         "reinforcementToPick": parseInt(f"{teamPrefix}_REINFORCEMENT_TO_PICK", 1),
-        "reinforcementCrabadaClass": CrabadaClass[getenv(f"{teamPrefix}_REINFORCEMENT_CRABADA_CLASS", "ALL")],
+        "reinforcementCrabadaClass": CrabadaClass[
+            getenv(f"{teamPrefix}_REINFORCEMENT_CRABADA_CLASS", "ALL")
+        ],
         "teamNumber": teamNumber,
         "groupNumber": groupNumber,
     }

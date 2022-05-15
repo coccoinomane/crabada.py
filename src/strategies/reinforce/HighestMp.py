@@ -16,10 +16,15 @@ class HighestMp(ReinforceStrategy):
     """
 
     def query(self, game: Game) -> dict[str, Any]:
-        queryParams = {"limit": 100, "orderBy": "price", "order": "asc"}
+        queryParams = {
+            "limit": 100,
+            "orderBy": "price",
+            "order": "asc",
+        }
 
-        if self.teamConfig["reinforcementCrabadaClass"] != CrabadaClass.ALL:
-            queryParams["class_ids[]"] = self.teamConfig["reinforcementCrabadaClass"]
+        crabadaClass = self.teamConfig["reinforcementCrabadaClass"]
+        if crabadaClass != CrabadaClass.ALL:
+            queryParams["class_ids[]"] = crabadaClass.value
 
         return queryParams
 
