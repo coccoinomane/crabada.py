@@ -105,7 +105,7 @@ class CrabadaWeb2Client:
 
     def listMines_Raw(self, params: dict[str, Any] = {}) -> Any:
         url = self.baseUri + "/mines"
-        defaultParams: dict[str, Any] = {"limit": 5, "page": 1}
+        defaultParams: dict[str, Any] = {"limit": 100, "page": 1}
         actualParams = defaultParams | params
         response = requests.get(
             url,
