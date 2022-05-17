@@ -436,7 +436,7 @@ class Web3Client:
 
     @staticmethod
     def getContractAbiFromFile(fileName: str) -> Any:
-        with open(fileName) as file:
+        with open(fileName, encoding="utf-8") as file:
             return json.load(file)
 
     @staticmethod
