@@ -163,7 +163,7 @@ def logClaim(rewards: Tuple[float, float]) -> None:
     """
     Append a line to the claims file
     """
-    with open(getClaimsLogFilepath(), "a+") as file:
+    with open(getClaimsLogFilepath(), mode="a+", encoding="utf-8") as file:
         file.write("%10.5f %10.5f\n" % rewards)
 
 
@@ -172,7 +172,7 @@ def getClaimsFromLog() -> List[List[float]]:
     Fetch all the reward claims in the file log
     """
     try:
-        with open(getClaimsLogFilepath(), "r") as file:
+        with open(getClaimsLogFilepath(), mode="r", encoding="utf-8") as file:
             return [[float(x) for x in line.split()] for line in file]
     except FileNotFoundError:
         return []

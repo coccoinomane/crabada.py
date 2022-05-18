@@ -23,7 +23,9 @@ os.makedirs(os.path.dirname(logFilepath), exist_ok=True)
 
 # Create handlers
 c_handler = logging.StreamHandler()
-f_handler = logging.handlers.TimedRotatingFileHandler(logFilepath, "midnight")
+f_handler = logging.handlers.TimedRotatingFileHandler(
+    logFilepath, "midnight", encoding="utf-8"
+)
 
 c_handler.setLevel(getenv("DEBUG_LEVEL", "WARNING"))
 f_handler.setLevel(getenv("DEBUG_LEVEL", "WARNING"))
