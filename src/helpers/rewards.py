@@ -9,10 +9,10 @@ from src.helpers.general import firstOrNone
 Anything related to TUS and CRA rewards
 """
 
-tusToCraRatio: int = 81
+tusToCraRatio: int = 27
 """
 Ratio between the amount of TUS rewarded and the amount
-of CRA rewarded (334.125 divided by 4.125)
+of CRA rewarded
 """
 
 
