@@ -52,6 +52,6 @@ def closeLoots(user: User) -> int:
             nClosedLoots += 1
             logger.info(f"Loot {gameId} closed correctly")
             sendIM(f"Loot {gameId} closed correctly")
-            maybeDonate(txReceipt)
+            maybeDonate(game=g, isMining=False)
 
     return nClosedLoots

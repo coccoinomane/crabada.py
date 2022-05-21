@@ -62,6 +62,14 @@ def closeMines(user: User) -> int:
             nClosedGames += 1
             logger.info(f"Mine {gameId} closed correctly")
             sendIM(f"Mine {gameId} closed correctly")
-            maybeDonate(txReceipt)
+
+            # FIXME Debug code to test tus and cra donations
+            # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+            tusRewardInWei = g["miner_tus_reward"]
+            craRewardInWei = g["miner_cra_reward"]
+            logger.debug(f"Rewards tus: {tusRewardInWei} cra:{craRewardInWei}")
+            # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+            maybeDonate(game=g, isMining=True)
 
     return nClosedGames

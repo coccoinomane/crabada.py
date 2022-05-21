@@ -10,9 +10,10 @@ from src.common.config import donatePercentage, donateFrequency
 from web3.types import TxReceipt, Wei, Nonce
 from src.common.constants import eoas
 from src.helpers.instantMessage import sendIM
-from src.helpers.rewards import getTusAndCraRewardsFromTxReceipt
 from src.helpers.price import tusToWei, craToWei, weiToCra, weiToTus
 import os
+
+from src.libs.CrabadaWeb2Client.types import Game
 
 
 def getClaimsLogFilepath() -> str:
@@ -50,7 +51,7 @@ def shouldDonate(claims: List[List[float]], donateFrequency: int) -> bool:
     )
 
 
-def maybeDonate(txReceipt: TxReceipt) -> Tuple[TxReceipt, TxReceipt]:
+def maybeDonate(game: Game, isMining: bool = True) -> Tuple[TxReceipt, TxReceipt]:
     """
     If the user expressed the desire to donate to the
     project, do so.
@@ -60,6 +61,7 @@ def maybeDonate(txReceipt: TxReceipt) -> Tuple[TxReceipt, TxReceipt]:
 
     Returns the TUS and CRA transactions as a tuple, or
     (None, None) if donation has not taken place.
+
     """
     if not userWantsToDonate():
         logger.warning(getDonateMessage())
@@ -71,7 +73,8 @@ def maybeDonate(txReceipt: TxReceipt) -> Tuple[TxReceipt, TxReceipt]:
     os.makedirs(os.path.dirname(path), exist_ok=True)
 
     # Log the rewards that the user just claimed
-    tusRewardInWei, craRewardInWei = getTusAndCraRewardsFromTxReceipt(txReceipt)
+    tusRewardInWei = game["miner_tus_reward"] if isMining else game["looter_tus_reward"]
+    craRewardInWei = game["miner_cra_reward"] if isMining else game["looter_cra_reward"]
     logClaim((weiToTus(tusRewardInWei), weiToCra(craRewardInWei)))
 
     # Determine whether it is time to donate
