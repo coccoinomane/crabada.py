@@ -13,12 +13,12 @@ class MarketWeb2Client(CrabadaWeb2Client):
 
     def listCrabsForSale_Raw(self, params: SearchParameters = {}) -> Any:
         url = self.baseUri + "/selling"
-        defaultParams: dict[str, Any] = {"limit": 20, "page": 1}
+        defaultParams = {"limit": 20, "page": 1}
         actualParams = defaultParams | params
         response = requests.get(
             url,
             headers=self.browserHeaders,
-            params=actualParams,
+            params=actualParams,  # type: ignore
         )
         return response.json()
 

@@ -78,40 +78,45 @@ class CrabForSale(TypedDict):
     updated_at: str
 
 
-class SearchParameters(TypedDict):
-    # Pagination
-    limit: int
-    page: int
-    # Ordering
-    order: Literal["asc", "desc"]
-    orderBy: Literal["price", "order_time"]
-    # Price
-    from_price: Wei  # in TUS
-    to_price: Wei  # in TUS
-    # Type filters
-    class_ids: List[CrabClasses]
-    is_origin: Literal[0, 1]
-    type: int  # 2 is genesis
-    stage: Literal[0, 1]
-    from_breed_count: Literal[0, 1, 2, 3, 4, 5]
-    to_breed_count: Literal[0, 1, 2, 3, 4, 5]
-    from_pure: Literal[0, 1, 2, 3, 4, 5, 6]
-    to_pure: Literal[0, 1, 2, 3, 4, 5, 6]
-    from_legend: Literal[0, 1, 2, 3, 4, 5, 6]
-    to_legend: Literal[0, 1, 2, 3, 4, 5, 6]
-    # Battle game filters
-    from_speed: int
-    to_speed: int
-    from_damage: int
-    to_damage: int
-    from_armor: int
-    to_armor: int
-    from_hp: int
-    to_hp: int
-    from_critical: int
-    to_critical: int
-    # Idle game filters
-    from_battle_point: int
-    to_battle_point: int
-    from_mine_point: int
-    to_mine_point: int
+SearchParameters = TypedDict(
+    "SearchParameters",
+    {
+        # Pagination
+        "limit": int,
+        "page": int,
+        # Ordering
+        "order": Literal["asc", "desc"],
+        "orderBy": Literal["price", "order_time"],
+        # Price
+        "from_price": Wei,  # in TUS
+        "to_price": Wei,  # in TUS
+        # Type filters
+        "class_ids[]": List[int],  # use CrabClasses enum to translate from names to ids
+        "is_origin": Literal[0, 1],
+        "type": int,  # 2 is genesis
+        "stage": Literal[0, 1],
+        "from_breed_count": Literal[0, 1, 2, 3, 4, 5],
+        "to_breed_count": Literal[0, 1, 2, 3, 4, 5],
+        "from_pure": Literal[0, 1, 2, 3, 4, 5, 6],
+        "to_pure": Literal[0, 1, 2, 3, 4, 5, 6],
+        "from_legend": Literal[0, 1, 2, 3, 4, 5, 6],
+        "to_legend": Literal[0, 1, 2, 3, 4, 5, 6],
+        # Battle game filters
+        "from_speed": int,
+        "to_speed": int,
+        "from_damage": int,
+        "to_damage": int,
+        "from_armor": int,
+        "to_armor": int,
+        "from_hp": int,
+        "to_hp": int,
+        "from_critical": int,
+        "to_critical": int,
+        # Idle game filters
+        "from_battle_point": int,
+        "to_battle_point": int,
+        "from_mine_point": int,
+        "to_mine_point": int,
+    },
+    total=False,
+)
