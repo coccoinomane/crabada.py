@@ -11,7 +11,7 @@ from src.libs.Web3Client.Web3Client import Web3Client
 from src.libs.Web3Client.Web3ClientFactory import makeErc20Client, makeWeb3Client
 
 
-def makeCrabadaWeb2Client() -> IdleGameWeb2Client:
+def makeIdleGameWeb2Client() -> IdleGameWeb2Client:
     """
     Return an initialized client to access Crabada's web endpoints
     """

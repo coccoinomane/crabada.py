@@ -1,10 +1,10 @@
 from src.common.config import users
 from src.helpers.general import findInListOfDicts
 from src.strategies.loot.LowestBp import LowestBp
-from src.common.clients import makeCrabadaWeb2Client
+from src.common.clients import makeIdleGameWeb2Client
 
 # VARS
-client = makeCrabadaWeb2Client()
+client = makeIdleGameWeb2Client()
 userAddress = users[0]["address"]
 teamId = users[0]["teams"][0]["id"]
 teams = client.listTeams(userAddress)

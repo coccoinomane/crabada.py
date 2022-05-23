@@ -1,6 +1,6 @@
 from src.libs.CrabadaWeb2Client.types.idleGameTypes import Team
 from src.models.User import User
-from src.common.clients import makeCrabadaWeb2Client
+from src.common.clients import makeIdleGameWeb2Client
 from src.common.types import StaggeringGroup, TeamTask, ConfigTeam
 from src.common.logger import logger
 
@@ -30,7 +30,7 @@ def _fetchTeamsWithElapsedTime(user: User) -> Dict[int, int]:
     time from the last mining operation start date.
     """
     try:
-        allTeams = makeCrabadaWeb2Client().listTeams(
+        allTeams = makeIdleGameWeb2Client().listTeams(
             user.address, {"limit": 100, "page": 1}
         )
 

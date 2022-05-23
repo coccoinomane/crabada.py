@@ -12,7 +12,7 @@ from src.common.exceptions import (
     StrategyNotFound,
     StrategyNotSet,
 )
-from src.common.clients import makeCrabadaWeb2Client
+from src.common.clients import makeIdleGameWeb2Client
 from src.common.types import ConfigTeam
 from src.libs.CrabadaWeb2Client.types.idleGameTypes import Game, Team
 from src.strategies.loot.LootStrategy import LootStrategy
@@ -57,4 +57,4 @@ def makeLootStrategy(
     if not issubclass(strategyClass, (LootStrategy)):
         raise StrategyException(f"Error fetching loot strategy {strategyName}")
 
-    return strategyClass(user, teamConfig, makeCrabadaWeb2Client()).setParams(team)
+    return strategyClass(user, teamConfig, makeIdleGameWeb2Client()).setParams(team)

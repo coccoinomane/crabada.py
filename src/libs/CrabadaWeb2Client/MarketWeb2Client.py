@@ -4,7 +4,7 @@ from src.libs.CrabadaWeb2Client.CrabadaWeb2Client import CrabadaWeb2Client
 from src.libs.CrabadaWeb2Client.types.marketTypes import CrabForSale, SearchParameters
 
 
-class marketWeb2Client(CrabadaWeb2Client):
+class MarketWeb2Client(CrabadaWeb2Client):
     """
     Access the HTTP endpoints of the Crabada marketplace
     """

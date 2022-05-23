@@ -1,12 +1,12 @@
 from src.helpers import mines, reinforce
 from src.helpers.general import secondOrNone
-from src.common.clients import makeCrabadaWeb2Client
+from src.common.clients import makeIdleGameWeb2Client
 from sys import argv
 from pprint import pprint
 
 # VARS
 mineId = secondOrNone(argv) or 269751
-mine = makeCrabadaWeb2Client().getMine(mineId)
+mine = makeIdleGameWeb2Client().getMine(mineId)
 
 # TEST FUNCTIONS
 def test() -> None:

@@ -6,7 +6,7 @@ from src.models.User import User
 from src.strategies.reinforce.ReinforceStrategyFactory import (
     getBestReinforcement,
 )
-from src.common.clients import makeCrabadaWeb2Client
+from src.common.clients import makeIdleGameWeb2Client
 from sys import argv
 
 # VARS
@@ -22,7 +22,7 @@ if fourthOrNone(argv):
     reinforceStrategies = [x.strip() for x in fourthOrNone(argv).split(",")]
 
 # Get the first mine that can be reinforced
-openMines = makeCrabadaWeb2Client().listOpenMines({"limit": 100})
+openMines = makeIdleGameWeb2Client().listOpenMines({"limit": 100})
 reinforceableMines = [m for m in openMines if minerCanReinforce(m)]
 game = secondOrNone(reinforceableMines)
 

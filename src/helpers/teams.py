@@ -2,7 +2,7 @@ from typing import List
 from src.common.types import TeamTask
 from src.libs.CrabadaWeb2Client.types.idleGameTypes import Team
 from src.models.User import User
-from src.common.clients import makeCrabadaWeb2Client
+from src.common.clients import makeIdleGameWeb2Client
 from .staggering import filterAvailableTeamsForStaggering
 
 
@@ -19,7 +19,7 @@ def fetchAvailableTeamsForTask(user: User, task: TeamTask) -> List[Team]:
         return []
 
     # Fetch list of available teams
-    availableTeams = makeCrabadaWeb2Client().listTeams(
+    availableTeams = makeIdleGameWeb2Client().listTeams(
         user.address, {"is_team_available": 1, "limit": len(ids) * 2, "page": 1}
     )
 
