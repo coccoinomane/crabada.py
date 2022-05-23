@@ -4,18 +4,18 @@ by the scripts"""
 from typing import cast
 from eth_typing import Address
 from src.common.config import nodeUri, users
+from src.libs.CrabadaWeb2Client.IdleGameWeb2Client import IdleGameWeb2Client
 from src.libs.CrabadaWeb3Client.CrabadaWeb3Client import CrabadaWeb3Client
-from src.libs.CrabadaWeb2Client.CrabadaWeb2Client import CrabadaWeb2Client
 from src.libs.Web3Client.Erc20Web3Client import Erc20Web3Client
 from src.libs.Web3Client.Web3Client import Web3Client
 from src.libs.Web3Client.Web3ClientFactory import makeErc20Client, makeWeb3Client
 
 
-def makeCrabadaWeb2Client() -> CrabadaWeb2Client:
+def makeCrabadaWeb2Client() -> IdleGameWeb2Client:
     """
     Return an initialized client to access Crabada's web endpoints
     """
-    return CrabadaWeb2Client()
+    return IdleGameWeb2Client()
 
 
 def makeCrabadaWeb3Client(

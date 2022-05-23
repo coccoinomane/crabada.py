@@ -4,7 +4,7 @@ from src.libs.Web3Client.exceptions import Web3ClientException
 from src.libs.Web3Client.helpers.debug import printTxInfo
 from src.common.config import nodeUri, users
 from src.libs.CrabadaWeb3Client.CrabadaWeb3Client import CrabadaWeb3Client
-from src.libs.CrabadaWeb2Client.CrabadaWeb2Client import CrabadaWeb2Client
+from src.libs.CrabadaWeb2Client.IdleGameWeb2Client import IdleGameWeb2Client
 from web3 import Web3
 from pprint import pprint
 from src.models.User import User
@@ -17,7 +17,7 @@ web3Client = CrabadaWeb3Client(
     upperLimitForBaseFeeInGwei=users[0]["reinforcementMaxGasInGwei"],
 )
 
-web2Client = CrabadaWeb2Client()
+web2Client = IdleGameWeb2Client()
 
 looterAddress = users[0]["address"]
 

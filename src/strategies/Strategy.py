@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from typing import Any, Tuple
 from src.common.exceptions import StrategyNotApplicable
 from src.common.types import ConfigTeam
-from src.libs.CrabadaWeb2Client.CrabadaWeb2Client import CrabadaWeb2Client
+from src.libs.CrabadaWeb2Client.IdleGameWeb2Client import IdleGameWeb2Client
 from src.models.User import User
 
 
@@ -18,11 +18,11 @@ class Strategy(ABC):
     """
 
     def __init__(
-        self, user: User, teamConfig: ConfigTeam, web2Client: CrabadaWeb2Client
+        self, user: User, teamConfig: ConfigTeam, web2Client: IdleGameWeb2Client
     ) -> None:
         self.user: User = user
         self.teamConfig: ConfigTeam = teamConfig
-        self.web2Client: CrabadaWeb2Client = web2Client
+        self.web2Client: IdleGameWeb2Client = web2Client
 
     def setParams(self, *args: Any, **kwargs: Any) -> Strategy:
         """

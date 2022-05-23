@@ -1,12 +1,12 @@
 from src.helpers.general import secondOrNone
 from src.helpers.reinforce import looterCanReinforce, getLooterReinforcementStatus
-from src.libs.CrabadaWeb2Client.CrabadaWeb2Client import CrabadaWeb2Client
+from src.libs.CrabadaWeb2Client.IdleGameWeb2Client import IdleGameWeb2Client
 from pprint import pprint
 from sys import argv
 
 # VARS
 mineId = secondOrNone(argv)
-client = CrabadaWeb2Client()
+client = IdleGameWeb2Client()
 
 if not mineId:
     print("Provide a game ID")

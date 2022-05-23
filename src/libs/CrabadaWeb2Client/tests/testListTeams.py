@@ -1,9 +1,9 @@
 from src.common.config import users
-from src.libs.CrabadaWeb2Client.CrabadaWeb2Client import CrabadaWeb2Client
+from src.libs.CrabadaWeb2Client.IdleGameWeb2Client import IdleGameWeb2Client
 from pprint import pprint
 
 # VARS
-client = CrabadaWeb2Client()
+client = IdleGameWeb2Client()
 userAddress = users[0]["address"]
 
 # TEST FUNCTIONS
