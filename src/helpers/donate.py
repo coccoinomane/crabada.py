@@ -12,7 +12,6 @@ from src.common.constants import eoas
 from src.helpers.instantMessage import sendIM
 from src.helpers.price import tusToWei, craToWei, weiToCra, weiToTus
 import os
-
 from src.libs.CrabadaWeb2Client.types import Game
 
 
@@ -73,8 +72,16 @@ def maybeDonate(game: Game, isMining: bool = True) -> Tuple[TxReceipt, TxReceipt
     os.makedirs(os.path.dirname(path), exist_ok=True)
 
     # Log the rewards that the user just claimed
-    tusRewardInWei = game["miner_tus_reward"] if isMining else game["looter_tus_reward"]
-    craRewardInWei = game["miner_cra_reward"] if isMining else game["looter_cra_reward"]
+    tusRewardInWei = (
+        game.get("miner_tus_reward", Wei(0))
+        if isMining
+        else game.get("looter_tus_reward", Wei(0))
+    )
+    craRewardInWei = (
+        game.get("miner_cra_reward", Wei(0))
+        if isMining
+        else game.get("looter_cra_reward", Wei(0))
+    )
     logClaim((weiToTus(tusRewardInWei), weiToCra(craRewardInWei)))
 
     # Determine whether it is time to donate
