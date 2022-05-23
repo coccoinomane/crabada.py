@@ -62,6 +62,6 @@ def closeMines(user: User) -> int:
             nClosedGames += 1
             logger.info(f"Mine {gameId} closed correctly")
             sendIM(f"Mine {gameId} closed correctly")
-            maybeDonate(txReceipt)
+            maybeDonate(game=g, isMining=True)
 
     return nClosedGames

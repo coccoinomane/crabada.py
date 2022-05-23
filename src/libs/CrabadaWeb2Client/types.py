@@ -61,6 +61,10 @@ class Game(TypedDict):
     estimate_miner_lose_tus: Wei
     estimate_miner_win_cra: Wei
     estimate_miner_win_tus: Wei
+    miner_cra_reward: Wei
+    miner_tus_reward: Wei
+    looter_cra_reward: Wei
+    looter_tus_reward: Wei
     # Time
     start_time: int
     end_time: int
