@@ -2,7 +2,7 @@ from abc import abstractmethod
 from typing import List, Tuple
 from src.helpers.general import firstOrNone
 from src.strategies.Strategy import Strategy
-from src.libs.CrabadaWeb2Client.types import Game, Team
+from src.libs.CrabadaWeb2Client.types.idleGameTypes import Game, Team
 
 
 class LootStrategy(Strategy):

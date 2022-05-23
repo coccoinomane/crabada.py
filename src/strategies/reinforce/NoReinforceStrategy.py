@@ -1,5 +1,5 @@
 from typing import Any, List
-from src.libs.CrabadaWeb2Client.types import CrabForLending, Game, TeamStatus
+from src.libs.CrabadaWeb2Client.types.idleGameTypes import CrabForLending, Game, TeamStatus
 from src.strategies.reinforce.ReinforceStrategy import ReinforceStrategy
 
 

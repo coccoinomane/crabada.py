@@ -7,7 +7,7 @@ from src.helpers.dates import getPrettySeconds
 from time import time
 from src.common.clients import makeCrabadaWeb2Client
 from src.helpers.general import firstOrNone
-from src.libs.CrabadaWeb2Client.types import Game, GameProcess
+from src.libs.CrabadaWeb2Client.types.idleGameTypes import Game, GameProcess
 from src.models.User import User
 
 

@@ -2,10 +2,10 @@ from typing import Literal, TypedDict, List
 from eth_typing import Address
 from web3.types import Wei
 
+TeamStatus = Literal["MINING", "LOOTING", "AVAILABLE"]
 """
 Possible states for a team
 """
-TeamStatus = Literal["MINING", "LOOTING", "AVAILABLE"]
 
 
 class GameProcess(TypedDict):

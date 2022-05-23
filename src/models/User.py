@@ -6,7 +6,7 @@ from src.common.config import users
 from src.common.exceptions import UserException
 from src.common.types import ConfigTeam, ConfigUser, StaggeringGroup, Tus, TeamTask
 from src.helpers.general import findInListOfDicts, firstOrNone
-from src.libs.CrabadaWeb2Client.types import Game, TeamStatus
+from src.libs.CrabadaWeb2Client.types.idleGameTypes import Game, TeamStatus
 from src.models.Model import Model
 
 

@@ -1,4 +1,4 @@
-from src.libs.CrabadaWeb2Client.types import Team
+from src.libs.CrabadaWeb2Client.types.idleGameTypes import Team
 from src.models.User import User
 from src.common.clients import makeCrabadaWeb2Client
 from src.common.types import StaggeringGroup, TeamTask, ConfigTeam

@@ -1,5 +1,5 @@
 from typing import List
-from src.libs.CrabadaWeb2Client.types import CrabForLending, Game
+from src.libs.CrabadaWeb2Client.types.idleGameTypes import CrabForLending, Game
 from src.strategies.reinforce.FirstFromInventory import FirstFromInventory
 
 

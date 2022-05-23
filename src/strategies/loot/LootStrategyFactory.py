@@ -14,7 +14,7 @@ from src.common.exceptions import (
 )
 from src.common.clients import makeCrabadaWeb2Client
 from src.common.types import ConfigTeam
-from src.libs.CrabadaWeb2Client.types import Game, Team
+from src.libs.CrabadaWeb2Client.types.idleGameTypes import Game, Team
 from src.strategies.loot.LootStrategy import LootStrategy
 from src.strategies.loot.LowestBp import LowestBp
 from src.models.User import User

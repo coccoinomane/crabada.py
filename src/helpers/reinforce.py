@@ -6,7 +6,7 @@ from src.helpers.mines import (
     mineIsOpen,
     mineIsSettled,
 )
-from src.libs.CrabadaWeb2Client.types import CrabForLending, CrabFromInventory, Game
+from src.libs.CrabadaWeb2Client.types.idleGameTypes import CrabForLending, CrabFromInventory, Game
 from web3.types import Wei
 
 

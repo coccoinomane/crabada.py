@@ -14,7 +14,7 @@ from src.common.exceptions import (
 )
 from src.common.clients import makeCrabadaWeb2Client
 from src.common.types import ConfigTeam, Tus
-from src.libs.CrabadaWeb2Client.types import CrabForLending, Game, Team, TeamStatus
+from src.libs.CrabadaWeb2Client.types.idleGameTypes import CrabForLending, Game, Team, TeamStatus
 from src.strategies.reinforce.HighestBp import HighestBp
 from src.strategies.reinforce.HighestBpFromInventory import HighestBpFromInventory
 from src.strategies.reinforce.HighestMp import HighestMp

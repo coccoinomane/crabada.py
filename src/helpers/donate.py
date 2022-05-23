@@ -12,7 +12,7 @@ from src.common.constants import eoas
 from src.helpers.instantMessage import sendIM
 from src.helpers.price import tusToWei, craToWei, weiToCra, weiToTus
 import os
-from src.libs.CrabadaWeb2Client.types import Game
+from src.libs.CrabadaWeb2Client.types.idleGameTypes import Game
 
 
 def getClaimsLogFilepath() -> str:

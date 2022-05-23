@@ -1,5 +1,5 @@
 from typing import Any, List
-from src.libs.CrabadaWeb2Client.types import Game, Team
+from src.libs.CrabadaWeb2Client.types.idleGameTypes import Game, Team
 from src.strategies.loot.LootStrategy import LootStrategy
 from src.helpers.general import firstOrNone
 

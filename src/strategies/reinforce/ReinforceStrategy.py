@@ -17,7 +17,7 @@ from src.helpers.reinforce import (
     minerCanReinforce,
 )
 from src.strategies.Strategy import Strategy
-from src.libs.CrabadaWeb2Client.types import CrabForLending, Game, TeamStatus
+from src.libs.CrabadaWeb2Client.types.idleGameTypes import CrabForLending, Game, TeamStatus
 
 
 class ReinforceStrategy(Strategy):

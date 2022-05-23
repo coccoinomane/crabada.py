@@ -8,7 +8,7 @@ client = makeCrabadaWeb2Client()
 userAddress = users[0]["address"]
 teamId = users[0]["teams"][0]["id"]
 teams = client.listTeams(userAddress)
-team = findInListOfDicts(teams, "team_id", teamId)  # type: ignore
+team = findInListOfDicts(teams, "team_id", teamId)
 
 if not team:
     print("Error getting team with ID " + str(teamId))

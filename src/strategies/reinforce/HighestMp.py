@@ -1,5 +1,5 @@
 from typing import Any, List
-from src.libs.CrabadaWeb2Client.types import CrabForLending, Game
+from src.libs.CrabadaWeb2Client.types.idleGameTypes import CrabForLending, Game
 from src.strategies.reinforce.ReinforceStrategy import ReinforceStrategy
 from src.helpers.general import nthOrLastOrNone
 from src.helpers.price import weiToTus
