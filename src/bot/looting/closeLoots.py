@@ -8,6 +8,9 @@ from src.common.clients import makeCrabadaWeb3Client
 from src.helpers.mines import (
     fetchOpenLoots,
     mineCanBeSettled,
+    mineIsWaitToSettle,
+    getRemainingTimeBeforeSettleFormatted,
+    getNextMineToSettle,
 )
 from src.models.User import User
 from web3.exceptions import ContractLogicError
@@ -22,10 +25,17 @@ def closeLoots(user: User) -> int:
     client = makeCrabadaWeb3Client(
         upperLimitForBaseFeeInGwei=user.config["closeLootMaxGasInGwei"]
     )
-    settleableMines = [g for g in fetchOpenLoots(user) if mineCanBeSettled(g)]
+    openGames = fetchOpenLoots(user)
+    settleableMines = [g for g in openGames if mineCanBeSettled(g)]
+    waitingToSettleMines = [g for g in openGames if mineIsWaitToSettle(g)]
 
+    # Print a useful message in case there aren't loots to close
     if not settleableMines:
-        logger.info(f"No loots to close for user {str(user.address)}")
+        message = f"No loots to close for user {str(user.address)}"
+        nextGameToFinish = getNextMineToSettle(waitingToSettleMines)
+        if nextGameToFinish:
+            message += f" (next in {getRemainingTimeBeforeSettleFormatted(nextGameToFinish)})"
+        logger.info(message)
         return 0
 
     nClosedLoots = 0
