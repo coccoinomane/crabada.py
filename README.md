@@ -1,18 +1,12 @@
 Scripts to interact with [Crabada](https://www.crabada.com)'s smart contracts 🦀
 
-# 📣  Swimmer Network subnet
-
-Crabada.py now works on the Swimmer Network subnet!
-
-Make sure to follow our [migration tutorial](https://github.com/coccoinomane/crabada.py/discussions/104): it takes just a few minutes 🙂
-
 # Features
 
 - Completely automatic mining: start, reinforce & settle.
 - Semi-automatic looting: reinforce and settle.
 - Manage multiple teams at the same time.
 - Telegram notifications.
-- Self-reinforce from inventory
+- Self-reinforce from inventory.
 
 # Quick start
 

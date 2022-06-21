@@ -9,13 +9,21 @@ from src.libs.CrabadaWeb3Client.CrabadaWeb3Client import CrabadaWeb3Client
 from src.libs.Web3Client.Erc20Web3Client import Erc20Web3Client
 from src.libs.Web3Client.Web3Client import Web3Client
 from src.libs.Web3Client.Web3ClientFactory import makeErc20Client, makeWeb3Client
+from src.libs.CrabadaWeb2Client.MarketWeb2Client import MarketWeb2Client
 
 
 def makeIdleGameWeb2Client(userAgent: str = None) -> IdleGameWeb2Client:
     """
-    Return an initialized client to access Crabada's web endpoints
+    Return an initialized client to access Crabada's idle game web endpoints
     """
     return IdleGameWeb2Client(userAgent=userAgent or users[0]["userAgent"])
+
+
+def makeMarketWeb2Client(userAgent: str = None) -> MarketWeb2Client:
+    """
+    Return an initialized client to access Crabada's marketplace web endpoints
+    """
+    return MarketWeb2Client(userAgent=userAgent or users[0]["userAgent"])
 
 
 def makeCrabadaWeb3Client(
