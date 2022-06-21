@@ -53,11 +53,26 @@ def parseInt(key: str, default: int = None) -> int:
         raise InvalidConfig(f"Config value '{key}' must be an integer, {value} given")
 
 
+def parsePositiveInt(key: str, default: int = None) -> int:
+    """
+    Get an env variable and cast it to integer; return the
+    default value if the variable is not found; raises
+    an error if the variable is not an integer or if it
+    is smaller than zero.
+    """
+    value = parseInt(key, default)
+    if value < 0:
+        raise InvalidConfig(
+            f"Config value '{key}' must be higher than or equal to 0, '{value}' given"
+        )
+    return value
+
+
 def parseFloat(key: str, default: float = 0) -> float:
     """
     Get an env variable and cast it to a float; return the
     default value if the variable is not found; raises an
-    error if the variable is not a float.
+    error if the variable is not a float
     """
     value = getenv(key, None)
     if value is None:
@@ -68,6 +83,21 @@ def parseFloat(key: str, default: float = 0) -> float:
         raise InvalidConfig(
             f"Config value '{key}' must be a float number, '{value}' given"
         )
+
+
+def parsePositiveFloat(key: str, default: float = 0) -> float:
+    """
+    Get an env variable and cast it to a float; return the
+    default value if the variable is not found; raises an
+    error if the variable is not a float or if it
+    is smaller than zero.
+    """
+    value = parseFloat(key, default)
+    if value < 0:
+        raise InvalidConfig(
+            f"Config value '{key}' must be higher than or equal to 0, '{value}' given"
+        )
+    return value
 
 
 def parsePercentage(key: str, default: float = 0) -> float:

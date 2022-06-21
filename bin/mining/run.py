@@ -10,7 +10,11 @@ Usage:
 from typing import cast
 from eth_typing import Address
 from src.bot.mining.run import run
-from src.common.dotenv import getenv, parseInt
+from src.common.dotenv import (
+    getenv,
+    parsePercentage,
+    parsePositiveInt,
+)
 from src.models.User import User
 from src.common.logger import logger
 from src.helpers.general import secondOrNone
@@ -19,16 +23,13 @@ from sys import exit, argv
 # Provide user via CLI, or will use 1st registered user
 userAddress = secondOrNone(argv) or cast(Address, getenv("USER_1_ADDRESS"))
 
-# Interval between each full cycle of mining, reinforcing
-# and settling, in seconds (like a cronjob definition)
-sleep_timer = parseInt("SLEEP_TIMER", 120)
-
-# Interval between closing a mine (closeMines) & opening a new
-# one (sendTeamsMining), in seconds
-sleep_timer_minor = parseInt("SLEEP_TIMER_MINOR", 20)
-
 if not userAddress:
     logger.error("Specify a user address")
     exit(1)
 
-run(User(userAddress), sleep_timer, sleep_timer_minor)
+run(
+    User(userAddress),
+    parsePositiveInt("SLEEP_TIMER", 120),
+    parsePositiveInt("SLEEP_TIMER_MINOR", 20),
+    parsePercentage("SLEEP_RANDOMIZER", 20) / 100,
+)

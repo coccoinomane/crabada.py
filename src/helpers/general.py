@@ -1,6 +1,7 @@
 from functools import reduce
 from typing import Any, List
 from collections import Counter
+from random import uniform
 
 
 def firstOrNone(list: List[Any]) -> Any:
@@ -89,3 +90,13 @@ def flattenList(l: List[Any]) -> List[Any]:
     Source: https://stackoverflow.com/a/46080186/2972183
     """
     return reduce(lambda x, y: x + y, l)
+
+
+def randomize(x: float, d: float) -> float:
+    """
+    Return a number uniformly distributed between
+    x*(1-d) and x*(1+d)
+    """
+    if d == 0:
+        return x
+    return x * (1 + uniform(-1, 1) * d)
