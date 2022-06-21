@@ -30,6 +30,7 @@ StaggeringGroup = Set[int]
 class ConfigUser(TypedDict):
     address: Address
     privateKey: str
+    userAgent: str
     reinforcementMaxPriceInTus: Tus
     reinforcementMaxPriceInTusWei: Wei
     reinforcementMaxGasInGwei: float

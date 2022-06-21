@@ -143,6 +143,7 @@ def parseUserConfig(userNumber: int, teams: List[ConfigTeam]) -> ConfigUser:
     userConfig: ConfigUser = {
         "address": address,
         "privateKey": getenv(f"{userPrefix}_PRIVATE_KEY"),
+        "userAgent": getenv(f"{userPrefix}_USER_AGENT"),
         "reinforcementMaxPriceInTus": cast(Tus, reinforcementMaxPriceInTus),
         "reinforcementMaxPriceInTusWei": Web3.toWei(
             reinforcementMaxPriceInTus, "ether"

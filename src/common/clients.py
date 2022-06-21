@@ -11,11 +11,11 @@ from src.libs.Web3Client.Web3Client import Web3Client
 from src.libs.Web3Client.Web3ClientFactory import makeErc20Client, makeWeb3Client
 
 
-def makeIdleGameWeb2Client() -> IdleGameWeb2Client:
+def makeIdleGameWeb2Client(userAgent: str = None) -> IdleGameWeb2Client:
     """
     Return an initialized client to access Crabada's web endpoints
     """
-    return IdleGameWeb2Client()
+    return IdleGameWeb2Client(userAgent=userAgent or users[0]["userAgent"])
 
 
 def makeCrabadaWeb3Client(

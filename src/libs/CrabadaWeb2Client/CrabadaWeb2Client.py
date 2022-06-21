@@ -4,11 +4,6 @@ from abc import ABC
 class CrabadaWeb2Client(ABC):
     """
     Base class to access the HTTP endpoints of the Crabada P2E game.
-
-    All endpoints have a 'raw' parameter that you can set to true
-    in order to get the full JSON response. By default it is false,
-    which means you only get the data contained in the response (a
-    list for list endpoints, a dict for specific endpoints)
     """
 
     baseUri: str
@@ -30,3 +25,8 @@ class CrabadaWeb2Client(ABC):
         "sec-gpc": "1",
         "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36",
     }
+
+    def __init__(self, userAgent: str = None) -> None:
+        super().__init__()
+        if userAgent:
+            self.browserHeaders["user-agent"] = userAgent
