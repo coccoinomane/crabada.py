@@ -1,5 +1,13 @@
 Scripts to interact with [Crabada](https://www.crabada.com)'s smart contracts 🦀
 
+# ⚠️ UPDATE ⚠️
+
+It is now official: [Crabada's Idle game was discontinued in October 2022](https://twitter.com/PlayCrabada/status/1578550824329879552), leaving the Battle Game the only way to play Crabada.
+
+This means no more snib snibbing for this bot. It has been a long and fun ride: thank you all for your support and feedback ❤️
+
+Please note that some functions in this repo will keep working, e.g. the marketplace ones.
+
 # Features
 
 - Completely automatic mining: start, reinforce & settle.
